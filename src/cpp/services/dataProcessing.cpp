@@ -4,6 +4,11 @@
 #include <sstream>
 #include <iomanip>
 
+void DataProcessing::discardColumn(std::stringstream& ss){
+    std::string discard;
+    std::getline(ss, discard, ',');
+}
+
 std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
     std::vector<DataRow> data;
     std::ifstream inputFile;
@@ -16,26 +21,32 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
     
     std::string line;
     std::getline(inputFile, line); // skip header
+    
     while (std::getline(inputFile, line)){
         std::stringstream ss(line);
+        discardColumn(ss);
         DataRow row;
         std::getline(ss, row.ASXCode, ',');
+        discardColumn(ss);
         std::string orderType;
         std::getline(ss, orderType, ',');
         if (orderType == "Buy"){
             row.orderType = OrderType::BUY;
-        } else if (orderType == "Sell"){
+        } 
+        else if (orderType == "Sell"){
             row.orderType = OrderType::SELL;
-        } else {
-            std::cerr << "Invalid order type: " << orderType << std::endl;
-            continue;
+        } 
+        else {
+            throw std::runtime_error("Invalid order type: " + orderType);
         }
+        discardColumn(ss);
         std::string tradeDate;
         std::getline(ss, tradeDate, ',');
         std::tm date;
         std::istringstream dateStream(tradeDate);
         dateStream >> std::get_time(&date, "%d/%m/%Y");
         row.TradeDate = date;
+        discardColumn(ss);
         std::string price;
         std::getline(ss, price, ',');
         row.price = std::stod(price);
@@ -54,6 +65,4 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
 
     inputFile.close();
     return data;
-
-
 }
