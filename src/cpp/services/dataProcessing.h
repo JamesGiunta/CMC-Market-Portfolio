@@ -1,21 +1,9 @@
 #pragma once
+#include "dataRow.h"
 #include <vector>
 #include <string>
 #include <ctime>
 #include <sstream>
-
-
-enum OrderType {BUY, SELL};
-
-struct DataRow {
-    std::string ASXCode;
-    OrderType orderType;
-    std::tm TradeDate;
-    double price;
-    int quantity;
-    double fee;
-};
-
 
 class DataProcessing {
 public:
