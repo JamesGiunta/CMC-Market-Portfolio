@@ -8,6 +8,12 @@ std::ostream& operator<<(std::ostream& os, const DataRow& row) {
     return os;
 }
 
-bool operator==(const DataRow& lhs, const DataRow& rhs) {
-    return lhs.ASXCode == rhs.ASXCode && lhs.orderType == rhs.orderType && lhs.tradeDate == rhs.tradeDate && lhs.price == rhs.price && lhs.quantity == rhs.quantity && lhs.fee == rhs.fee;
-}
+    bool operator==(const DataRow& lhs, const DataRow& rhs) {
+        const double epsilon = 1e-6; // Tolerance for floating-point comparison
+        return lhs.ASXCode == rhs.ASXCode &&
+               lhs.orderType == rhs.orderType &&
+               lhs.tradeDate == rhs.tradeDate &&
+               std::abs(lhs.price - rhs.price) < epsilon &&
+               lhs.quantity == rhs.quantity &&
+               std::abs(lhs.fee - rhs.fee) < epsilon;
+    }
