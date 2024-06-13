@@ -6,6 +6,6 @@ class ServiceTest {
     public:
         std::time_t parseDate(const std::string& dateStr);
         void vectorToCSV(const std::vector<std::vector<std::string>>& data, const std::string& filepath);
-        std::vector<DataRow> createTestData();
-        void testLoadCSV();
+        void createTestData();
+        std::vector<DataRow> testLoadCSV();
 };

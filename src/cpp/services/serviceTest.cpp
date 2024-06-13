@@ -35,8 +35,7 @@ void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data,
     outputFile.close();
 }
 
-std::vector<DataRow> ServiceTest::createTestData() {
-    DataRow dr;
+void ServiceTest::createTestData() {
     std::vector<std::string> header = {"Account","ASXCode", "Confirmations", "OrderType", "As at Date", "TradeDate", "Settlement Date", "Price", "Quantity", "Brokerage", "GST"};
     std::vector<std::string> row1 = {"", "CBA", "", "Buy", "", "19/03/2024", "", "115.78", "100", "19.95", "1.17"};
     std::vector<std::string> row2 = {"", "360", "", "Sell", "", "01/03/2024", "", "11.30", "300", "11", "0.73"};
@@ -44,7 +43,10 @@ std::vector<DataRow> ServiceTest::createTestData() {
 
     std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3};
     vectorToCSV(testData1, "testData.csv");
+}
 
+std::vector<DataRow> ServiceTest::testLoadCSV() {
+    DataRow dr;
     DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12)};
     DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73)};
     DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59)};
@@ -52,15 +54,13 @@ std::vector<DataRow> ServiceTest::createTestData() {
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3};
     
     return expectedData;
-}
-
-void ServiceTest::testLoadCSV() {
     
 }
 
 int main() {
     ServiceTest st;
-    std::vector<DataRow> expectedData = st.createTestData();
+    st.createTestData();
+    std::vector<DataRow> expectedData = st.testLoadCSV();
     DataProcessing dp;
     std::vector<DataRow> data = dp.loadCSV("resources/testData.csv");
     std::cout << "Actual data:" << std::endl;
