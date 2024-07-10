@@ -21,7 +21,7 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
     
     std::string line;
     std::getline(inputFile, line); // skip header
-    
+    int seq = 0;
     while (std::getline(inputFile, line)){
         std::stringstream ss(line);
         discardColumn(ss);
@@ -44,7 +44,7 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         std::getline(ss, tradeDate, ',');
         tm tm = {};
         std::istringstream dateStream(tradeDate);
-        dateStream >> std::get_time(&tm, "%d/%m/%Y");
+        dateStream >> std::get_time(&tm, "%Y-%m-%d");
         std::time_t date = mktime(&tm);
         row.tradeDate = date;
         discardColumn(ss);
@@ -60,6 +60,8 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         std::string gst;
         std::getline(ss, gst, ',');
         row.fee += std::stod(gst);
+        row.seq = seq;
+        seq++;
 
         data.push_back(row);
     }

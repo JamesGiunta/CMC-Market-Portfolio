@@ -5,12 +5,13 @@
 #include <iomanip>
 #include <fstream>
 #include <ctime>
+#include <algorithm>
 
 
 std::time_t ServiceTest::parseDate(const std::string& dateStr) {
     std::tm tm = {};
     std::istringstream dateStream(dateStr);
-    dateStream >> std::get_time(&tm, "%d/%m/%Y");
+    dateStream >> std::get_time(&tm, "%Y-%m-%d");
     std::time_t date = mktime(&tm);
     return date;
 }
@@ -37,19 +38,19 @@ void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data,
 
 void ServiceTest::createTestData() {
     std::vector<std::string> header = {"Account","ASXCode", "Confirmations", "OrderType", "As at Date", "TradeDate", "Settlement Date", "Price", "Quantity", "Brokerage", "GST"};
-    std::vector<std::string> row1 = {"", "CBA", "", "Buy", "", "19/03/2024", "", "115.78", "100", "19.95", "1.17"};
-    std::vector<std::string> row2 = {"", "360", "", "Sell", "", "01/03/2024", "", "11.30", "300", "11", "0.73"};
-    std::vector<std::string> row3 = {"", "360", "", "Buy", "", "04/12/2023", "", "7.78", "300", "10", "0.59"};
+    std::vector<std::string> row1 = {"", "CBA", "", "Buy", "", "2024-03-19-", "", "115.78", "100", "19.95", "1.17"};
+    std::vector<std::string> row2 = {"", "360", "", "Sell", "", "2024-03-01", "", "11.30", "300", "11", "0.73"};
+    std::vector<std::string> row3 = {"", "360", "", "Buy", "", "2023-12-04", "", "7.78", "300", "10", "0.59"};
 
     std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3};
-    vectorToCSV(testData1, "testData.csv");
+    vectorToCSV(testData1, "resources/testData.csv");
 }
 
 std::vector<DataRow> ServiceTest::testLoadCSV() {
     DataRow dr;
-    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12)};
-    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73)};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59)};
+    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("2024-03-19"), double(115.78), 100, double(21.12)};
+    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("2024-03-01"), double(11.30), 300, double(11.73)};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("2023-12-04"), double(7.78), 300, double(10.59)};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3};
     
