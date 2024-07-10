@@ -8,12 +8,20 @@ std::ostream& operator<<(std::ostream& os, const DataRow& row) {
     return os;
 }
 
-    bool operator==(const DataRow& lhs, const DataRow& rhs) {
-        const double epsilon = 1e-6; // Tolerance for floating-point comparison
-        return lhs.ASXCode == rhs.ASXCode &&
-               lhs.orderType == rhs.orderType &&
-               lhs.tradeDate == rhs.tradeDate &&
-               std::abs(lhs.price - rhs.price) < epsilon &&
-               lhs.quantity == rhs.quantity &&
-               std::abs(lhs.fee - rhs.fee) < epsilon;
+bool operator==(const DataRow& lhs, const DataRow& rhs) {
+    const double epsilon = 1e-6; // Tolerance for floating-point comparison
+    return lhs.ASXCode == rhs.ASXCode &&
+            lhs.orderType == rhs.orderType &&
+            lhs.tradeDate == rhs.tradeDate &&
+           std::abs(lhs.price - rhs.price) < epsilon &&
+           lhs.quantity == rhs.quantity &&
+           std::abs(lhs.fee - rhs.fee) < epsilon;
+}
+
+bool DataRow::operator<(const DataRow& obj) const {
+    if (tradeDate == obj.tradeDate) { 
+        // If trade dates are the same, compare by sequence number so that the buy order comes before the sell order
+        return seq > obj.seq;
     }
+    return tradeDate < obj.tradeDate;
+}

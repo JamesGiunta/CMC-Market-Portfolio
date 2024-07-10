@@ -17,10 +17,5 @@ struct DataRow {
 
     friend bool operator==(const DataRow& lhs, const DataRow& rhs);
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
-    bool operator<(const DataRow& obj) const { 
-        if (tradeDate == obj.tradeDate) {
-            return seq > obj.seq;
-        }
-        return tradeDate < obj.tradeDate; 
-    } 
+    bool operator<(const DataRow& obj) const;
 };

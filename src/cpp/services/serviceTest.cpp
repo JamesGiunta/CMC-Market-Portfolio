@@ -1,6 +1,7 @@
-#include "dataProcessing.h"
 #include "serviceTest.h"
 #include "dataRow.h"
+#include "dataProcessing.h"
+#include "tradeOperations.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -80,7 +81,13 @@ int main() {
         std::cout << "Data loaded correctly." << std::endl;
     } 
     else {
-        std::cout << "Data did not match expected values." << std::endl;
+        std::cout << "Data did not match expected values." << std::endl;  
+    }
+    
+    TradeOperations to;
+    std::map<std::string, int> map = to.createLiveDataVector(data);
+    for (const auto& pair : map) {
+        std::cout << pair.first << " " << pair.second << std::endl;
     }
 
     return 0;
