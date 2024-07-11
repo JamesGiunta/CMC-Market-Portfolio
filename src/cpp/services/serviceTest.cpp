@@ -2,11 +2,13 @@
 #include "dataRow.h"
 #include "dataProcessing.h"
 #include "tradeOperations.h"
+#include "dataRetrieval.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <ctime>
 #include <algorithm>
+#include <curl/curl.h>
 
 
 std::time_t ServiceTest::parseDate(const std::string& dateStr) {
@@ -89,6 +91,15 @@ int main() {
     for (const auto& pair : map) {
         std::cout << pair.first << " " << pair.second << std::endl;
     }
+    
+    DataRetrieval dr;
+
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    std::string html_document = dr.getRequest("CBA");
+    std::cout << html_document << std::endl;
+
+    curl_global_cleanup();
 
     return 0;
 }
