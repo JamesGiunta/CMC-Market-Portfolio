@@ -103,13 +103,8 @@ int main() {
     for (const auto& pair : liveSharesMap) {
         std::cout << pair.first << ": " << pair.second.quantity << std::endl;
     }
-    
-    DataRetrieval dr;
-    auto start = std::chrono::high_resolution_clock::now();
 
     curl_global_init(CURL_GLOBAL_ALL);
-
-    std::cout << dr.getRequest("CBA") << std::endl;
 
     std::vector<std::thread> threads(liveSharesMap.size());
     int i = 0;
@@ -123,9 +118,6 @@ int main() {
         } 
     }
     curl_global_cleanup();
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout << "Time taken: " << duration.count() << " milliseconds" << std::endl;
 
     return 0;
 }
