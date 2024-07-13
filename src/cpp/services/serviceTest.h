@@ -1,6 +1,7 @@
 #pragma once
-#include "dataProcessing.h"
-#include <vector>
+#include "dataRow.h"
+#include "dataRetrieval.h"
+#include "tradeOperations.h"
 
 class ServiceTest {
     public:
@@ -8,4 +9,5 @@ class ServiceTest {
         void vectorToCSV(const std::vector<std::vector<std::string>>& data, const std::string& filepath);
         void createTestData();
         std::vector<DataRow> testLoadCSV();
+        void getLivePrices(std::pair<const std::string, liveShares>& pair);
 };

@@ -5,7 +5,12 @@
 #include <map>
 #include <sstream>
 
+struct liveShares {
+    int quantity;
+    double price;
+};
+
 class TradeOperations {
 public:
-    std::map<std::string, int> createLiveDataVector(std::vector<DataRow>& data);
+    std::map<std::string, liveShares> createLiveDataVector(std::vector<DataRow>& data);
 };

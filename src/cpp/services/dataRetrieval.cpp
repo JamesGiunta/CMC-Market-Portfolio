@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include "rapidjson/document.h" 
+#include <fstream> 
 
 size_t DataRetrieval::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp){
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -10,26 +12,29 @@ size_t DataRetrieval::WriteCallback(void *contents, size_t size, size_t nmemb, v
 }
 
 std::string DataRetrieval::getRequest(std::string ASXCode) {
-    std::string url = "https://au.finance.yahoo.com/quote/" + ASXCode + ".AX/";
+    for (char& c : ASXCode) {
+        c = std::tolower(c);
+    }
+    std::string url = "https://quoteapi.com/api/v5/symbols/" + ASXCode + ".asx?appID=4ec85c869fdae450&averages=1&liveness=delayed";
     CURL *curl = curl_easy_init();
-    std::string html;
-    std::string result;
     CURLcode res;
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-
+    std::string jsonResponse;
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51");
+        curl_easy_setopt(curl, CURLOPT_REFERER, "https://www.fool.com.au/");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &html);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &jsonResponse);
         res = curl_easy_perform(curl);
 
         if (res != CURLE_OK) {
             std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
         }
-
-        curl_easy_cleanup(curl);
-
+        long httpCode = 0;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+        if (httpCode != 200){
+            std::cerr << "httpCode: " << httpCode << std::endl;
+        }
+    curl_easy_cleanup(curl);
     }
-    return html;
+    return jsonResponse;
 }

@@ -9,7 +9,10 @@
 #include <ctime>
 #include <algorithm>
 #include <curl/curl.h>
-
+#include <nlohmann/json.hpp>
+#include <chrono>
+#include <thread>
+#include <vector>
 
 std::time_t ServiceTest::parseDate(const std::string& dateStr) {
     std::tm tm = {};
@@ -61,6 +64,15 @@ std::vector<DataRow> ServiceTest::testLoadCSV() {
     
 }
 
+void ServiceTest::getLivePrices(std::pair<const std::string, liveShares>& pair) {
+    DataRetrieval dr;
+    std::string jsonResponse = dr.getRequest(pair.first);
+    nlohmann::json j = nlohmann::json::parse(jsonResponse);
+    double price = j["quote"]["price"];
+    std::cout << "Price: " << price << std::endl;
+    pair.second.price = price;
+}
+
 int main() {
     ServiceTest st;
     st.createTestData();
@@ -87,19 +99,33 @@ int main() {
     }
     
     TradeOperations to;
-    std::map<std::string, int> map = to.createLiveDataVector(data);
-    for (const auto& pair : map) {
-        std::cout << pair.first << " " << pair.second << std::endl;
+    std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
+    for (const auto& pair : liveSharesMap) {
+        std::cout << pair.first << ": " << pair.second.quantity << std::endl;
     }
     
     DataRetrieval dr;
+    auto start = std::chrono::high_resolution_clock::now();
 
     curl_global_init(CURL_GLOBAL_ALL);
 
-    std::string html_document = dr.getRequest("CBA");
-    std::cout << html_document << std::endl;
+    std::cout << dr.getRequest("CBA") << std::endl;
 
+    std::vector<std::thread> threads(liveSharesMap.size());
+    int i = 0;
+    for (std::pair<const std::string, liveShares>& pair: liveSharesMap) {
+        threads[i] = std::thread(std::bind(&ServiceTest::getLivePrices, &st, std::ref(pair)));
+        i++;
+    }
+    for (std::thread& thread : threads) {
+        if (thread.joinable()){
+            thread.join();
+        } 
+    }
     curl_global_cleanup();
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "Time taken: " << duration.count() << " milliseconds" << std::endl;
 
     return 0;
 }

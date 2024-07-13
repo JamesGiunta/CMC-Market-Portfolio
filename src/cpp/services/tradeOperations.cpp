@@ -5,8 +5,8 @@
 #include <map>
 #include <iostream>
 
-std::map<std::string, int> TradeOperations::createLiveDataVector(std::vector<DataRow>& data){
-    std::map<std::string, int> liveSharesMap;
+std::map<std::string, liveShares> TradeOperations::createLiveDataVector(std::vector<DataRow>& data){
+    std::map<std::string, liveShares> liveSharesMap;
     std::sort(data.begin(), data.end());
     std::string currentASXCode = "";
     for (auto it = data.begin(); it != data.end(); ++it) {
@@ -20,14 +20,14 @@ std::map<std::string, int> TradeOperations::createLiveDataVector(std::vector<Dat
         }
 
         if (liveSharesMap.find(currentASXCode) == liveSharesMap.end()) {
-            liveSharesMap[currentASXCode] = currentQuantity;
+            liveSharesMap[currentASXCode].quantity = currentQuantity;
         } 
         else {
-            liveSharesMap[currentASXCode] += currentQuantity;
+            liveSharesMap[currentASXCode].quantity += currentQuantity;
         }
     }
     for (auto it = liveSharesMap.begin(); it != liveSharesMap.end(); ) {
-        if (it->second == 0) {
+        if (it->second.quantity == 0) {
             it = liveSharesMap.erase(it);
         }
         else {
@@ -36,4 +36,3 @@ std::map<std::string, int> TradeOperations::createLiveDataVector(std::vector<Dat
     }
     return liveSharesMap;
 }
-
