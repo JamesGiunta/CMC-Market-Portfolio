@@ -119,5 +119,7 @@ int main() {
     }
     curl_global_cleanup();
 
+    to.calculateLiveProfit(liveSharesMap, data);
+
     return 0;
 }

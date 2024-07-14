@@ -36,3 +36,29 @@ std::map<std::string, liveShares> TradeOperations::createLiveDataVector(std::vec
     }
     return liveSharesMap;
 }
+
+void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liveSharesMap, std::vector<DataRow>& data){
+    std::sort(data.begin(), data.end(), DataRow::descending);
+    for (auto& liveShare: liveSharesMap) {
+        double cost = 0;
+        int quantity = liveShare.second.quantity;
+        for (auto& dataRow: data) {
+            if (liveShare.first == dataRow.ASXCode) {
+                if (dataRow.quantity <= quantity) {
+                    cost += (dataRow.price * dataRow.quantity) + dataRow.fee;
+                    quantity = quantity - dataRow.quantity;
+                }
+                // If the buy order quantity is greater than the live quantity then calculate the profit based on the percentage of the buy order quantity
+                else {
+                    double percentage = quantity / (double)dataRow.quantity;  
+                    cost += (dataRow.price * quantity * percentage) + (dataRow.fee * percentage);
+                    quantity = 0;
+                }
+            } 
+            if (quantity == 0) {
+                break;
+            }      
+        }
+        liveShare.second.profit = (liveShare.second.price * liveShare.second.quantity) - cost;
+    }
+}

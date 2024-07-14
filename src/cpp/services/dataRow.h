@@ -18,4 +18,5 @@ struct DataRow {
     friend bool operator==(const DataRow& lhs, const DataRow& rhs);
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
     bool operator<(const DataRow& obj) const;
+    static bool descending(const DataRow& obj, const DataRow& obj2);
 };

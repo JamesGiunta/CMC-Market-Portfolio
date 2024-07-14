@@ -25,3 +25,11 @@ bool DataRow::operator<(const DataRow& obj) const {
     }
     return tradeDate < obj.tradeDate;
 }
+
+bool DataRow::descending(const DataRow& obj1, const DataRow& obj2) {
+        if (obj1.tradeDate == obj2.tradeDate) {
+            // If trade dates are the same, compare by sequence number so that the sell order comes before the buy order
+            return obj1.seq < obj2.seq;
+        }
+        return obj1.tradeDate > obj2.tradeDate;
+}
