@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include "rapidjson/document.h" 
+#include <nlohmann/json.hpp>
 #include <fstream> 
 
 size_t DataRetrieval::WriteCallback(void *contents, size_t size, size_t nmemb, void *userp){
@@ -37,4 +37,12 @@ std::string DataRetrieval::getRequest(std::string ASXCode) {
     curl_easy_cleanup(curl);
     }
     return jsonResponse;
+}
+
+void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair) {
+    std::string jsonResponse = getRequest(pair.first);
+    nlohmann::json j = nlohmann::json::parse(jsonResponse);
+    double price = j["quote"]["price"];
+    std::cout << "Price: " << price << std::endl;
+    pair.second.price = price;
 }
