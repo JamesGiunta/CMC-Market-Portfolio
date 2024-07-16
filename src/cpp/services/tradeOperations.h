@@ -9,6 +9,8 @@ struct liveShares {
     int quantity;
     double price;
     double profit;
+
+    friend bool operator==(const liveShares& lhs, const liveShares& rhs);
 };
 
 class TradeOperations {

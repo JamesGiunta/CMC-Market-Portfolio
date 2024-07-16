@@ -43,6 +43,5 @@ void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair
     std::string jsonResponse = getRequest(pair.first);
     nlohmann::json j = nlohmann::json::parse(jsonResponse);
     double price = j["quote"]["price"];
-    std::cout << "Price: " << price << std::endl;
     pair.second.price = price;
 }

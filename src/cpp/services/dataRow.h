@@ -14,9 +14,9 @@ struct DataRow {
     int quantity;
     double fee;
     int seq;
-
-    friend bool operator==(const DataRow& lhs, const DataRow& rhs);
+    
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
+    friend bool operator==(const DataRow& lhs, const DataRow& rhs);
     bool operator<(const DataRow& obj) const;
     static bool descending(const DataRow& obj, const DataRow& obj2);
 };
