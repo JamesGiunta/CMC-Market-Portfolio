@@ -38,7 +38,6 @@ void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data,
         }
         outputFile << "\n";
     }
-
     outputFile.close();
 }
 
@@ -84,7 +83,6 @@ void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
         std::cout << "Data did not load correctly. ❌" << std::endl;  
     }    
 }
-
 
 void ServiceTest::testDataRowSorting(DataRow& dr) {
     bool ascending = false;
@@ -201,7 +199,6 @@ void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
     }
 
 }
-
 
 
 int main() {

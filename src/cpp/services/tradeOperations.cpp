@@ -6,6 +6,11 @@
 #include <iostream>
 #include <cmath>
 
+bool operator==(const liveShares& lhs, const liveShares& rhs) {
+    const double epsilon = 1e-6; // Tolerance for floating-point comparison
+    return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity;
+}
+
 std::map<std::string, liveShares> TradeOperations::createLiveDataVector(std::vector<DataRow>& data){
     std::map<std::string, liveShares> liveSharesMap;
     std::sort(data.begin(), data.end());
@@ -47,7 +52,6 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
         for (auto& dataRow: data) {
             if (dataRow.orderType==DataRow::BUY) {
                 if (liveShare.first == dataRow.ASXCode) {
-                    std::cout<<dataRow.quantity<<std::endl;
                     if (dataRow.quantity <= quantity) {
                         cost += (dataRow.price * dataRow.quantity) + dataRow.fee;
                         quantity = quantity - dataRow.quantity;
@@ -68,9 +72,4 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
         // Rounds to 2 decimal places
         liveShare.second.profit = round(liveShare.second.profit*100)/100;
     }
-}
-
-bool operator==(const liveShares& lhs, const liveShares& rhs) {
-    const double epsilon = 1e-6; // Tolerance for floating-point comparison
-    return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity;
 }
