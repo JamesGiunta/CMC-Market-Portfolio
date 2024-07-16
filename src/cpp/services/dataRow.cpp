@@ -15,7 +15,7 @@ bool operator==(const DataRow& lhs, const DataRow& rhs) {
             lhs.tradeDate == rhs.tradeDate &&
            std::abs(lhs.price - rhs.price) < epsilon &&
            lhs.quantity == rhs.quantity &&
-           std::abs(lhs.fee - rhs.fee) < epsilon;
+           std::abs(lhs.fee - rhs.fee) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon;
 }
 
 bool DataRow::operator<(const DataRow& obj) const {

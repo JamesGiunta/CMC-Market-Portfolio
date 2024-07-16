@@ -17,4 +17,5 @@ class TradeOperations {
 public:
     std::map<std::string, liveShares> createLiveDataVector(std::vector<DataRow>& data);
     void calculateLiveProfit(std::map<std::string, liveShares>& liveSharesMap, std::vector<DataRow>& data);
+    void calculateProfit(std::vector<DataRow>& data);
 };

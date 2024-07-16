@@ -54,11 +54,11 @@ void ServiceTest::createTestData(DataRow& dr) {
 }
 
 std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
-    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("2024-03-19"), double(115.78), 100, double(21.12), 0};
-    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("2024-03-01"), double(11.30), 300, double(11.73), 1};
-    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("2023-12-04"), double(7.78), 300, double(10.59), 2};
-    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("2023-11-06"), double(22.78), 10, double(10.21), 3};
-    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("2023-11-06"), double(22.33), 30, double(10.19), 4};
+    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("2024-03-19"), double(115.78), 100, double(21.12), 0, 0};
+    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("2024-03-01"), double(11.30), 300, double(11.73), 0, 1};
+    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("2023-12-04"), double(7.78), 300, double(10.59), 0, 2};
+    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("2023-11-06"), double(22.78), 10, double(10.21), 0, 3};
+    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("2023-11-06"), double(22.33), 30, double(10.19), 0, 4};
 
     std::vector<DataRow> testData = {row1, row2, row3, row4, row5};
     return testData;
@@ -197,7 +197,26 @@ void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
     else {
         std::cout << "Live data vector did not create correctly. ❌" << std::endl;  
     }
+}
 
+void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("2023-11-06"), double(22.33), 30, double(10.19), 0};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("2023-11-06"), double(22.78), 10, double(10.21), -9.11};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("2023-12-04"), double(7.78), 300, double(10.59), 0};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("2024-03-01"), double(11.30), 300, double(11.73), 1033.68};
+    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("2024-03-19"), double(115.78), 100, double(21.12), 0};
+
+    std::vector<DataRow> expectedData = {expectedRow5, expectedRow4, expectedRow3, expectedRow2, expectedRow1};
+
+    std::vector<DataRow> testData = generateTestData(dr);
+    to.calculateProfit(testData);
+    std::cout << "function: testCalculateProfit" << std::endl;
+    if (testData == expectedData) {
+        std::cout << " Data profit calculated correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Data profit was not calculated correctly. ❌" << std::endl;  
+    }
 }
 
 
@@ -211,6 +230,7 @@ int main() {
     st.testLiveDataVector(dr, to);
     st.testLiveShareValue(to);
     st.testCalculateLiveProfit(dr, to);
+    st.testCalculateProfit(dr, to);
 
     return 0;
 }

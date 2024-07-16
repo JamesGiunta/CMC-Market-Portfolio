@@ -73,3 +73,33 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
         liveShare.second.profit = round(liveShare.second.profit*100)/100;
     }
 }
+
+void TradeOperations::calculateProfit(std::vector<DataRow>& data){
+    std::sort(data.begin(), data.end(), DataRow::descending);
+    for (auto& sellOrder: data) {
+        double cost = 0;
+        if (sellOrder.orderType == DataRow::SELL) {
+            int quantity = sellOrder.quantity;
+            for (auto& buyOrder: data) {
+                if ((buyOrder.orderType == DataRow::BUY) && (buyOrder.ASXCode == sellOrder.ASXCode)) {
+                    if (buyOrder.quantity <= quantity) {
+                        cost += (buyOrder.price * buyOrder.quantity) + buyOrder.fee;
+                        quantity = quantity - buyOrder.quantity;
+                    }
+                    // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
+                    else {
+                        double percentage = quantity / (double)buyOrder.quantity;  
+                        cost += (buyOrder.price * quantity) + (buyOrder.fee * percentage);
+                        quantity = 0;
+                    }
+                }
+                if (quantity == 0) {
+                    break;
+                }
+            }
+            sellOrder.profit = (sellOrder.price * sellOrder.quantity) - cost - sellOrder.fee;
+            // Rounds to 2 decimal places
+            sellOrder.profit = round(sellOrder.profit*100)/100;
+        }
+    }
+}

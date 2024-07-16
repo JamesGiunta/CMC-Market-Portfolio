@@ -15,4 +15,5 @@ class ServiceTest {
         void testLiveDataVector(DataRow& dr, TradeOperations& to);
         void testLiveShareValue(TradeOperations& to);
         void testCalculateLiveProfit(DataRow& dr, TradeOperations& to);
+        void testCalculateProfit(DataRow& dr, TradeOperations& to);
 };

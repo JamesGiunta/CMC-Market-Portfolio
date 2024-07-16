@@ -13,6 +13,7 @@ struct DataRow {
     double price;
     int quantity;
     double fee;
+    double profit;
     int seq;
     
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
