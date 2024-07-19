@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -Wall -Werror -std=c++20 -g -O -I/home/james/vcpkg/installed/x64-linux/include
 LDFLAGS = -O -L/home/james/vcpkg/installed/x64-linux/lib
-LDLIBS = -lcurl -lz -lssl -lcrypto -pthread
+LDLIBS = -lcurl -lssl -lcrypto -pthread -lxlsxwriter -lminizip -lz
 SRC_DIR = src/cpp/services
 
 dataRow.o:

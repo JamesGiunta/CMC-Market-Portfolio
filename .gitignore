@@ -5,4 +5,5 @@
 *.csv
 *.exe
 *.o
+*.xlsx
 !Makefile

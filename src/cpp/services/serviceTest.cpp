@@ -3,6 +3,7 @@
 #include "dataProcessing.h"
 #include "tradeOperations.h"
 #include "dataRetrieval.h"
+#include "xlsxwriter.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -13,6 +14,7 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+
 
 std::time_t ServiceTest::parseDate(const std::string& dateStr) {
     std::tm tm = {};
@@ -231,6 +233,25 @@ int main() {
     st.testLiveShareValue(to);
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
+
+    lxw_workbook  *workbook  = workbook_new("Report.xlsx");
+    lxw_worksheet *worksheet1 = workbook_add_worksheet(workbook, NULL);
+    worksheet_set_column(worksheet1, 0, 2, 10, NULL);
+    worksheet_set_column(worksheet1, 5, 8, 12, NULL);
+    worksheet_set_column(worksheet1, 9, 9, 15, NULL);
+    worksheet_set_column(worksheet1, 10, 10, 12, NULL);
+    worksheet_set_column(worksheet1, 11, 11, 15, NULL);
+    worksheet_set_column(worksheet1, 12, 13, 12, NULL);
+    worksheet_set_column(worksheet1, 15, 15, 15, NULL);
+    worksheet_set_column(worksheet1, 17, 19, 10, NULL);
+    worksheet_set_zoom(worksheet1, 88);
+
+    int row = 0;
+    int col = 0;
+ 
+    worksheet_write_string(worksheet1, row, col, "Hello me!", NULL);
+ 
+    return workbook_close(workbook);
 
     return 0;
 }
