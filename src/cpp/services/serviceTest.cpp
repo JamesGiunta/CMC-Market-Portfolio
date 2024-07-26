@@ -3,7 +3,6 @@
 #include "dataProcessing.h"
 #include "tradeOperations.h"
 #include "dataRetrieval.h"
-#include "xlsxwriter.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -221,6 +220,24 @@ void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
     }
 }
 
+void ServiceTest::testExcelExport(DataRow& dr, TradeOperations& to) {
+
+    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("2023-11-06"), double(22.33), 30, double(10.19), 0};
+    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("2023-11-06"), double(22.78), 10, double(10.21), -9.11};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("2023-12-04"), double(7.78), 300, double(10.59), 0};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("2024-03-01"), double(11.30), 300, double(11.73), 1033.68};
+    DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("2024-03-19"), double(115.78), 100, double(21.12), 0};
+
+    std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5};
+
+    liveShares testLiveShare1 = {20, 24.31, 32.81};
+    liveShares testLiveShare2 = {100, 110.12, -587.12};
+
+    std::map<std::string, liveShares> testLiveShares;
+    testLiveShares["ANZ"] = testLiveShare1;
+    testLiveShares["CBA"] = testLiveShare2;
+}
+
 
 int main() {
     ServiceTest st;
@@ -233,25 +250,8 @@ int main() {
     st.testLiveShareValue(to);
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
+    st.testExcelExport(dr, to);
 
-    lxw_workbook  *workbook  = workbook_new("Report.xlsx");
-    lxw_worksheet *worksheet1 = workbook_add_worksheet(workbook, NULL);
-    worksheet_set_column(worksheet1, 0, 2, 10, NULL);
-    worksheet_set_column(worksheet1, 5, 8, 12, NULL);
-    worksheet_set_column(worksheet1, 9, 9, 15, NULL);
-    worksheet_set_column(worksheet1, 10, 10, 12, NULL);
-    worksheet_set_column(worksheet1, 11, 11, 15, NULL);
-    worksheet_set_column(worksheet1, 12, 13, 12, NULL);
-    worksheet_set_column(worksheet1, 15, 15, 15, NULL);
-    worksheet_set_column(worksheet1, 17, 19, 10, NULL);
-    worksheet_set_zoom(worksheet1, 88);
-
-    int row = 0;
-    int col = 0;
  
-    worksheet_write_string(worksheet1, row, col, "Hello me!", NULL);
- 
-    return workbook_close(workbook);
-
     return 0;
 }

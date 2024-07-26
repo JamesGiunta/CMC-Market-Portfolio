@@ -16,4 +16,5 @@ class ServiceTest {
         void testLiveShareValue(TradeOperations& to);
         void testCalculateLiveProfit(DataRow& dr, TradeOperations& to);
         void testCalculateProfit(DataRow& dr, TradeOperations& to);
+        void testExcelExport(DataRow& dr, TradeOperations& to);
 };
