@@ -3,6 +3,7 @@
 #include "dataProcessing.h"
 #include "tradeOperations.h"
 #include "dataRetrieval.h"
+#include "excelWriter.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -175,8 +176,8 @@ void ServiceTest::testLiveShareValue(TradeOperations& to) {
 }
 
 void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
-    liveShares expectedLiveShare1 = {20, 24.31, 32.81};
-    liveShares expectedLiveShare2 = {100, 110.12, -587.12};
+    liveShares expectedLiveShare1 = {20, 24.31, 32.81, 454.39, 22.33};
+    liveShares expectedLiveShare2 = {100, 110.12, -587.12, 11599.12, 115.78};
 
     std::map<std::string, liveShares> expectedLiveShares;
     expectedLiveShares["ANZ"] = expectedLiveShare1;
@@ -244,13 +245,32 @@ int main() {
     DataRow dr;
     DataProcessing dp;
     TradeOperations to;
+    ExcelWriter ew;
+
     st.testLoadCSV(dr, dp);
     st.testDataRowSorting(dr);
     st.testLiveDataVector(dr, to);
     st.testLiveShareValue(to);
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
+    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, st.parseDate("2023-11-06"), double(22.33), 30, double(10.19), 0};
+    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, st.parseDate("2023-11-06"), double(22.78), 10, double(10.21), -9.11};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, st.parseDate("2023-12-04"), double(7.78), 300, double(10.59), 0};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, st.parseDate("2024-03-01"), double(11.30), 300, double(11.73), 1033.68};
+    DataRow testRow5 = {"CBA", dr.OrderType::BUY, st.parseDate("2024-03-19"), double(115.78), 100, double(21.12), 0};
+
+    std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5};
+
+    liveShares testLiveShare1 = {20, 24.31, 32.81, 454.39, 22.33};
+    liveShares testLiveShare2 = {100, 110.12, -587.12, 11599.12, 115.78};
+
+    std::map<std::string, liveShares> testLiveShares;
+    testLiveShares["ANZ"] = testLiveShare1;
+    testLiveShares["CBA"] = testLiveShare2;
+    std::sort(testData.begin(), testData.end(), DataRow::descending);
+    ew.generateExcelFile(testData, testLiveShares, dr);
     st.testExcelExport(dr, to);
+
 
  
     return 0;

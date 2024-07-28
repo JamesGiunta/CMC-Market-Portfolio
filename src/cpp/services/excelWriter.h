@@ -4,5 +4,5 @@
 
 class ExcelWriter {
 public:
-    void generateExcelFile(const std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap);
+    void generateExcelFile(const std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap, DataRow& dr);
 };

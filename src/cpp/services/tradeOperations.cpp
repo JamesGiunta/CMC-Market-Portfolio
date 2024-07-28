@@ -8,9 +8,10 @@
 
 bool operator==(const liveShares& lhs, const liveShares& rhs) {
     const double epsilon = 1e-6; // Tolerance for floating-point comparison
-    return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity;
+    return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity && (lhs.cost - rhs.cost) < epsilon && (lhs.priceBrought - rhs.priceBrought) < epsilon;
 }
 
+//TODO offline check
 std::map<std::string, liveShares> TradeOperations::createLiveDataVector(std::vector<DataRow>& data){
     std::map<std::string, liveShares> liveSharesMap;
     std::sort(data.begin(), data.end());
@@ -47,6 +48,7 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
     std::sort(data.begin(), data.end(), DataRow::descending);
     for (auto& liveShare: liveSharesMap) {
         double cost = 0;
+        double fee = 0;
 
         int quantity = liveShare.second.quantity;
         for (auto& dataRow: data) {
@@ -55,11 +57,13 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
                     if (dataRow.quantity <= quantity) {
                         cost += (dataRow.price * dataRow.quantity) + dataRow.fee;
                         quantity = quantity - dataRow.quantity;
+                        fee += dataRow.fee;
                     }
                     // If the buy order quantity is greater than the live quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
                         double percentage = quantity / (double)dataRow.quantity;  
                         cost += (dataRow.price * quantity) + (dataRow.fee * percentage);
+                        fee += dataRow.fee * percentage;
                         quantity = 0;
                     }
                 } 
@@ -71,6 +75,8 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
         liveShare.second.profit = (liveShare.second.price * liveShare.second.quantity) - cost;
         // Rounds to 2 decimal places
         liveShare.second.profit = round(liveShare.second.profit*100)/100;
+        liveShare.second.cost = cost;
+        liveShare.second.priceBrought = (cost - fee)/ liveShare.second.quantity;
     }
 }
 

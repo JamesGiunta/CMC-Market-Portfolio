@@ -20,4 +20,7 @@ struct DataRow {
     friend bool operator==(const DataRow& lhs, const DataRow& rhs);
     bool operator<(const DataRow& obj) const;
     static bool descending(const DataRow& obj, const DataRow& obj2);
+    static std::string orderTypeToString(OrderType type);
+    static std::string dateToString(std::time_t date);
 };
+

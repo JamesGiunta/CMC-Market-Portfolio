@@ -33,3 +33,22 @@ bool DataRow::descending(const DataRow& obj1, const DataRow& obj2) {
         }
         return obj1.tradeDate > obj2.tradeDate;
 }
+
+std::string DataRow::orderTypeToString(OrderType type) {
+    switch (type) {
+        case OrderType::BUY:
+            return "BUY";
+        case OrderType::SELL:
+            return "SELL";
+    
+    default:
+        std::runtime_error("Invalid order type");
+        return "";
+    }
+}
+
+std::string DataRow::dateToString(std::time_t date) {
+    char buffer[80];
+    std::strftime(buffer, sizeof(buffer), "%d-%m-%Y", std::localtime(&date));
+    return buffer;
+}
