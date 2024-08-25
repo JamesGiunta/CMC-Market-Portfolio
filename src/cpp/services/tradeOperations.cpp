@@ -81,22 +81,27 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
 }
 
 void TradeOperations::calculateProfit(std::vector<DataRow>& data){
-    std::sort(data.begin(), data.end(), DataRow::descending);
+    std::sort(data.begin(), data.end());
+    for (auto& row: data){
+        row.tempQuantity = row.quantity;
+    }
     for (auto& sellOrder: data) {
         double cost = 0;
         if (sellOrder.orderType == DataRow::SELL) {
             int quantity = sellOrder.quantity;
             for (auto& buyOrder: data) {
                 if ((buyOrder.orderType == DataRow::BUY) && (buyOrder.ASXCode == sellOrder.ASXCode)) {
-                    if (buyOrder.quantity <= quantity) {
-                        cost += (buyOrder.price * buyOrder.quantity) + buyOrder.fee;
-                        quantity = quantity - buyOrder.quantity;
+                    if (buyOrder.tempQuantity <= quantity) {
+                        cost += (buyOrder.price * buyOrder.tempQuantity) + buyOrder.fee;
+                        quantity = quantity - buyOrder.tempQuantity;
+                        buyOrder.tempQuantity -= buyOrder.tempQuantity;
                     }
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
-                        double percentage = quantity / (double)buyOrder.quantity;  
+                        double percentage = quantity / (double)buyOrder.tempQuantity;  
                         cost += (buyOrder.price * quantity) + (buyOrder.fee * percentage);
                         quantity = 0;
+                        buyOrder.tempQuantity -= quantity;
                     }
                 }
                 if (quantity == 0) {
