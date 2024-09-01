@@ -15,7 +15,7 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
     double totalProfit = profit + liveProfit;
 
     lxw_workbook *workbook  = workbook_new("Report.xlsx");
-    lxw_worksheet *worksheet1 = workbook_add_worksheet(workbook, NULL);
+    lxw_worksheet *worksheet1 = workbook_add_worksheet(workbook, "Overview");
     worksheet_set_column(worksheet1, 0, 2, 10, NULL);
     worksheet_set_column(worksheet1, 5, 8, 12, NULL);
     worksheet_set_column(worksheet1, 9, 9, 15, NULL);

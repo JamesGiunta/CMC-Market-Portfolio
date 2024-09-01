@@ -3,8 +3,8 @@
 
 std::ostream& operator<<(std::ostream& os, const DataRow& row) {
     char buffer[80];
-    std::strftime(buffer, sizeof(buffer), "%d-%m-%Y", std::localtime(&row.tradeDate));
-    os << "Share Code:" << row.ASXCode << " Order Type:" << (row.orderType == DataRow::BUY ? "BUY" : "SELL") << " Trade Date:" << buffer << " Price:" << row.price << " Quantity:" << row.quantity << " Fee:" << row.fee << std::endl;
+    std::strftime(buffer, sizeof(buffer), "%d/%m/%Y", std::localtime(&row.tradeDate));
+    os << "Share Code:" << row.ASXCode << " Order Type:" << (row.orderType == DataRow::BUY ? "BUY" : "SELL") << " Trade Date:" << buffer << " Price:" << row.price << " Quantity:" << row.quantity << " Fee:" << row.fee << "Profit:" << row.profit << std::endl;
     return os;
 }
 
@@ -49,6 +49,6 @@ std::string DataRow::orderTypeToString(OrderType type) {
 
 std::string DataRow::dateToString(std::time_t date) {
     char buffer[80];
-    std::strftime(buffer, sizeof(buffer), "%d-%m-%Y", std::localtime(&date));
+    std::strftime(buffer, sizeof(buffer), "%d/%m/%Y", std::localtime(&date));
     return buffer;
 }

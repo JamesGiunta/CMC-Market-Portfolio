@@ -44,7 +44,7 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         std::getline(ss, tradeDate, ',');
         tm tm = {};
         std::istringstream dateStream(tradeDate);
-        dateStream >> std::get_time(&tm, "%Y-%m-%d");
+        dateStream >> std::get_time(&tm, "%d/%m/%Y");
         std::time_t date = mktime(&tm);
         row.tradeDate = date;
         discardColumn(ss);
