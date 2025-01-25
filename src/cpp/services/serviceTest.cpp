@@ -213,17 +213,12 @@ void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
     std::vector<DataRow> testData = generateTestData(dr);
     to.calculateProfit(testData);
     std::cout << "function: testCalculateProfit" << std::endl;
+    
     if (testData == expectedData) {
         std::cout << " Data profit calculated correctly. ✅" << std::endl;
     } 
     else {
         std::cout << "Data profit was not calculated correctly. ❌" << std::endl;  
-        for (DataRow& row : testData) {
-            std::cout << row << std::endl;
-        }
-        for (DataRow& row : expectedData) {
-            std::cout << row << std::endl;
-        }
     }
 }
 
@@ -278,7 +273,7 @@ int main() {
     ew.generateExcelFile(testData, testLiveShares, dr);
     st.testExcelExport(dr, to);
 
-    // std::vector<DataRow> data = dp.loadCSV("resources/Confirmation-real.csv");
+    // std::vector<DataRow> data = dp.loadCSV("resources/Confirmation.csv");
     // std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
     // curl_global_init(CURL_GLOBAL_ALL);
 

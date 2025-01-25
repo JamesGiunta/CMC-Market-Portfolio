@@ -65,5 +65,33 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
         worksheet_write_number(worksheet1, row, col + 4, share.quantity, NULL);
         row++;
     }
+    // time_t earliestTime = data.back().tradeDate;
+
+    // std::time_t t = std::time(0);
+    // std::tm* date = std::localtime(&t);
+    // std::time_t currentMonth = date->tm_mon + 1;
+    // if (currentMonth >= 1 and currentMonth <= 6) {
+    //     date->tm_mon = 5;
+    //     date->tm_mday = 30;
+    //     date->tm_hour = 23;
+    //     date->tm_min = 59;
+    //     date->tm_sec = 59;
+    // }
+    // else {
+    //     date->tm_year = date->tm_year + 1;
+    //     date->tm_mon = 6;
+    //     date->tm_mday = 30;
+    //     date->tm_hour = 23;
+    //     date->tm_min = 59;
+    //     date->tm_sec = 59;
+    // }
+    // std::time_t currentTime = std::mktime(date);
+    // std::cout << std::asctime(date) << std::endl;
+
+    // while (currentTime > earliestTime) {
+
+    // }
+
+
     workbook_close(workbook);
 }

@@ -16,6 +16,7 @@ struct DataRow {
     double profit;
     int seq;
     int tempQuantity;
+    double tempFee;
     
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
     friend bool operator==(const DataRow& lhs, const DataRow& rhs);

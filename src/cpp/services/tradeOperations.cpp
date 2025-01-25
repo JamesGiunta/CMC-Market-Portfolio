@@ -84,6 +84,7 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
     std::sort(data.begin(), data.end());
     for (auto& row: data){
         row.tempQuantity = row.quantity;
+        row.tempFee = row.fee;
     }
     for (auto& sellOrder: data) {
         double cost = 0;
@@ -92,16 +93,20 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
             for (auto& buyOrder: data) {
                 if ((buyOrder.orderType == DataRow::BUY) && (buyOrder.ASXCode == sellOrder.ASXCode)) {
                     if (buyOrder.tempQuantity <= quantity) {
-                        cost += (buyOrder.price * buyOrder.tempQuantity) + buyOrder.fee;
-                        quantity = quantity - buyOrder.tempQuantity;
-                        buyOrder.tempQuantity -= buyOrder.tempQuantity;
+                        if (buyOrder.tempQuantity != 0) {
+                            cost += (buyOrder.price * buyOrder.tempQuantity) + buyOrder.tempFee;
+                        }
+                        quantity -= buyOrder.tempQuantity;
+                        buyOrder.tempQuantity = 0;
                     }
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
                         double percentage = quantity / (double)buyOrder.tempQuantity;  
-                        cost += (buyOrder.price * quantity) + (buyOrder.fee * percentage);
-                        quantity = 0;
+                        double fee = buyOrder.tempFee * percentage;
+                        cost += (buyOrder.price * quantity) + fee;
                         buyOrder.tempQuantity -= quantity;
+                        buyOrder.tempFee -= fee;
+                        quantity = 0;
                     }
                 }
                 if (quantity == 0) {
