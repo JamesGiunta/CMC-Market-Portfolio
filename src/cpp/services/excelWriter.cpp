@@ -65,32 +65,97 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
         worksheet_write_number(worksheet1, row, col + 4, share.quantity, NULL);
         row++;
     }
-    // time_t earliestTime = data.back().tradeDate;
+    time_t earliestTime = data.back().tradeDate;
 
-    // std::time_t t = std::time(0);
-    // std::tm* date = std::localtime(&t);
-    // std::time_t currentMonth = date->tm_mon + 1;
-    // if (currentMonth >= 1 and currentMonth <= 6) {
-    //     date->tm_mon = 5;
-    //     date->tm_mday = 30;
-    //     date->tm_hour = 23;
-    //     date->tm_min = 59;
-    //     date->tm_sec = 59;
-    // }
-    // else {
-    //     date->tm_year = date->tm_year + 1;
-    //     date->tm_mon = 6;
-    //     date->tm_mday = 30;
-    //     date->tm_hour = 23;
-    //     date->tm_min = 59;
-    //     date->tm_sec = 59;
-    // }
-    // std::time_t currentTime = std::mktime(date);
-    // std::cout << std::asctime(date) << std::endl;
+    std::time_t t = std::time(0);
+    std::tm* date = std::localtime(&t);
+    std::time_t currentMonth = date->tm_mon + 1;
+    if (currentMonth >= 1 and currentMonth <= 6) {
+        date->tm_mon = 5;
+        date->tm_mday = 30;
+        date->tm_hour = 23;
+        date->tm_min = 59;
+        date->tm_sec = 59;
+    }
+    else {
+        date->tm_year = date->tm_year + 1;
+        date->tm_mon = 6;
+        date->tm_mday = 30;
+        date->tm_hour = 23;
+        date->tm_min = 59;
+        date->tm_sec = 59;
+    }
+    std::time_t currentTime = std::mktime(date);
+    std::cout << std::asctime(date) << std::endl;
 
-    // while (currentTime > earliestTime) {
+    int year = date->tm_year + 1900;
+    int year2 = year - 1;
 
-    // }
+    std::string sheetName = std::to_string(year) + "-" + std::to_string(year2) + " Financial Year";
+
+    if (currentTime > earliestTime) {
+        
+        std::cout << sheetName << std::endl;
+
+    }
+    while (currentTime > earliestTime) {
+        lxw_worksheet *worksheet2 = workbook_add_worksheet(workbook, sheetName.c_str());
+
+        row = 0;
+        col = 0;
+        std::list<std::string> headers = {"Financial Year Profit", "Capitial Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "", "Date", "Type", "Share", "Price", "Quantity"};
+
+        for (const auto& header : headers) {
+            worksheet_write_string(worksheet2, row, col, header.c_str(), NULL);
+            col++;
+        }
+
+        row++;
+        double financialYearProfit = 0;
+        double CapitialGainsTax = 0;
+        std::list<double> profits = {financialYearProfit, CapitialGainsTax};
+        row++;
+        for (const auto& profit : profits) {
+            worksheet_write_string(worksheet1, row, col, std::to_string(profit).c_str(), NULL);
+            col++;
+        }
+
+        col = 3;
+        date->tm_year -= 1;
+        std::time_t yearBack = std::mktime(date);
+        for (auto share : data) {
+            if (share.orderType == DataRow::OrderType::SELL && yearBack < share.tradeDate && share.tradeDate < currentTime) {
+                worksheet_write_string(worksheet2, row, col, share.ASXCode.c_str(), NULL);
+                worksheet_write_string(worksheet2, row, col + 1, std::to_string(share.profit).c_str(), NULL);
+                worksheet_write_string(worksheet2, row, col + 2, dr.dateToString(share.tradeDate).c_str(), NULL);
+                if (share.twelveMonths) {
+                    worksheet_write_string(worksheet2, row, col + 3, "Yes", NULL);
+                }
+                else {
+                    worksheet_write_string(worksheet2, row, col + 3, "No", NULL);
+                }
+                row++;
+            }
+            
+        }
+
+        col = 8;
+        row = 1;
+        for (auto share : data) {
+            if (yearBack < share.tradeDate && share.tradeDate < currentTime) {
+                worksheet_write_string(worksheet2, row, col, dr.dateToString(share.tradeDate).c_str(), NULL);
+                worksheet_write_string(worksheet2, row, col + 1, dr.orderTypeToString(share.orderType).c_str(), NULL);
+                worksheet_write_string(worksheet2, row, col + 2, share.ASXCode.c_str(), NULL);
+                worksheet_write_number(worksheet2, row, col + 3, share.price, NULL);
+                worksheet_write_number(worksheet2, row, col + 4, share.quantity, NULL);
+                row++;
+            }
+        }
+
+        date->tm_year = date->tm_year - 1;
+
+        break;
+    }
 
 
     workbook_close(workbook);
