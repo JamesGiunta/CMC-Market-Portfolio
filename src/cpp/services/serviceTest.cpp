@@ -244,7 +244,7 @@ int main() {
     ServiceTest st;
     DataRow dr;
     DataProcessing dp;
-    // DataRetrieval drr;
+    DataRetrieval drr;
     TradeOperations to;
     ExcelWriter ew;
 
@@ -273,28 +273,28 @@ int main() {
     ew.generateExcelFile(testData, testLiveShares, dr);
     st.testExcelExport(dr, to);
 
-    // std::vector<DataRow> data = dp.loadCSV("resources/Confirmation.csv");
-    // std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
-    // curl_global_init(CURL_GLOBAL_ALL);
+    std::vector<DataRow> data = dp.loadCSV("resources/Confirmation-real.csv");
+    std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
+    curl_global_init(CURL_GLOBAL_ALL);
 
-    // std::vector<std::thread> threads(liveSharesMap.size());
-    // int i = 0;
-    // for (std::pair<const std::string, liveShares>& pair : liveSharesMap) {
-    //     threads[i] = std::thread(std::bind(&DataRetrieval::getLivePrices, &drr, std::ref(pair)));
-    //     i++;
-    // }
-    // for (std::thread& thread : threads) {
-    //     if (thread.joinable()) {
-    //         thread.join();
-    //     }
-    // }
+    std::vector<std::thread> threads(liveSharesMap.size());
+    int i = 0;
+    for (std::pair<const std::string, liveShares>& pair : liveSharesMap) {
+        threads[i] = std::thread(std::bind(&DataRetrieval::getLivePrices, &drr, std::ref(pair)));
+        i++;
+    }
+    for (std::thread& thread : threads) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
 
-    // curl_global_cleanup();
-    // to.calculateLiveProfit(liveSharesMap, data);
-    // to.calculateProfit(data);
-    // std::sort(data.begin(), data.end(), DataRow::descending);
-    // ew.generateExcelFile(data, liveSharesMap, dr);
-    // st.testExcelExport(dr, to);
+    curl_global_cleanup();
+    to.calculateLiveProfit(liveSharesMap, data);
+    to.calculateProfit(data);
+    std::sort(data.begin(), data.end(), DataRow::descending);
+    ew.generateExcelFile(data, liveSharesMap, dr);
+    st.testExcelExport(dr, to);
 
 
  
