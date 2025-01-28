@@ -98,6 +98,25 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                         }
                         quantity -= buyOrder.tempQuantity;
                         buyOrder.tempQuantity = 0;
+                        //Takes way a day and 12 months and sets hour,min,sec same for buy and sell order
+                        std::tm tmSellDate = *std::gmtime(&sellOrder.tradeDate);
+                        tmSellDate.tm_year -= 1;
+                        tmSellDate.tm_mday -= 1;
+                        tmSellDate.tm_hour = 0;
+                        tmSellDate.tm_min = 0;
+                        tmSellDate.tm_sec = 0;
+                        std::time_t sellDatePreviousYearDay = std::mktime(&tmSellDate);
+
+                        std::tm tmBuyDate = *std::gmtime(&buyOrder.tradeDate);
+                        tmBuyDate.tm_hour = 0;
+                        tmBuyDate.tm_min = 0;
+                        tmBuyDate.tm_sec = 0;
+                        
+                        std::time_t buyDate = std::mktime(&tmBuyDate);
+                        if (buyDate <= sellDatePreviousYearDay) {
+                            buyOrder.twelveMonths = true;
+                        }
+
                     }
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {

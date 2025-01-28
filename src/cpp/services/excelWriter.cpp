@@ -162,7 +162,7 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
 
         row = 0;
         col = 0;
-        std::list<std::string> headers = {"Financial Year Profit", "Capitial Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "", "Date", "Type", "Share", "Price", "Quantity"};
+        std::list<std::string> headers = {"Financial Year Profit", "Capitial Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "Percentage Held For 12 Months", "", "Date", "Type", "Share", "Price", "Quantity"};
         setUpHeader(worksheet2, headers, row, col);
 
         row++;
