@@ -18,6 +18,7 @@ struct DataRow {
     int tempQuantity;
     double tempFee;
     bool twelveMonths = false;
+    double cgt;
     
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
     friend bool operator==(const DataRow& lhs, const DataRow& rhs);
