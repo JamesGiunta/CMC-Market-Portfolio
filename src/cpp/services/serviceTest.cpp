@@ -215,29 +215,64 @@ void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
     std::cout << "function: testCalculateProfit" << std::endl;
     
     if (testData == expectedData) {
-        std::cout << " Data profit calculated correctly. ✅" << std::endl;
+        std::cout << "Data profit calculated correctly. ✅" << std::endl;
     } 
     else {
         std::cout << "Data profit was not calculated correctly. ❌" << std::endl;  
     }
 }
 
-void ServiceTest::testExcelExport(DataRow& dr, TradeOperations& to) {
+void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
+    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0};
+    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21), -9.11};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), double(7.78), 300, double(10.59), 0};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68};
+    // DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0};
 
-    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("2023-11-06"), double(22.33), 30, double(10.19), 0};
-    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("2023-11-06"), double(22.78), 10, double(10.21), -9.11};
-    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("2023-12-04"), double(7.78), 300, double(10.59), 0};
-    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("2024-03-01"), double(11.30), 300, double(11.73), 1033.68};
-    DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("2024-03-19"), double(115.78), 100, double(21.12), 0};
+    std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4};
+
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0, 0, 0};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21), -9.11, 0, 0};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 1};
+    // DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0};
+
+    std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4};
+
+    to.calculateProfit(testData);
+    for (auto& row : testData) {
+        std::cout << row.twelveMonths << std::endl;
+        std::cout << row.cgt << std::endl;
+    }
+    std::cout << "function: testcalculateCGTPercentage" << std::endl;
+    
+    if (testData == expectedData) {
+        std::cout << "Data CGT calculated correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Data CGT was not calculated correctly. ❌" << std::endl;  
+    }
+}
+
+void ServiceTest::testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew) {
+
+    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0};
+    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21), -9.11};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59), 0};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68};
+    DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0};
 
     std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5};
 
-    liveShares testLiveShare1 = {20, 24.31, 32.81};
-    liveShares testLiveShare2 = {100, 110.12, -587.12};
+    liveShares testLiveShare1 = {20, 24.31, 32.81, 454.39, 22.33};
+    liveShares testLiveShare2 = {100, 110.12, -587.12, 11599.12, 115.78};
 
     std::map<std::string, liveShares> testLiveShares;
     testLiveShares["ANZ"] = testLiveShare1;
     testLiveShares["CBA"] = testLiveShare2;
+
+    std::sort(testData.begin(), testData.end(), DataRow::descending);
+    ew.generateExcelFile(testData, testLiveShares, dr);
 }
 
 int main() {
@@ -254,24 +289,8 @@ int main() {
     st.testLiveShareValue(to);
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
-    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, st.parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0};
-    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, st.parseDate("06/11/2023"), double(22.78), 10, double(10.21), -9.11};
-    DataRow testRow3 = {"360", dr.OrderType::BUY, st.parseDate("04/12/20236"), double(7.78), 300, double(10.59), 0};
-    DataRow testRow4 = {"360", dr.OrderType::SELL, st.parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68};
-    DataRow testRow5 = {"CBA", dr.OrderType::BUY, st.parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0};
-
-    std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5};
-
-    liveShares testLiveShare1 = {20, 24.31, 32.81, 454.39, 22.33};
-    liveShares testLiveShare2 = {100, 110.12, -587.12, 11599.12, 115.78};
-
-    std::map<std::string, liveShares> testLiveShares;
-    testLiveShares["ANZ"] = testLiveShare1;
-    testLiveShares["CBA"] = testLiveShare2;
-
-    std::sort(testData.begin(), testData.end(), DataRow::descending);
-    ew.generateExcelFile(testData, testLiveShares, dr);
-    st.testExcelExport(dr, to);
+    st.testcalculateCGTPercentage(dr, to);
+    st.testExcelExport(dr, to, ew);
 
     // std::vector<DataRow> data = dp.loadCSV("resources/Confirmation-real.csv");
     // std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);

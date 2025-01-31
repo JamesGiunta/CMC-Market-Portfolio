@@ -11,7 +11,7 @@ bool operator==(const liveShares& lhs, const liveShares& rhs) {
     return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity && (lhs.cost - rhs.cost) < epsilon && (lhs.priceBrought - rhs.priceBrought) < epsilon;
 }
 
-double TradeOperations::calculateGCTPercentage(DataRow& buyOrder, DataRow& sellOrder) {
+double TradeOperations::calculateCGTPercentage(DataRow& buyOrder, DataRow& sellOrder) {
     //Takes way a day and 12 months and sets hour,min,sec same for buy and sell order
     std::tm tmSellDate = *std::gmtime(&sellOrder.tradeDate);
     tmSellDate.tm_year -= 1;
@@ -122,13 +122,13 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                         }
                         quantity -= buyOrder.tempQuantity;
                         buyOrder.tempQuantity = 0;
-                        percentageTwevleMonths += calculateGCTPercentage(buyOrder, sellOrder);
+                        percentageTwevleMonths += calculateCGTPercentage(buyOrder, sellOrder);
                         
                     }
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
                         double percentage = quantity / (double)buyOrder.tempQuantity;  
-                        percentageTwevleMonths += calculateGCTPercentage(buyOrder, sellOrder);
+                        percentageTwevleMonths += calculateCGTPercentage(buyOrder, sellOrder);
                         double fee = buyOrder.tempFee * percentage;
                         cost += (buyOrder.price * quantity) + fee;
                         buyOrder.tempQuantity -= quantity;

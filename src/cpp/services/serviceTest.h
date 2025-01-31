@@ -3,6 +3,7 @@
 #include "dataRetrieval.h"
 #include "tradeOperations.h"
 #include "dataProcessing.h"
+#include "excelWriter.h"
 
 class ServiceTest {
     public:
@@ -16,5 +17,6 @@ class ServiceTest {
         void testLiveShareValue(TradeOperations& to);
         void testCalculateLiveProfit(DataRow& dr, TradeOperations& to);
         void testCalculateProfit(DataRow& dr, TradeOperations& to);
-        void testExcelExport(DataRow& dr, TradeOperations& to);
+        void testcalculateCGTPercentage(DataRow& dr, TradeOperations& to);
+        void testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew);
 };

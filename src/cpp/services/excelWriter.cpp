@@ -101,6 +101,7 @@ void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, const s
             else {
                 worksheet_write_string(worksheet, row, col + 3, "No", NULL);
             }
+            worksheet_write_string(worksheet, row, col + 4, std::to_string(share.cgt).c_str(), NULL);
             row++;
         }        
     }
@@ -175,7 +176,7 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
         col = 3;
         writeSoldFinancialYearShares(worksheet2, data, row, col, previousFinancialYearEnd, currentFinancialYearEnd, dr);
 
-        col = 8;
+        col = 9;
         row = 1;
         writeTransactionDataWithRange(worksheet2, data, row, col, dr, previousFinancialYearEnd, currentFinancialYearEnd);
 
