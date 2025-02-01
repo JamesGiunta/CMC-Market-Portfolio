@@ -4,7 +4,7 @@
 std::ostream& operator<<(std::ostream& os, const DataRow& row) {
     char buffer[80];
     std::strftime(buffer, sizeof(buffer), "%d/%m/%Y", std::localtime(&row.tradeDate));
-    os << "Share Code:" << row.ASXCode << " Order Type:" << (row.orderType == DataRow::BUY ? "BUY" : "SELL") << " Trade Date:" << buffer << " Price:" << row.price << " Quantity:" << row.quantity << " Fee:" << row.fee << " Profit:" << row.profit << std::endl;
+    os << "Share Code:" << row.ASXCode << " Order Type:" << (row.orderType == DataRow::BUY ? "BUY" : "SELL") << " Trade Date:" << buffer << " Price:" << row.price << " Quantity:" << row.quantity << " Fee:" << row.fee << " Profit:" << row.profit << " CGT:" << row.cgt << std::endl;
     return os;
 }
 
@@ -15,7 +15,8 @@ bool operator==(const DataRow& lhs, const DataRow& rhs) {
             lhs.tradeDate == rhs.tradeDate &&
            std::abs(lhs.price - rhs.price) < epsilon &&
            lhs.quantity == rhs.quantity &&
-           std::abs(lhs.fee - rhs.fee) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon;
+           std::abs(lhs.fee - rhs.fee) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && 
+           std::abs(lhs.cgt - rhs.cgt) < epsilon;
 }
 
 bool DataRow::operator<(const DataRow& obj) const {

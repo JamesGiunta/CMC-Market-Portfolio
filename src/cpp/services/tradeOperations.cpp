@@ -13,23 +13,24 @@ bool operator==(const liveShares& lhs, const liveShares& rhs) {
 
 double TradeOperations::calculateCGTPercentage(DataRow& buyOrder, DataRow& sellOrder) {
     //Takes way a day and 12 months and sets hour,min,sec same for buy and sell order
-    std::tm tmSellDate = *std::gmtime(&sellOrder.tradeDate);
+    std::tm tmSellDate = *std::localtime(&sellOrder.tradeDate);
     tmSellDate.tm_year -= 1;
-    tmSellDate.tm_mday -= 1;
     tmSellDate.tm_hour = 0;
     tmSellDate.tm_min = 0;
     tmSellDate.tm_sec = 0;
     std::time_t sellDatePreviousYearDay = std::mktime(&tmSellDate);
 
-    std::tm tmBuyDate = *std::gmtime(&buyOrder.tradeDate);
+    std::tm tmBuyDate = *std::localtime(&buyOrder.tradeDate);
+    tmBuyDate.tm_mday += 1;
     tmBuyDate.tm_hour = 0;
     tmBuyDate.tm_min = 0;
     tmBuyDate.tm_sec = 0;
                         
     std::time_t buyDate = std::mktime(&tmBuyDate);
+
     if (buyDate <= sellDatePreviousYearDay) {
         sellOrder.twelveMonths = true;
-        return buyOrder.quantity / (double)sellOrder.quantity;
+        return buyOrder.tempQuantity / (double)sellOrder.quantity;
     }
     return 0;
 }
@@ -120,10 +121,9 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                         if (buyOrder.tempQuantity != 0) {
                             cost += (buyOrder.price * buyOrder.tempQuantity) + buyOrder.tempFee;
                         }
+                        percentageTwevleMonths += calculateCGTPercentage(buyOrder, sellOrder);
                         quantity -= buyOrder.tempQuantity;
                         buyOrder.tempQuantity = 0;
-                        percentageTwevleMonths += calculateCGTPercentage(buyOrder, sellOrder);
-                        
                     }
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
@@ -143,7 +143,13 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
             sellOrder.profit = (sellOrder.price * sellOrder.quantity) - cost - sellOrder.fee;
             // Rounds to 2 decimal places
             sellOrder.profit = round(sellOrder.profit*100)/100;
+            if (percentageTwevleMonths <= 0) {
+                percentageTwevleMonths = 2;
+            }
             sellOrder.cgt = percentageTwevleMonths * sellOrder.profit * 0.5;
+            if (sellOrder.cgt <= 0) {
+                sellOrder.cgt = 0.0;
+            }
         }
     }
 }

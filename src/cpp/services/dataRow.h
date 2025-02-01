@@ -17,8 +17,8 @@ struct DataRow {
     int seq;
     int tempQuantity;
     double tempFee;
-    bool twelveMonths = false;
     double cgt;
+    bool twelveMonths = false;
     
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
     friend bool operator==(const DataRow& lhs, const DataRow& rhs);
@@ -27,4 +27,3 @@ struct DataRow {
     static std::string orderTypeToString(OrderType type);
     static std::string dateToString(std::time_t date);
 };
-
