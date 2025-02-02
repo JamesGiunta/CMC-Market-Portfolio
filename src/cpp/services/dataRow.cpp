@@ -13,6 +13,7 @@ bool operator==(const DataRow& lhs, const DataRow& rhs) {
     return lhs.ASXCode == rhs.ASXCode &&
             lhs.orderType == rhs.orderType &&
             lhs.tradeDate == rhs.tradeDate &&
+            lhs.settlementDate == rhs.settlementDate &&
            std::abs(lhs.price - rhs.price) < epsilon &&
            lhs.quantity == rhs.quantity &&
            std::abs(lhs.fee - rhs.fee) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && 

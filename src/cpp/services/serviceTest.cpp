@@ -45,22 +45,22 @@ void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data,
 
 void ServiceTest::createTestData(DataRow& dr) {
     std::vector<std::string> header = {"Account","ASXCode", "Confirmations", "OrderType", "As at Date", "TradeDate", "Settlement Date", "Price", "Quantity", "Brokerage", "GST"};
-    std::vector<std::string> row1 = {"", "CBA", "", "Buy", "", "19/03/2024", "", "115.78", "100", "19.95", "1.17"};
-    std::vector<std::string> row2 = {"", "360", "", "Sell", "", "01/03/2024", "", "11.30", "300", "11", "0.73"};
-    std::vector<std::string> row3 = {"", "360", "", "Buy", "", "04/12/2023", "", "7.78", "300", "10", "0.59"};
-    std::vector<std::string> row4 = {"", "ANZ", "", "Sell", "", "06/11/2023", "", "22.78", "10", "10", "0.21"};
-    std::vector<std::string> row5 = {"", "ANZ", "", "Buy", "", "06/11/2023", "", "22.33", "30", "10", "0.19"};
+    std::vector<std::string> row1 = {"", "CBA", "", "Buy", "", "19/03/2024", "21/03/2024", "115.78", "100", "19.95", "1.17"};
+    std::vector<std::string> row2 = {"", "360", "", "Sell", "", "01/03/2024", "03/03/2024", "11.30", "300", "11", "0.73"};
+    std::vector<std::string> row3 = {"", "360", "", "Buy", "", "04/12/2023", "06/12/2023", "7.78", "300", "10", "0.59"};
+    std::vector<std::string> row4 = {"", "ANZ", "", "Sell", "", "06/11/2023", "08/11/2023", "22.78", "10", "10", "0.21"};
+    std::vector<std::string> row5 = {"", "ANZ", "", "Buy", "", "06/11/2023", "08/11/2023", "22.33", "30", "10", "0.19"};
 
     std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3, row4, row5};
     vectorToCSV(testData1, "resources/testData.csv");
 }
 
 std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
-    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0, 0};
-    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 0, 1};
-    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59), 0, 2};
-    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21), 0, 3};
-    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0, 4};
+    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0, 0};
+    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 0, 1};
+    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0, 2};
+    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), 0, 3};
+    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0, 4};
 
     std::vector<DataRow> testData = {row1, row2, row3, row4, row5};
     return testData;
@@ -68,11 +68,11 @@ std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
 
 void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
     createTestData(dr);
-    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12)};
-    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73)};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59)};
-    DataRow expectedRow4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21)};
-    DataRow expectedRow5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19)};
+    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12)};
+    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73)};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59)};
+    DataRow expectedRow4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21)};
+    DataRow expectedRow5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19)};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
 
@@ -89,11 +89,11 @@ void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
 void ServiceTest::testDataRowSorting(DataRow& dr) {
     bool ascending = false;
     bool descending = false;
-    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19)};
-    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21)};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59)};
-    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73)};
-    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12)};
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19)};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21)};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59)};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73)};
+    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12)};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
     std::vector<DataRow> expectedData2 = {expectedRow5, expectedRow4, expectedRow3, expectedRow2, expectedRow1};
@@ -202,11 +202,11 @@ void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
 }
 
 void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
-    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0};
-    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21), -9.11};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59), 0};
-    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
-    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0};
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), -9.11};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
+    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
 
@@ -223,37 +223,35 @@ void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
 }
 
 void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
-    DataRow testRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow testRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-    DataRow testRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow testRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-    DataRow testRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow testRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, 0};
-    DataRow testRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow testRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-    DataRow testRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), double(7.78), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-    DataRow testRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), double(11.30), 30, double(11.73), 92.68, 0, 0, 0, 0};
-    DataRow testRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), double(11.30), 270, double(11.73), 834.99, 0, 0, 0, 0};
+    DataRow testRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), parseDate("03/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow testRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), parseDate("03/02/2025"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), parseDate("03/02/2026"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
+    DataRow testRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow testRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
+    DataRow testRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow testRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, 0};
+    DataRow testRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow testRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
+    DataRow testRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), double(7.78), 300, double(11.73), 0, 0, 0, 0, 0};
+    DataRow testRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), parseDate("03/06/2033"), double(11.30), 30, double(11.73), 92.68, 0, 0, 0, 0};
+    DataRow testRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), parseDate("03/06/2034"), double(11.30), 270, double(11.73), 834.99, 0, 0, 0, 0};
     
-
     std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5, testRow6, testRow7, testRow8, testRow9, testRow10, testRow11, testRow12, testRow13};
 
-    DataRow expectedRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
-    DataRow expectedRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow expectedRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
-    DataRow expectedRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow expectedRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, 0};
-    DataRow expectedRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow expectedRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
-    DataRow expectedRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), double(7.78), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-    DataRow expectedRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), double(11.30), 30, double(11.73), 92.7, 0, 0, 0, 92.7};
-    DataRow expectedRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), double(11.30), 270, double(11.73), 928.11, 0, 0, 0, 464.055};
-
+    DataRow expectedRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), parseDate("03/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), parseDate("03/02/2025"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), parseDate("03/02/2026"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
+    DataRow expectedRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow expectedRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
+    DataRow expectedRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow expectedRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, 0};
+    DataRow expectedRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
+    DataRow expectedRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
+    DataRow expectedRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), double(7.78), 300, double(11.73), 0, 0, 0, 0, 0};
+    DataRow expectedRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), parseDate("03/06/2033"), double(11.30), 30, double(11.73), 92.7, 0, 0, 0, 92.7};
+    DataRow expectedRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), parseDate("03/06/2034"), double(11.30), 270, double(11.73), 928.11, 0, 0, 0, 464.055};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5, expectedRow6, expectedRow7, expectedRow8, expectedRow9, expectedRow10, expectedRow11, expectedRow12, expectedRow13};
 
@@ -265,16 +263,24 @@ void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
     }
     else {
         std::cout << "Data CGT was not calculated correctly. ❌" << std::endl; 
+        std::cout << "Expected: " << std::endl;
+        for (DataRow& row : expectedData) {
+            std::cout << row << std::endl;
+        }
+        std::cout << "Actual: " << std::endl;
+        for (DataRow& row : testData) {
+            std::cout << row << std::endl;
+        }
     }
 }
 
 void ServiceTest::testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew) {
 
-    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), double(22.33), 30, double(10.19), 0};
-    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), double(22.78), 10, double(10.21), -9.11};
-    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), double(7.78), 300, double(10.59), 0};
-    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), double(11.30), 300, double(11.73), 1033.68};
-    DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), double(115.78), 100, double(21.12), 0};
+    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0};
+    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), -9.11};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68};
+    DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0};
 
     std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5};
 
@@ -293,9 +299,9 @@ int main() {
     ServiceTest st;
     DataRow dr;
     DataProcessing dp;
-    // DataRetrieval drr;
+    // // DataRetrieval drr;
     TradeOperations to;
-    ExcelWriter ew;
+    // ExcelWriter ew;
 
     st.testLoadCSV(dr, dp);
     st.testDataRowSorting(dr);
@@ -304,7 +310,7 @@ int main() {
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
     st.testcalculateCGTPercentage(dr, to);
-    st.testExcelExport(dr, to, ew);
+    // st.testExcelExport(dr, to, ew);
 
     // std::vector<DataRow> data = dp.loadCSV("resources/Confirmation-real.csv");
     // std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);

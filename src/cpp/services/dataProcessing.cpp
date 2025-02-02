@@ -47,7 +47,13 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         dateStream >> std::get_time(&tm, "%d/%m/%Y");
         std::time_t date = mktime(&tm);
         row.tradeDate = date;
-        discardColumn(ss);
+        std::string settlementDate;
+        std::getline(ss, settlementDate, ',');
+        tm = {};
+        dateStream = std::istringstream(settlementDate);
+        dateStream >> std::get_time(&tm, "%d/%m/%Y");
+        date = mktime(&tm);
+        row.settlementDate = date;
         std::string price;
         std::getline(ss, price, ',');
         row.price = std::stod(price);

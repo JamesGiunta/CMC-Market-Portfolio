@@ -10,6 +10,7 @@ struct DataRow {
     std::string ASXCode;
     OrderType orderType;
     std::time_t tradeDate;
+    std::time_t settlementDate;
     double price;
     int quantity;
     double fee;
