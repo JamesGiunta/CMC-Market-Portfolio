@@ -2,10 +2,27 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <regex>
+// #include <string>
+// #include <iostream>
+
 
 void DataProcessing::discardColumn(std::stringstream& ss){
     std::string discard;
     std::getline(ss, discard, ',');
+}
+
+std::time_t DataProcessing::regexDate(std::string& date){
+    tm tm = {};
+    std::istringstream dateStream(date);
+    std::regex datePattern("\\d{1,2}\\/\\d{1,2}\\/\\d{3,4}"); 
+    if (std::regex_match (date, datePattern)){
+        dateStream >> std::get_time(&tm, "%d/%m/%Y");
+    } 
+    else {
+        dateStream >> std::get_time(&tm, "%Y-%m-%d");
+    }
+    return std::mktime(&tm);
 }
 
 std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
@@ -42,18 +59,14 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         discardColumn(ss);
         std::string tradeDate;
         std::getline(ss, tradeDate, ',');
-        tm tm = {};
-        std::istringstream dateStream(tradeDate);
-        dateStream >> std::get_time(&tm, "%d/%m/%Y");
-        std::time_t date = mktime(&tm);
+        std::time_t date = regexDate(tradeDate);
         row.tradeDate = date;
+
         std::string settlementDate;
         std::getline(ss, settlementDate, ',');
-        tm = {};
-        dateStream = std::istringstream(settlementDate);
-        dateStream >> std::get_time(&tm, "%d/%m/%Y");
-        date = mktime(&tm);
+        date = regexDate(settlementDate);
         row.settlementDate = date;
+
         std::string price;
         std::getline(ss, price, ',');
         row.price = std::stod(price);
