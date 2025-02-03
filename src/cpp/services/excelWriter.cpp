@@ -3,7 +3,7 @@
 #include <xlsxwriter.h>
 #include <list>
 
-void ExcelWriter::setupOverviewSheet(lxw_worksheet *worksheet1){
+void ExcelWriter::setupOverviewSheet(lxw_worksheet* worksheet1){
     worksheet_set_column(worksheet1, 0, 2, 10, NULL);
     worksheet_set_column(worksheet1, 5, 8, 12, NULL);
     worksheet_set_column(worksheet1, 9, 9, 15, NULL);
