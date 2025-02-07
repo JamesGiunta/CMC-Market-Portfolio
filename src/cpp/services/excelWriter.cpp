@@ -18,7 +18,7 @@ void ExcelWriter::setupOverviewSheet(lxw_worksheet* worksheet1){
 void ExcelWriter::setFinancialSheet(lxw_worksheet* worksheet1){
     worksheet_set_column(worksheet1, 0, 1, 18, NULL);
     worksheet_set_column(worksheet1, 4, 5, 12, NULL);
-    worksheet_set_column(worksheet1, 6, 6, 18, NULL);
+    worksheet_set_column(worksheet1, 6, 6, 20, NULL);
     worksheet_set_column(worksheet1, 7, 7, 24, NULL);
     worksheet_set_column(worksheet1, 9, 9, 15, NULL);
     worksheet_set_column(worksheet1, 10, 10, 12, NULL);
@@ -103,7 +103,7 @@ std::time_t ExcelWriter::caculateFinanicalYearEndDate(std::tm* date) {
     return std::mktime(date);
 }
 
-void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, const std::vector<DataRow>& data, int& row, int& col, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, DataRow& dr, double& financialYearProfit, double& capitialGainsTax) {
+void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, const std::vector<DataRow>& data, int& row, int& col, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, DataRow& dr, double& financialYearProfit, double& capitalGainsTax) {
     for (auto share : data) {
         if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.tradeDate && share.tradeDate < currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, share.ASXCode.c_str(), NULL);
@@ -117,7 +117,7 @@ void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, const s
             }
             worksheet_write_string(worksheet, row, col + 4, std::to_string(share.cgt).c_str(), NULL);
             financialYearProfit += share.profit;
-            capitialGainsTax += share.cgt;
+            capitalGainsTax += share.cgt;
             row++;
         }        
     }
@@ -182,18 +182,18 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
 
         row = 0;
         col = 0;
-        std::list<std::string> headers = {"Financial Year Profit", "Capitial Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "Capitial Gains Tax On Share", "", "Date", "Type", "Share", "Price", "Quantity"};
+        std::list<std::string> headers = {"Financial Year Profit", "Capital Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "Capital Gains Tax On Share", "", "Date", "Type", "Share", "Price", "Quantity"};
         setUpHeader(worksheet2, headers, row, col, cellFormat);
 
         row++;
         double financialYearProfit = 0;
-        double capitialGainsTax = 0;
+        double capitalGainsTax = 0;
         col = 3;
-        writeSoldFinancialYearShares(worksheet2, data, row, col, previousFinancialYearEnd, currentFinancialYearEnd, dr, financialYearProfit, capitialGainsTax);
+        writeSoldFinancialYearShares(worksheet2, data, row, col, previousFinancialYearEnd, currentFinancialYearEnd, dr, financialYearProfit, capitalGainsTax);
 
         col = 0;
         row = 1;
-        std::list<double> profits = {financialYearProfit, capitialGainsTax};
+        std::list<double> profits = {financialYearProfit, capitalGainsTax};
         writeProfitData(worksheet2, profits, row, col);
 
 

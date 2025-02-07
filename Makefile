@@ -25,7 +25,10 @@ dataRetrieval.o:
 excelWriter.o:
 	$(CXX) $(CXXFLAGS) -c $(SRC_DIR)/excelWriter.cpp -o $(SRC_DIR)/excelWriter.o
 
-serviceTest: $(SRC_DIR)/serviceTest.o $(SRC_DIR)/dataProcessing.o $(SRC_DIR)/dataRow.o $(SRC_DIR)/tradeOperations.o $(SRC_DIR)/dataRetrieval.o $(SRC_DIR)/excelWriter.o
+corporateShareActions.o:
+	$(CXX) $(CXXFLAGS) -c $(SRC_DIR)/corporateShareActions.cpp -o $(SRC_DIR)/corporateShareActions.o
+
+serviceTest: $(SRC_DIR)/serviceTest.o $(SRC_DIR)/dataProcessing.o $(SRC_DIR)/dataRow.o $(SRC_DIR)/tradeOperations.o $(SRC_DIR)/dataRetrieval.o $(SRC_DIR)/excelWriter.o $(SRC_DIR)/corporateShareActions.o
 	$(CXX) $(LDFLAGS) -o serviceTest $^ $(LDLIBS)
 
 clean:
