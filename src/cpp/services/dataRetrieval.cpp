@@ -17,6 +17,9 @@ std::string DataRetrieval::getRequest(std::string ASXCode) {
     }
     std::string url = "https://quoteapi.com/api/v5/symbols/" + ASXCode + ".asx?appID=4ec85c869fdae450&averages=1&liveness=delayed";
     CURL *curl = curl_easy_init();
+    if (!curl) {
+        throw std::runtime_error("Failed to initialise curl");
+    }
     CURLcode res;
     std::string jsonResponse;
     if (curl) {
