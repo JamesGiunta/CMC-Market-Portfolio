@@ -3,6 +3,6 @@
 #include "dataProcessing.h"
 class CoparateShareActions {
 public:
-    void getSpecialCoporateActionsCLI(DataRow& dr, DataProcessing& dp);
-    void getShareConsolidation(DataRow& dr);
+    std::vector<DataRow> getSpecialCoporateActionsCLI(DataRow& dr, DataProcessing& dp);
+    std::vector<DataRow> getShareConsolidation(DataRow& dr, DataProcessing& dp, std::vector<DataRow>& data);
 };

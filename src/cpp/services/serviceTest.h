@@ -4,6 +4,7 @@
 #include "tradeOperations.h"
 #include "dataProcessing.h"
 #include "excelWriter.h"
+#include "corporateShareActions.h"
 
 class ServiceTest {
     public:

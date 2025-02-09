@@ -302,6 +302,7 @@ int main() {
     DataRetrieval drr;
     TradeOperations to;
     ExcelWriter ew;
+    CoparateShareActions csa;
 
     st.testLoadCSV(dr, dp);
     st.testDataRowSorting(dr);
@@ -333,6 +334,8 @@ int main() {
     to.calculateProfit(data);
     std::sort(data.begin(), data.end(), DataRow::descending);
     ew.generateExcelFile(data, liveSharesMap, dr);
+    std::vector<DataRow> specialData;
+    specialData = csa.getSpecialCoporateActionsCLI(dr, dp);
     // st.testExcelExport(dr, to);
 
 
