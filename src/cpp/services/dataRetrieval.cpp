@@ -42,6 +42,7 @@ std::string DataRetrieval::getRequest(std::string ASXCode) {
     return jsonResponse;
 }
 
+//TODO: Internet check before calling getRequest
 void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair) {
     std::string jsonResponse = getRequest(pair.first);
     nlohmann::json j = nlohmann::json::parse(jsonResponse);

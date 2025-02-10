@@ -33,7 +33,6 @@ void TradeOperations::calculateCGTPercentage(DataRow& buyOrder, DataRow& sellOrd
     }
 }
 
-//TODO offline check
 std::map<std::string, liveShares> TradeOperations::createLiveDataVector(std::vector<DataRow>& data){
     std::map<std::string, liveShares> liveSharesMap;
     std::sort(data.begin(), data.end());
