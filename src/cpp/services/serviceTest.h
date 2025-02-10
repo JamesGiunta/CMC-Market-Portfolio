@@ -8,16 +8,18 @@
 
 class ServiceTest {
     public:
-        std::time_t parseDate(const std::string& dateStr);
-        void vectorToCSV(const std::vector<std::vector<std::string>>& data, const std::string& filepath);
-        void createTestData(DataRow& dr);
-        std::vector<DataRow> generateTestData(DataRow& dr);
-        void testLoadCSV(DataRow& dr, DataProcessing& dp);
-        void testDataRowSorting(DataRow& dr);
-        void testLiveDataVector(DataRow& dr, TradeOperations& to);
-        void testLiveShareValue(TradeOperations& to);
-        void testCalculateLiveProfit(DataRow& dr, TradeOperations& to);
-        void testCalculateProfit(DataRow& dr, TradeOperations& to);
-        void testcalculateCGTPercentage(DataRow& dr, TradeOperations& to);
-        void testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew);
+        static void testLoadCSV(DataRow& dr, DataProcessing& dp);
+        static void testDataRowSorting(DataRow& dr);
+        static void testLiveDataVector(DataRow& dr, TradeOperations& to);
+        static void testLiveShareValue(TradeOperations& to);
+        static void testCalculateLiveProfit(DataRow& dr, TradeOperations& to);
+        static void testCalculateProfit(DataRow& dr, TradeOperations& to);
+        static void testcalculateCGTPercentage(DataRow& dr, TradeOperations& to);
+        static void testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew);
+
+    private:
+        static std::time_t parseDate(const std::string& dateStr);
+        static void vectorToCSV(const std::vector<std::vector<std::string>>& data, const std::string& filepath);
+        static void createTestData(DataRow& dr);
+        static std::vector<DataRow> generateTestData(DataRow& dr);
 };

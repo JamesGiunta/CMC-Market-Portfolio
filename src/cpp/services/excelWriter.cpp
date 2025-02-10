@@ -29,21 +29,21 @@ void ExcelWriter::setFinancialSheet(lxw_worksheet* worksheet1){
     worksheet_set_zoom(worksheet1, 110);
 }
 
-void ExcelWriter::setUpHeader(lxw_worksheet* worksheet, std::list<std::string> headers, int& row, int& col, lxw_format* cellFormat) {
+void ExcelWriter::setUpHeader(lxw_worksheet* worksheet, std::list<std::string> headers) {
     for (const auto& header : headers) {
         worksheet_write_string(worksheet, row, col, header.c_str(), cellFormat);
         col++;
     }
 }
 
-void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<double> profits, int& row, int& col) {
+void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<double> profits) {
     for (const auto& profit : profits) {
         worksheet_write_string(worksheet, row, col, std::to_string(profit).c_str(), NULL);
         col++;
     }
 }
 
-void ExcelWriter::showLiveShares(lxw_worksheet* worksheet, std::map<std::string, liveShares>& liveSharesMap, int& row, int& col) {
+void ExcelWriter::showLiveShares(lxw_worksheet* worksheet) {
     for (auto liveShare : liveSharesMap) {
         worksheet_write_string(worksheet, row, col, liveShare.first.c_str(), NULL);
         worksheet_write_number(worksheet, row, col + 1, liveShare.second.price, NULL);
@@ -59,7 +59,7 @@ void ExcelWriter::showLiveShares(lxw_worksheet* worksheet, std::map<std::string,
     }
 }
 
-void ExcelWriter::writeTransactionData(lxw_worksheet* worksheet, const std::vector<DataRow>& data, int& row, int& col, DataRow& dr) {
+void ExcelWriter::writeTransactionData(lxw_worksheet* worksheet) {
     for (auto share : data) {
         worksheet_write_string(worksheet, row, col, dr.dateToString(share.tradeDate).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 1, dr.orderTypeToString(share.orderType).c_str(), NULL);
@@ -70,7 +70,7 @@ void ExcelWriter::writeTransactionData(lxw_worksheet* worksheet, const std::vect
     }
 }
 
-void ExcelWriter::writeTransactionDataWithRange(lxw_worksheet* worksheet, const std::vector<DataRow>& data, int& row, int& col, DataRow& dr, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd) {
+void ExcelWriter::writeTransactionDataWithRange(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd) {
     for (auto share : data) {
         if (previousFinancialYearEnd < share.tradeDate && share.tradeDate < currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, dr.dateToString(share.tradeDate).c_str(), NULL);
@@ -103,7 +103,7 @@ std::time_t ExcelWriter::caculateFinanicalYearEndDate(std::tm* date) {
     return std::mktime(date);
 }
 
-void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, const std::vector<DataRow>& data, int& row, int& col, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, DataRow& dr, double& financialYearProfit, double& capitalGainsTax) {
+void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, double& financialYearProfit, double& capitalGainsTax) {
     for (auto share : data) {
         if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.tradeDate && share.tradeDate < currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, share.ASXCode.c_str(), NULL);
@@ -123,7 +123,7 @@ void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, const s
     }
 }
 
-void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap, DataRow& dr) {
+void ExcelWriter::generateExcelFile() {
     double liveProfit = 0;
     for (auto liveShare : liveSharesMap) {
         liveProfit += liveShare.second.profit;
@@ -134,28 +134,26 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
     }
     double totalProfit = profit + liveProfit;
 
-    lxw_workbook *workbook  = workbook_new("Report.xlsx");
     lxw_worksheet *worksheet1 = workbook_add_worksheet(workbook, "Overview");
-    lxw_format *cellFormat = workbook_add_format(workbook);
-    format_set_bold(cellFormat);
     setupOverviewSheet(worksheet1);
-    int col = 0;
-    int row = 0;
+
+    row = 0;
+    col = 0;
 
     std::list<std::string> headers = {"Total Profit", "Sold Profit", "Live Profit", "", "Share", "Current Price", "Price Brought", "Change", "Change %", "Quantity", "Cost", "Market Value", "Profit", "Profit %", "", "Date", "Type", "Share", "Price", "Quantity"};
-    setUpHeader(worksheet1, headers, row, col, cellFormat);
+    setUpHeader(worksheet1, headers);
 
     std::list<double> profits = {totalProfit, profit, liveProfit};
     col = 0;
     row++;
-    writeProfitData(worksheet1, profits, row, col);
+    writeProfitData(worksheet1, profits);
 
     col = 4;
-    showLiveShares(worksheet1, liveSharesMap, row, col);
+    showLiveShares(worksheet1);
 
     col = 15;
     row = 1;
-    writeTransactionData(worksheet1, data, row, col, dr);
+    writeTransactionData(worksheet1);
 
     
     time_t earliestTime = data.back().tradeDate;
@@ -183,25 +181,24 @@ void ExcelWriter::generateExcelFile(const std::vector<DataRow>& data, std::map<s
         row = 0;
         col = 0;
         std::list<std::string> headers = {"Financial Year Profit", "Capital Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "Capital Gains Tax On Share", "", "Date", "Type", "Share", "Price", "Quantity"};
-        setUpHeader(worksheet2, headers, row, col, cellFormat);
+        setUpHeader(worksheet2, headers);
 
         row++;
         double financialYearProfit = 0;
         double capitalGainsTax = 0;
         col = 3;
-        writeSoldFinancialYearShares(worksheet2, data, row, col, previousFinancialYearEnd, currentFinancialYearEnd, dr, financialYearProfit, capitalGainsTax);
+        writeSoldFinancialYearShares(worksheet2, previousFinancialYearEnd, currentFinancialYearEnd, financialYearProfit, capitalGainsTax);
 
         col = 0;
         row = 1;
         std::list<double> profits = {financialYearProfit, capitalGainsTax};
-        writeProfitData(worksheet2, profits, row, col);
+        writeProfitData(worksheet2, profits);
 
 
         col = 9;
         row = 1;
-        writeTransactionDataWithRange(worksheet2, data, row, col, dr, previousFinancialYearEnd, currentFinancialYearEnd);
+        writeTransactionDataWithRange(worksheet2, previousFinancialYearEnd, currentFinancialYearEnd);
 
         currentFinancialYearEnd = previousFinancialYearEnd;
     }
-    workbook_close(workbook);
 }

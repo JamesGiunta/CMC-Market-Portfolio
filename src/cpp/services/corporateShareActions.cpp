@@ -1,8 +1,8 @@
 #include "corporateShareActions.h"
 
-std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(DataRow& dr, DataProcessing& dp){
+void CoparateShareActions::getSpecialCoporateActionsCLI(){
     char response;
-    std::vector<DataRow> data;
+    std::vector<DataRow> userEnteredData;
     DataRow row;
     double price;
     int quantity;
@@ -41,7 +41,7 @@ std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(DataRow&
             row.profit = 0;
             row.seq = 0;
             row.cgt = 0;
-            data.push_back(row);
+            userEnteredData.push_back(row);
             std::cout << "Do you have another share takeover to enter? (Y/N): ";
             std::cin >> response;
             if (response == 'N' || response == 'n') {
@@ -49,10 +49,10 @@ std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(DataRow&
             }  
         }
     }
-    return data;
+    data.insert(data.end(), userEnteredData.begin(), userEnteredData.end());
 }
 
-std::vector<DataRow> CoparateShareActions::getShareConsolidation(DataRow& dr, DataProcessing& dp, std::vector<DataRow>& data){
+std::vector<DataRow> CoparateShareActions::getShareConsolidationCLI(){
     char response;
     std::vector<ShareSplit> shareSplit;
     ShareSplit row;

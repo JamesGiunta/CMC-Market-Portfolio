@@ -82,6 +82,7 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         row.profit = 0;
         row.seq = seq;
         seq++;
+        row.cgt = 0;
 
         data.push_back(row);
     }

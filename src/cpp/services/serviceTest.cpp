@@ -292,7 +292,7 @@ void ServiceTest::testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter&
     testLiveShares["CBA"] = testLiveShare2;
 
     std::sort(testData.begin(), testData.end(), DataRow::descending);
-    ew.generateExcelFile(testData, testLiveShares, dr);
+    ew.generateExcelFile();
 }
 
 int main() {
@@ -301,8 +301,6 @@ int main() {
     DataProcessing dp;
     DataRetrieval drr;
     TradeOperations to;
-    ExcelWriter ew;
-    CoparateShareActions csa;
 
     st.testLoadCSV(dr, dp);
     st.testDataRowSorting(dr);
@@ -314,6 +312,8 @@ int main() {
     // st.testExcelExport(dr, to, ew);
 
     std::vector<DataRow> data = dp.loadCSV("resources/Confirmation1.csv");
+    CoparateShareActions csa(dr, dp, data);
+    
     std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
     curl_global_init(CURL_GLOBAL_ALL);
 
@@ -333,9 +333,10 @@ int main() {
     to.calculateLiveProfit(liveSharesMap, data);
     to.calculateProfit(data);
     std::sort(data.begin(), data.end(), DataRow::descending);
-    ew.generateExcelFile(data, liveSharesMap, dr);
+    ExcelWriter ew(dr, "Report.xlsx", data, liveSharesMap);
+    ew.generateExcelFile();
     std::vector<DataRow> specialData;
-    specialData = csa.getSpecialCoporateActionsCLI(dr, dp);
+    csa.getSpecialCoporateActionsCLI();
     // st.testExcelExport(dr, to);
 
 
