@@ -28,9 +28,3 @@ struct DataRow {
     static std::string orderTypeToString(OrderType type);
     static std::string dateToString(std::time_t date);
 };
-
-struct ShareSplit {
-    std::string ASXCode;
-    int ratio;
-    time_t tradeDate;
-};

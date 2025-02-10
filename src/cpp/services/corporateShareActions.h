@@ -1,6 +1,8 @@
 #include <iostream>
 #include "dataRow.h"
 #include "dataProcessing.h"
+#include "tradeOperations.h"
+#
 class CoparateShareActions {
 public:
     CoparateShareActions(DataRow& dr, DataProcessing& dp, std::vector<DataRow>& data) :
@@ -8,7 +10,8 @@ public:
         dp(dp),
         data(data) {}
     void getSpecialCoporateActionsCLI();
-    std::vector<DataRow> getShareConsolidationCLI();
+    void getShareConsolidationCLI();
+    void getShareNameChange();
 private:
     DataRow& dr;
     DataProcessing& dp;

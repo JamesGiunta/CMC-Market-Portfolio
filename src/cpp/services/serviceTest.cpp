@@ -329,6 +329,10 @@ int main() {
         }
     }
 
+    csa.getSpecialCoporateActionsCLI();
+    csa.getShareConsolidationCLI();
+    csa.getShareNameChange();
+
     curl_global_cleanup();
     to.calculateLiveProfit(liveSharesMap, data);
     to.calculateProfit(data);
@@ -336,7 +340,6 @@ int main() {
     ExcelWriter ew(dr, "Report.xlsx", data, liveSharesMap);
     ew.generateExcelFile();
     std::vector<DataRow> specialData;
-    csa.getSpecialCoporateActionsCLI();
     // st.testExcelExport(dr, to);
 
 

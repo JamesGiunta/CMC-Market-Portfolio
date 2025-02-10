@@ -52,11 +52,9 @@ void CoparateShareActions::getSpecialCoporateActionsCLI(){
     data.insert(data.end(), userEnteredData.begin(), userEnteredData.end());
 }
 
-std::vector<DataRow> CoparateShareActions::getShareConsolidationCLI(){
+void CoparateShareActions::getShareConsolidationCLI(){
     char response;
-    std::vector<ShareSplit> shareSplit;
-    ShareSplit row;
-    std::cout << "Have you incurred any share splits (Y/N)";
+    std::cout << "Have you incurred any share splits (Y/N): ";
     std::cin >> response;
     int ratio;
     std::string dateString;
@@ -75,10 +73,12 @@ std::vector<DataRow> CoparateShareActions::getShareConsolidationCLI(){
             std::cout << "When did the share split occur (dd/mm/yyyy): ";
             std::cin >> dateString;
             date = dp.regexDate(dateString);
-            row.ASXCode = ASXCode;
-            row.ratio = ratio;
-            row.tradeDate = date;
-            shareSplit.push_back(row);
+            for (DataRow& row : data) {
+                if (row.ASXCode == ASXCode && row.tradeDate < date) {
+                    row.quantity *= ratio;
+                    row.price /= ratio;
+                }
+            }
             std::cout << "Do you have another share split to enter? (Y/N): ";
             std::cin >> response;
             if (response == 'N' || response == 'n') {
@@ -86,8 +86,43 @@ std::vector<DataRow> CoparateShareActions::getShareConsolidationCLI(){
             }  
         }
     }
-    // TODO updates qualtity of shares in data vector and test
-    return data;
+}
 
+void CoparateShareActions::getShareNameChange(){
+    char response;
+    std::cout << "Have you incurred any share name changes (Y/N): ";
+    std::cin >> response;
+    std::string ASXCode;
+    std::string newASXCode;
+    std::string dateString;
+    std::time_t date;
+    if (response == 'Y' || response == 'y') {
+        bool finished = false;
+        while (!finished) {
+            std::cout << "What was the share's ASX code: ";
+            std::cin >> ASXCode;
+            for (std::size_t i = 0; i < ASXCode.length(); i++) {
+                ASXCode[i] = toupper(ASXCode[i]);
+            }
+            std::cout << "What is the new ASX code: ";
+            std::cin >> newASXCode;
+            for (std::size_t i = 0; i < newASXCode.length(); i++) {
+                newASXCode[i] = toupper(newASXCode[i]);
+            }
+            std::cout << "When did the share name change occur (dd/mm/yyyy): ";
+            std::cin >> dateString;
+            date = dp.regexDate(dateString);
+            for (DataRow& row : data) {
+                if (row.ASXCode == ASXCode && row.tradeDate < date) {
+                    row.ASXCode = newASXCode;
+                }
+            }
+            std::cout << "Do you have another share name change to enter? (Y/N): ";
+            std::cin >> response;
+            if (response == 'N' || response == 'n') {
+                finished = true;
+            }  
+        }
+    }
 }
 
