@@ -1,6 +1,6 @@
 #include "corporateShareActions.h"
 
-void CoparateShareActions::getSpecialCoporateActionsCLI(){
+std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(){
     char response;
     std::vector<DataRow> userEnteredData;
     DataRow row;
@@ -50,13 +50,16 @@ void CoparateShareActions::getSpecialCoporateActionsCLI(){
         }
     }
     data.insert(data.end(), userEnteredData.begin(), userEnteredData.end());
+    return userEnteredData;
 }
 
-void CoparateShareActions::getShareConsolidationCLI(){
+std::vector<ShareSplitRow> CoparateShareActions::getShareConsolidationCLI(){
+    std::vector<ShareSplitRow> shareSplits;
+    ShareSplitRow shareSplitRow;
     char response;
     std::cout << "Have you incurred any share splits (Y/N): ";
     std::cin >> response;
-    int ratio;
+    double ratio;
     std::string dateString;
     std::time_t date;
     if (response == 'Y' || response == 'y') {
@@ -79,6 +82,10 @@ void CoparateShareActions::getShareConsolidationCLI(){
                     row.price /= ratio;
                 }
             }
+            shareSplitRow.ASXCode = ASXCode;
+            shareSplitRow.ratio = ratio;
+            shareSplitRow.date = date;
+            shareSplits.push_back(shareSplitRow);
             std::cout << "Do you have another share split to enter? (Y/N): ";
             std::cin >> response;
             if (response == 'N' || response == 'n') {
@@ -86,10 +93,13 @@ void CoparateShareActions::getShareConsolidationCLI(){
             }  
         }
     }
+    return shareSplits;
 }
 
-void CoparateShareActions::getShareNameChange(){
+std::vector<NameChangeRow> CoparateShareActions::getShareNameChange(){
     char response;
+    std::vector<NameChangeRow> nameChanges;
+    NameChangeRow nameChangeRow;
     std::cout << "Have you incurred any share name changes (Y/N): ";
     std::cin >> response;
     std::string ASXCode;
@@ -117,6 +127,10 @@ void CoparateShareActions::getShareNameChange(){
                     row.ASXCode = newASXCode;
                 }
             }
+            nameChangeRow.ASXCode = ASXCode;
+            nameChangeRow.newASXCode = newASXCode;
+            nameChangeRow.date = date;
+            nameChanges.push_back(nameChangeRow);
             std::cout << "Do you have another share name change to enter? (Y/N): ";
             std::cin >> response;
             if (response == 'N' || response == 'n') {
@@ -124,5 +138,6 @@ void CoparateShareActions::getShareNameChange(){
             }  
         }
     }
+    return nameChanges;
 }
 

@@ -28,3 +28,15 @@ struct DataRow {
     static std::string orderTypeToString(OrderType type);
     static std::string dateToString(std::time_t date);
 };
+
+struct ShareSplitRow {
+    std::string ASXCode;
+    double ratio;
+    std::time_t date;
+};
+
+struct NameChangeRow {
+    std::string ASXCode;
+    std::string newASXCode;
+    std::time_t date;
+};

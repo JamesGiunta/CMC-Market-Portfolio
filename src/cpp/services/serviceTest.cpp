@@ -312,7 +312,28 @@ int main() {
     // st.testExcelExport(dr, to, ew);
 
     std::vector<DataRow> data = dp.loadCSV("resources/Confirmation1.csv");
-    CoparateShareActions csa(dr, dp, data);
+
+    char cache;
+    std::cout << "Would you like to use cached data? (Y/N): ";
+    std::cin >> cache;
+
+    if (cache == 'Y') {
+        return 0;
+    }
+    if (cache == 'Y') {
+        CoparateShareActions csa(dr, dp, data);
+
+        std::vector<DataRow> shareTakeOverVector = csa.getSpecialCoporateActionsCLI();
+        std::vector<ShareSplitRow> shareSplitVector = csa.getShareConsolidationCLI();
+        std::vector<NameChangeRow> shareNameChangeVector = csa.getShareNameChange();
+
+        char response;
+        std::cout << "Would you like to cache the data? (Y/N): ";
+        std::cin >> response;
+        if (response == 'Y' || response == 'y') {
+            return 0;   
+        }
+    }
     
     std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
     curl_global_init(CURL_GLOBAL_ALL);
@@ -328,10 +349,6 @@ int main() {
             thread.join();
         }
     }
-
-    csa.getSpecialCoporateActionsCLI();
-    csa.getShareConsolidationCLI();
-    csa.getShareNameChange();
 
     curl_global_cleanup();
     to.calculateLiveProfit(liveSharesMap, data);

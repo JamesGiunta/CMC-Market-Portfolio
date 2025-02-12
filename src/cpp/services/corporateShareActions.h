@@ -9,9 +9,9 @@ public:
         dr(dr),
         dp(dp),
         data(data) {}
-    void getSpecialCoporateActionsCLI();
-    void getShareConsolidationCLI();
-    void getShareNameChange();
+    std::vector<DataRow> getSpecialCoporateActionsCLI();
+    std::vector<ShareSplitRow> getShareConsolidationCLI();
+    std::vector<NameChangeRow> getShareNameChange();
 private:
     DataRow& dr;
     DataProcessing& dp;
