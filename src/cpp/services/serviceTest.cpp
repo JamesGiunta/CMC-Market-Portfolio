@@ -14,7 +14,20 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+#include <sys/stat.h>
 
+
+void ServiceTest::createDirectory() {
+    const char* dir = "resources/jsons";
+ 
+    // Structure which would store the metadata
+    struct stat sb;
+ 
+    // If the directory does not exists at the path returns -1
+    if (stat(dir, &sb) == -1) {
+        std::filesystem::create_directories(dir);
+    }
+}
 
 std::time_t ServiceTest::parseDate(const std::string& dateStr) {
     std::tm tm = {};
@@ -301,7 +314,7 @@ int main() {
     DataProcessing dp;
     DataRetrieval drr;
     TradeOperations to;
-
+    st.createDirectory();
     st.testLoadCSV(dr, dp);
     st.testDataRowSorting(dr);
     st.testLiveDataVector(dr, to);

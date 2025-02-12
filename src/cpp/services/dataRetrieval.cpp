@@ -50,7 +50,6 @@ void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair
     pair.second.price = price;
 }
 
-//TODO: Checks that folder exists before writing
 void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& shareSplitVector, std::vector<NameChangeRow>& shareNameChangeVector, std::vector<DataRow>& shareTakeOverVector){
     nlohmann::json j1;
     j1["shareSplitVector"] = shareSplitVector;
@@ -71,8 +70,30 @@ void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& sha
     file3.close();
 }
 
-// TODO: Checks that the jsons exist before loading
 void DataRetrieval::loadCachedData(std::vector<DataRow>& data) {
+    //Check if the json files exist and create them if they don't
+    if (!std::filesystem::exists("resources/jsons/shareSplitVector.json")){
+        nlohmann::json j;
+        std::vector<ShareSplitRow> empty;
+        j["shareSplitVector"] = empty;
+        std::ofstream file("resources/jsons/shareSplitVector.json");
+        file << j;
+    }
+    if (!std::filesystem::exists("resources/jsons/shareNameChangeVector.json")){
+        nlohmann::json j;
+        std::vector<NameChangeRow> empty;
+        j["shareNameChangeVector"] = empty;
+        std::ofstream file("resources/jsons/shareNameChangeVector.json");
+        file << j;
+    }
+    if (!std::filesystem::exists("resources/jsons/shareTakeOverVector.json")){
+        nlohmann::json j;
+        std::vector<DataRow> empty;
+        j["shareTakeOverVector"] = empty;
+        std::ofstream file("resources/jsons/shareTakeOverVector.json");
+        file << j;
+    }
+
     nlohmann::json j1;
     std::ifstream file1("resources/jsons/shareSplitVector.json");
     file1 >> j1;

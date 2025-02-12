@@ -16,6 +16,7 @@ class ServiceTest {
         static void testCalculateProfit(DataRow& dr, TradeOperations& to);
         static void testcalculateCGTPercentage(DataRow& dr, TradeOperations& to);
         static void testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew);
+        static void createDirectory();
 
     private:
         static std::time_t parseDate(const std::string& dateStr);
