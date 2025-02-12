@@ -3,13 +3,13 @@
 #include "dataProcessing.h"
 #include "tradeOperations.h"
 #
-class CoparateShareActions {
+class CorporateShareActions {
 public:
-    CoparateShareActions(DataRow& dr, DataProcessing& dp, std::vector<DataRow>& data) :
+    CorporateShareActions(DataRow& dr, DataProcessing& dp, std::vector<DataRow>& data) :
         dr(dr),
         dp(dp),
         data(data) {}
-    std::vector<DataRow> getSpecialCoporateActionsCLI();
+    std::vector<DataRow> getSpecialCoporateActionsCLI(std::map<std::string, liveShares>& liveSharesMap);
     std::vector<ShareSplitRow> getShareConsolidationCLI();
     std::vector<NameChangeRow> getShareNameChange();
 private:

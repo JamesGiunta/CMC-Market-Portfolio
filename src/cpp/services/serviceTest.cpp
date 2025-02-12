@@ -311,31 +311,35 @@ int main() {
     st.testcalculateCGTPercentage(dr, to);
     // st.testExcelExport(dr, to, ew);
 
-    std::vector<DataRow> data = dp.loadCSV("resources/Confirmation1.csv");
+    std::vector<DataRow> data = dp.loadCSV("resources/Confirmation.csv");
 
     char cache;
     std::cout << "Would you like to use cached data? (Y/N): ";
     std::cin >> cache;
 
-    if (cache == 'Y') {
-        return 0;
-    }
-    if (cache == 'Y') {
-        CoparateShareActions csa(dr, dp, data);
+    std::map<std::string, liveShares> liveSharesMap;
 
-        std::vector<DataRow> shareTakeOverVector = csa.getSpecialCoporateActionsCLI();
+    if (cache == 'Y' || cache == 'y') {
+        drr.loadCachedData(data);
+        //update live shares map after data has been updated to avoid names, quantity and prices being incorrect
+        liveSharesMap = to.createLiveDataVector(data);
+    }
+    if (cache == 'N' || cache == 'n') {
+        CorporateShareActions csa(dr, dp, data);
+
         std::vector<ShareSplitRow> shareSplitVector = csa.getShareConsolidationCLI();
         std::vector<NameChangeRow> shareNameChangeVector = csa.getShareNameChange();
+        //update live shares map after data has been updated with share splits and name changes to avoid names, quantity and prices being incorrect
+        liveSharesMap = to.createLiveDataVector(data);
+        std::vector<DataRow> shareTakeOverVector = csa.getSpecialCoporateActionsCLI(liveSharesMap);
 
         char response;
         std::cout << "Would you like to cache the data? (Y/N): ";
         std::cin >> response;
-        if (response == 'Y' || response == 'y') {
-            return 0;   
+        if (response == 'Y' || response == 'y') {    
+            drr.cacheSpecialCorporateActions(shareSplitVector, shareNameChangeVector, shareTakeOverVector);
         }
     }
-    
-    std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(data);
     curl_global_init(CURL_GLOBAL_ALL);
 
     std::vector<std::thread> threads(liveSharesMap.size());

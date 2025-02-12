@@ -1,11 +1,11 @@
 #include "corporateShareActions.h"
 
-std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(){
+std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(std::map<std::string, liveShares>& liveSharesMap){
     char response;
     std::vector<DataRow> userEnteredData;
     DataRow row;
     double price;
-    int quantity;
+    std::map<std::string, liveShares>::iterator it;
     std::cout << "Have you incurred any Share Takeovers? (Y/N): ";
     std::cin >> response;
     if (response == 'Y' || response == 'y') {
@@ -29,14 +29,18 @@ std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(){
             settlementDate = dp.regexDate(settlementDateString);
             std::cout << "What was the price of the share: ";
             std::cin >> price;
-            std::cout << "What was the quantity of the share: ";
-            std::cin >> quantity;
             row.ASXCode = ASXCode;
             row.orderType = DataRow::OrderType::SELL;
             row.tradeDate = tradeDate;
             row.settlementDate = settlementDate;
             row.price = price;
-            row.quantity = quantity;
+            row.quantity = 0;
+            row.tempFee = 0;
+            row.tempQuantity = 0;
+            if (liveSharesMap.find(ASXCode) != liveSharesMap.end()) {
+                row.quantity = liveSharesMap[ASXCode].quantity;
+                liveSharesMap.erase(ASXCode);
+            }
             row.fee = 0;
             row.profit = 0;
             row.seq = 0;
@@ -46,14 +50,14 @@ std::vector<DataRow> CoparateShareActions::getSpecialCoporateActionsCLI(){
             std::cin >> response;
             if (response == 'N' || response == 'n') {
                 finished = true;
-            }  
+            }
         }
     }
     data.insert(data.end(), userEnteredData.begin(), userEnteredData.end());
     return userEnteredData;
 }
 
-std::vector<ShareSplitRow> CoparateShareActions::getShareConsolidationCLI(){
+std::vector<ShareSplitRow> CorporateShareActions::getShareConsolidationCLI(){
     std::vector<ShareSplitRow> shareSplits;
     ShareSplitRow shareSplitRow;
     char response;
@@ -96,7 +100,7 @@ std::vector<ShareSplitRow> CoparateShareActions::getShareConsolidationCLI(){
     return shareSplits;
 }
 
-std::vector<NameChangeRow> CoparateShareActions::getShareNameChange(){
+std::vector<NameChangeRow> CorporateShareActions::getShareNameChange(){
     char response;
     std::vector<NameChangeRow> nameChanges;
     NameChangeRow nameChangeRow;

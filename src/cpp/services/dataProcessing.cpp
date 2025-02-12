@@ -3,8 +3,8 @@
 #include <fstream>
 #include <iomanip>
 #include <regex>
-// #include <string>
-// #include <iostream>
+#include <nlohmann/json.hpp>
+
 
 
 void DataProcessing::discardColumn(std::stringstream& ss){

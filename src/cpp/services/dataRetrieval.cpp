@@ -49,3 +49,61 @@ void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair
     double price = j["quote"]["price"];
     pair.second.price = price;
 }
+
+//TODO: Checks that folder exists before writing
+void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& shareSplitVector, std::vector<NameChangeRow>& shareNameChangeVector, std::vector<DataRow>& shareTakeOverVector){
+    nlohmann::json j1;
+    j1["shareSplitVector"] = shareSplitVector;
+    std::ofstream file1("resources/jsons/shareSplitVector.json");
+    file1 << j1;
+    file1.close();
+
+    nlohmann::json j2;
+    j2["shareNameChangeVector"] = shareNameChangeVector;
+    std::ofstream file2("resources/jsons/shareNameChangeVector.json");
+    file2 << j2;
+    file2.close();
+
+    nlohmann::json j3;
+    j3["shareTakeOverVector"] = shareTakeOverVector;
+    std::ofstream file3("resources/jsons/shareTakeOverVector.json");
+    file3 << j3;
+    file3.close();
+}
+
+// TODO: Checks that the jsons exist before loading
+void DataRetrieval::loadCachedData(std::vector<DataRow>& data) {
+    nlohmann::json j1;
+    std::ifstream file1("resources/jsons/shareSplitVector.json");
+    file1 >> j1;
+    std::vector<ShareSplitRow> shareSplitVector = j1["shareSplitVector"];
+    file1.close();
+    for (ShareSplitRow& row : shareSplitVector) {
+        for (DataRow& dataRow : data) {
+            if (dataRow.ASXCode == row.ASXCode) {
+                dataRow.price /= row.ratio;
+                dataRow.quantity *= row.ratio;
+            }
+        }
+    }
+
+    nlohmann::json j2;
+    std::ifstream file2("resources/jsons/shareNameChangeVector.json");
+    file2 >> j2;
+    std::vector<NameChangeRow> shareNameChangeVector = j2["shareNameChangeVector"];
+    file2.close();
+    for (NameChangeRow& row : shareNameChangeVector) {
+        for (DataRow& dataRow : data) {
+            if (dataRow.ASXCode == row.ASXCode) {
+                dataRow.ASXCode = row.newASXCode;
+            }
+        }
+    }
+
+    nlohmann::json j3;
+    std::ifstream file3("resources/jsons/shareTakeOverVector.json");
+    file3 >> j3;
+    std::vector<DataRow> shareTakeOverVector = j3["shareTakeOverVector"];
+    file3.close();
+    data.insert(data.end(), shareTakeOverVector.begin(), shareTakeOverVector.end());
+}

@@ -3,6 +3,7 @@
 #include <string>
 #include <ctime>
 #include <sstream>
+#include <nlohmann/json.hpp>
 
 struct DataRow {
     enum OrderType {BUY, SELL};
@@ -27,16 +28,22 @@ struct DataRow {
     static bool descending(const DataRow& obj, const DataRow& obj2);
     static std::string orderTypeToString(OrderType type);
     static std::string dateToString(std::time_t date);
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(DataRow, ASXCode, orderType, tradeDate, settlementDate, price, quantity, fee, profit, seq, tempQuantity, tempFee, cgt, twelveMonths)
 };
 
 struct ShareSplitRow {
     std::string ASXCode;
     double ratio;
     std::time_t date;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShareSplitRow, ASXCode, ratio, date)
 };
 
 struct NameChangeRow {
     std::string ASXCode;
     std::string newASXCode;
     std::time_t date;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(NameChangeRow, ASXCode, newASXCode, date)
 };
