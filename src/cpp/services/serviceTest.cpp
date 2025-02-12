@@ -58,11 +58,11 @@ void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data,
 
 void ServiceTest::createTestData(DataRow& dr) {
     std::vector<std::string> header = {"Account","ASXCode", "Confirmations", "OrderType", "As at Date", "TradeDate", "Settlement Date", "Price", "Quantity", "Brokerage", "GST"};
-    std::vector<std::string> row1 = {"", "CBA", "", "Buy", "", "19/03/2024", "21/03/2024", "115.78", "100", "19.95", "1.17"};
-    std::vector<std::string> row2 = {"", "360", "", "Sell", "", "01/03/2024", "03/03/2024", "11.30", "300", "11", "0.73"};
-    std::vector<std::string> row3 = {"", "360", "", "Buy", "", "04/12/2023", "06/12/2023", "7.78", "300", "10", "0.59"};
-    std::vector<std::string> row4 = {"", "ANZ", "", "Sell", "", "06/11/2023", "08/11/2023", "22.78", "10", "10", "0.21"};
-    std::vector<std::string> row5 = {"", "ANZ", "", "Buy", "", "06/11/2023", "08/11/2023", "22.33", "30", "10", "0.19"};
+    std::vector<std::string> row1 = {"", "", "CBA", "", "Buy", "", "19/03/2024", "21/03/2024", "115.78", "100", "19.95", "1.17"};
+    std::vector<std::string> row2 = {"", "", "360", "", "Sell", "", "01/03/2024", "03/03/2024", "11.30", "300", "11", "0.73"};
+    std::vector<std::string> row3 = {"", "", "360", "", "Buy", "", "04/12/2023", "06/12/2023", "7.78", "300", "10", "0.59"};
+    std::vector<std::string> row4 = {"", "", "ANZ", "", "Sell", "", "06/11/2023", "08/11/2023", "22.78", "10", "10", "0.21"};
+    std::vector<std::string> row5 = {"", "", "ANZ", "", "Buy", "", "06/11/2023", "08/11/2023", "22.33", "30", "10", "0.19"};
 
     std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3, row4, row5};
     vectorToCSV(testData1, "resources/testData.csv");

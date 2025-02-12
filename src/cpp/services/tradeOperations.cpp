@@ -140,14 +140,11 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
             sellOrder.profit = (sellOrder.price * sellOrder.quantity) - cost - sellOrder.fee;
             // Rounds to 2 decimal places
             sellOrder.profit = round(sellOrder.profit*100)/100;
-            if (sellOrder.twelveMonths) {
+            if (sellOrder.twelveMonths && sellOrder.profit > 0) {
                 sellOrder.cgt = sellOrder.profit * 0.5;
             }
             else {
                 sellOrder.cgt = sellOrder.profit;
-            }
-            if (sellOrder.cgt <= 0) {
-                sellOrder.cgt = 0.0;
             }
         }
     }

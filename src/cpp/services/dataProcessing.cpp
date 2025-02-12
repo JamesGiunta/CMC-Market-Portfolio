@@ -42,6 +42,7 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
     while (std::getline(inputFile, line)){
         std::stringstream ss(line);
         discardColumn(ss);
+        discardColumn(ss);
         DataRow row;
         std::getline(ss, row.ASXCode, ',');
         discardColumn(ss);

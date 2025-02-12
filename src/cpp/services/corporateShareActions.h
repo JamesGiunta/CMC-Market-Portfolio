@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
 #include "dataRow.h"
 #include "dataProcessing.h"
 #include "tradeOperations.h"
-#
+
 class CorporateShareActions {
 public:
     CorporateShareActions(DataRow& dr, DataProcessing& dp, std::vector<DataRow>& data) :
