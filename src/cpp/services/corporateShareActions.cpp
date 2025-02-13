@@ -113,7 +113,7 @@ std::vector<NameChangeRow> CorporateShareActions::getShareNameChange(){
     if (response == 'Y' || response == 'y') {
         bool finished = false;
         while (!finished) {
-            std::cout << "What was the share's ASX code: ";
+            std::cout << "What was the share's old ASX code: ";
             std::cin >> ASXCode;
             for (std::size_t i = 0; i < ASXCode.length(); i++) {
                 ASXCode[i] = toupper(ASXCode[i]);
