@@ -41,8 +41,8 @@ mainFrame.o:
 serviceTest: $(SRC_SERVICES_DIR)/serviceTest.o $(SRC_SERVICES_DIR)/dataProcessing.o $(SRC_SERVICES_DIR)/dataRow.o $(SRC_SERVICES_DIR)/tradeOperations.o $(SRC_SERVICES_DIR)/dataRetrieval.o $(SRC_SERVICES_DIR)/excelWriter.o $(SRC_SERVICES_DIR)/corporateShareActions.o
 	$(CXX) $(LDFLAGS) -o serviceTest $^ $(LDLIBS)
 
-main1: $(SRC_USERINTERFACE_DIR)/app.o $(SRC_USERINTERFACE_DIR)/mainFrame.o
+main: $(SRC_USERINTERFACE_DIR)/app.o $(SRC_USERINTERFACE_DIR)/mainFrame.o
 	$(CXX) $(LDFLAGS) -o main $^ $(LDLIBS)
 
 clean:
-	rm -f $(SRC_DIR)/*.o serviceTest
+	rm -f $(SRC_SERVICES_DIR)/*.o $(SRC_USERINTERFACE_DIR)/*.o serviceTest main
