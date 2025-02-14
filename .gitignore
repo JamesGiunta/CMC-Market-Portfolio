@@ -1,1 +1,9 @@
+*
+!*.*
+!*/
 *.json
+*.csv
+*.exe
+*.o
+*.xlsx
+!Makefile
