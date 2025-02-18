@@ -7,6 +7,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     wxPanel *panel3 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
     wxPanel *panel4 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    wxPanel *panel5 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
     panel->SetBackgroundColour(wxColor(40, 40, 40));
     panel2->SetBackgroundColour(wxColor(40, 40, 40));
@@ -14,15 +15,16 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     panel4->SetBackgroundColour(wxColor(100, 100, 100));
 
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *panel4Sizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *panel2Sizer = new wxBoxSizer(wxVERTICAL);
 
     sizer->Add(panel, wxSizerFlags().Proportion(3).Expand().Border(wxALL, 1));
     sizer->Add(panel2, wxSizerFlags().Proportion(5).Expand().Border(wxTOP | wxBOTTOM | wxLEFT, 20));
     sizer->Add(panel3, wxSizerFlags().Proportion(3).Expand().Border(wxTOP | wxRIGHT | wxBOTTOM, 20));
 
-    panel4Sizer->Add(panel4, /*proportion=*/5, wxEXPAND | wxALL, 15);
-    panel4Sizer->AddStretchSpacer(5);
-    panel2->SetSizer(panel4Sizer);
+    panel2Sizer->Add(panel4, 14, wxEXPAND | wxALL, 15);
+    panel2Sizer->Add(panel5, 8, wxEXPAND | wxALL, 15);
+
+    panel2->SetSizer(panel2Sizer);
 
     this->SetSizer(sizer);
 
@@ -54,11 +56,43 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     wxButton *confirmButton = new wxButton(panel4, wxID_ANY, "Add Confirmation", wxDefaultPosition, wxDefaultSize);
     confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
 
-    wxBoxSizer *panel4Sizer2 = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *panel4ContentSizer = new wxBoxSizer(wxVERTICAL);
 
-    panel4Sizer2->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-    panel4Sizer2->AddSpacer(10);
-    panel4Sizer2->Add(confirmButton, wxSizerFlags().Proportion(0).Border(wxALL, 10));
+    wxCheckBox *checkBox = new wxCheckBox(panel5, wxID_ANY, "Use Cache", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE);
+    wxButton *generateReportButton = new wxButton(panel5, wxID_ANY, "Generate Report", wxDefaultPosition, wxDefaultSize);
 
-    panel4->SetSizer(panel4Sizer2);
+    checkBox->SetValue(true);
+
+    panel4ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    panel4ContentSizer->AddSpacer(10);
+    panel4ContentSizer->Add(confirmButton, wxSizerFlags().Proportion(0).Border(wxALL, 10));
+
+    panel4->SetSizer(panel4ContentSizer);
+
+    wxBoxSizer *panel5ContentSizer = new wxBoxSizer(wxVERTICAL);
+
+    panel5ContentSizer->Add(checkBox, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    panel5ContentSizer->AddStretchSpacer(1);
+    panel5ContentSizer->Add(generateReportButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 30));
+
+    panel5->SetSizer(panel5ContentSizer);
+
+    wxStaticText *fileSaveLocation = new wxStaticText(panel3, wxID_ANY, "File Save Location", wxDefaultPosition, wxDefaultSize);
+    wxButton *browseButton = new wxButton(panel3, wxID_ANY, "Browse", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *reportNameTextStatic = new wxStaticText(panel3, wxID_ANY, "Generated File Name:", wxDefaultPosition, wxDefaultSize);
+    wxTextCtrl *reportNameText = new wxTextCtrl(panel3, wxID_ANY, "Report", wxDefaultPosition, wxDefaultSize);
+
+    fileSaveLocation->SetFont(wxFont(wxFontInfo(12).Bold()));
+
+    wxBoxSizer *panel3ContentSizer = new wxBoxSizer(wxVERTICAL);
+
+    panel3ContentSizer->Add(fileSaveLocation, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    panel3ContentSizer->AddSpacer(10);
+    panel3ContentSizer->Add(browseButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    panel3ContentSizer->AddStretchSpacer(1);
+    panel3ContentSizer->Add(reportNameTextStatic, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 15));
+    panel3ContentSizer->Add(reportNameText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxBOTTOM | wxLEFT | wxRIGHT, 45));
+
+    panel3->SetSizer(panel3ContentSizer);
+
 }
