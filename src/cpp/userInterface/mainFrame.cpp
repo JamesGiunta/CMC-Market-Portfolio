@@ -79,6 +79,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
     wxStaticText *fileSaveLocation = new wxStaticText(panel3, wxID_ANY, "File Save Location", wxDefaultPosition, wxDefaultSize);
     wxButton *browseButton = new wxButton(panel3, wxID_ANY, "Browse", wxDefaultPosition, wxDefaultSize);
+    wxButton *clearCacheButton = new wxButton(panel3, wxID_ANY, "Clear Cache", wxDefaultPosition, wxDefaultSize);
     wxStaticText *reportNameTextStatic = new wxStaticText(panel3, wxID_ANY, "Generated File Name:", wxDefaultPosition, wxDefaultSize);
     wxTextCtrl *reportNameText = new wxTextCtrl(panel3, wxID_ANY, "Report", wxDefaultPosition, wxDefaultSize);
 
@@ -89,6 +90,8 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     panel3ContentSizer->Add(fileSaveLocation, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
     panel3ContentSizer->AddSpacer(10);
     panel3ContentSizer->Add(browseButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    panel3ContentSizer->AddSpacer(80);
+    panel3ContentSizer->Add(clearCacheButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
     panel3ContentSizer->AddStretchSpacer(1);
     panel3ContentSizer->Add(reportNameTextStatic, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 15));
     panel3ContentSizer->Add(reportNameText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxBOTTOM | wxLEFT | wxRIGHT, 45));
