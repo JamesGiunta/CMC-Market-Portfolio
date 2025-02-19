@@ -1,13 +1,13 @@
 #include "mainFrame.h"
 #include <wx/wx.h>
 
-MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
-    wxPanel *panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    wxPanel *panel2 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    wxPanel *panel3 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+void MainFrame::CreatePanels() {
+    panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    panel2 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    panel3 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
-    wxPanel *panel4 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    wxPanel *panel5 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    panel4 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    panel5 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
     panel->SetBackgroundColour(wxColor(40, 40, 40));
     panel2->SetBackgroundColour(wxColor(40, 40, 40));
@@ -25,9 +25,10 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     panel2Sizer->Add(panel5, 8, wxEXPAND | wxALL, 15);
 
     panel2->SetSizer(panel2Sizer);
-
     this->SetSizer(sizer);
+}
 
+void MainFrame::setupPanel1() {
     wxStaticText *applicationNameText = new wxStaticText(panel, wxID_ANY, "CMC-Market-Report", wxDefaultPosition, wxDefaultSize);
     wxButton *generateButton = new wxButton(panel, wxID_ANY, "Generate Report", wxDefaultPosition, wxDefaultSize);
     wxButton *shareSplitButton = new wxButton(panel, wxID_ANY, "Input Share Splits", wxDefaultPosition, wxDefaultSize);
@@ -51,18 +52,21 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     panelSizer->Add(shareTakeoverButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxLEFT | wxRIGHT | wxBOTTOM, 10));
 
     panel->SetSizer(panelSizer);
+}
 
+void MainFrame::setupPanel2() {
     wxStaticText *confrimationsText = new wxStaticText(panel4, wxID_ANY, "Select Confirmations", wxDefaultPosition, wxDefaultSize);
     wxButton *confirmButton = new wxButton(panel4, wxID_ANY, "Add Confirmation", wxDefaultPosition, wxDefaultSize);
-    confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
 
-    wxBoxSizer *panel4ContentSizer = new wxBoxSizer(wxVERTICAL);
+    confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
 
     wxCheckBox *checkBox = new wxCheckBox(panel5, wxID_ANY, "Use Cache", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE);
     wxButton *generateReportButton = new wxButton(panel5, wxID_ANY, "Generate Report", wxDefaultPosition, wxDefaultSize);
 
     checkBox->SetValue(true);
     checkBox->SetForegroundColour(wxColour(255, 255, 255));
+
+    wxBoxSizer *panel4ContentSizer = new wxBoxSizer(wxVERTICAL);
 
     panel4ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
     panel4ContentSizer->AddSpacer(10);
@@ -77,7 +81,9 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     panel5ContentSizer->Add(generateReportButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 30));
 
     panel5->SetSizer(panel5ContentSizer);
+}
 
+void MainFrame::setupPanel3() {
     wxStaticText *fileSaveLocation = new wxStaticText(panel3, wxID_ANY, "File Save Location", wxDefaultPosition, wxDefaultSize);
     wxButton *browseButton = new wxButton(panel3, wxID_ANY, "Browse", wxDefaultPosition, wxDefaultSize);
     wxButton *clearCacheButton = new wxButton(panel3, wxID_ANY, "Clear Cache", wxDefaultPosition, wxDefaultSize);
@@ -98,5 +104,11 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     panel3ContentSizer->Add(reportNameText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxBOTTOM | wxLEFT | wxRIGHT, 45));
 
     panel3->SetSizer(panel3ContentSizer);
+}
 
+MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
+    CreatePanels();
+    setupPanel1();
+    setupPanel2();
+    setupPanel3();
 }
