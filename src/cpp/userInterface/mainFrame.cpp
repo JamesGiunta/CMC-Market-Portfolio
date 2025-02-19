@@ -62,6 +62,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     wxButton *generateReportButton = new wxButton(panel5, wxID_ANY, "Generate Report", wxDefaultPosition, wxDefaultSize);
 
     checkBox->SetValue(true);
+    checkBox->SetForegroundColour(wxColour(255, 255, 255));
 
     panel4ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
     panel4ContentSizer->AddSpacer(10);
