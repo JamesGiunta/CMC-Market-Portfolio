@@ -1,30 +1,45 @@
 #include "mainFrame.h"
 #include <wx/wx.h>
+#include <wx/simplebook.h>
+
 
 void MainFrame::CreatePanels() {
     panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    panel2 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    panel3 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
-    panel4 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    panel5 = new wxPanel(panel2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    panel3 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    
+    book = new wxSimplebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+
+    page1 = new wxPanel(book);
+    // page2 = new wxPanel(book);
+    // page3 = new wxPanel(book);
+    // page4 = new wxPanel(book);
+    book->AddPage(page1, "Page 1");
+    // book->AddPage(page2, "Page 2");
+    // book->AddPage(page3, "Page 3");
+    // book->AddPage(page4, "Page 4");
+
+    book->SetSelection(0);
+
+    panel4 = new wxPanel(page1, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    panel5 = new wxPanel(page1, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
     panel->SetBackgroundColour(wxColor(40, 40, 40));
-    panel2->SetBackgroundColour(wxColor(40, 40, 40));
+    book->SetBackgroundColour(wxColor(40, 40, 40));
     panel3->SetBackgroundColour(wxColor(100, 100, 100));
     panel4->SetBackgroundColour(wxColor(100, 100, 100));
 
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer *panel2Sizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *page1Sizer = new wxBoxSizer(wxVERTICAL);
 
     sizer->Add(panel, wxSizerFlags().Proportion(3).Expand().Border(wxALL, 1));
-    sizer->Add(panel2, wxSizerFlags().Proportion(5).Expand().Border(wxTOP | wxBOTTOM | wxLEFT, 20));
+    sizer->Add(book, wxSizerFlags().Proportion(5).Expand().Border(wxTOP | wxBOTTOM | wxLEFT, 20));
     sizer->Add(panel3, wxSizerFlags().Proportion(3).Expand().Border(wxTOP | wxRIGHT | wxBOTTOM, 20));
 
-    panel2Sizer->Add(panel4, 14, wxEXPAND | wxALL, 15);
-    panel2Sizer->Add(panel5, 8, wxEXPAND | wxALL, 15);
+    page1Sizer->Add(panel4, 14, wxEXPAND | wxALL, 15);
+    page1Sizer->Add(panel5, 8, wxEXPAND | wxALL, 15);
 
-    panel2->SetSizer(panel2Sizer);
+    page1->SetSizer(page1Sizer);
     this->SetSizer(sizer);
 }
 
