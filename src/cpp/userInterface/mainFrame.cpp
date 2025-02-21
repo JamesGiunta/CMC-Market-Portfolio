@@ -2,19 +2,27 @@
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 
+void  MainFrame::onGenerateReportButton(wxCommandEvent& event) {
+    book->SetSelection(0);
+}
 
-void MainFrame::CreatePanels() {
+void MainFrame::onShareSplitButton(wxCommandEvent& event) {
+    book->SetSelection(1);
+}
+
+
+void MainFrame::createPanels() {
     panel1 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     panel2 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     
     book = new wxSimplebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
     page1 = new wxPanel(book);
-    // page2 = new wxPanel(book);
+    page2 = new wxPanel(book);
     // page3 = new wxPanel(book);
     // page4 = new wxPanel(book);
     book->AddPage(page1, "Page 1");
-    // book->AddPage(page2, "Page 2");
+    book->AddPage(page2, "Page 2");
     // book->AddPage(page3, "Page 3");
     // book->AddPage(page4, "Page 4");
 
@@ -39,6 +47,9 @@ void MainFrame::setupPanel1() {
     wxButton *shareSplitButton = new wxButton(panel1, wxID_ANY, "Input Share Splits", wxDefaultPosition, wxDefaultSize);
     wxButton *shareNameChangeButton = new wxButton(panel1, wxID_ANY, "Input Name Changes", wxDefaultPosition, wxDefaultSize);
     wxButton *shareTakeoverButton = new wxButton(panel1, wxID_ANY, "Input Share Takeovers", wxDefaultPosition, wxDefaultSize);
+
+    generateButton->Bind(wxEVT_BUTTON, &MainFrame::onGenerateReportButton, this);
+    shareSplitButton->Bind(wxEVT_BUTTON, &MainFrame::onShareSplitButton, this);
 
     applicationNameText->SetFont(wxFont(wxFontInfo(12).Bold()));
     applicationNameText->SetForegroundColour(wxColour(255, 255, 255));
@@ -123,9 +134,40 @@ void MainFrame::setupPage1() {
     page1Panel2->SetSizer(panel5ContentSizer);
 }
 
+    void MainFrame::setupPage2() {
+        page2Panel1 = new wxPanel(page2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+
+        wxStaticText *confrimationsText = new wxStaticText(page2Panel1, wxID_ANY, "Share Splits", wxDefaultPosition, wxDefaultSize);
+        wxStaticText *ASXCode = new wxStaticText(page2Panel1, wxID_ANY, "What is the shares ASX Code?", wxDefaultPosition, wxDefaultSize);
+        wxTextCtrl *ASXCodeInput = new wxTextCtrl(page2Panel1, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+        wxStaticText *ratio = new wxStaticText(page2Panel1, wxID_ANY, "What is the ratio of the share split (1:10) converts 10 shares to 100 (1:x)?", wxDefaultPosition, wxDefaultSize);
+        wxTextCtrl *ratioInput = new wxTextCtrl(page2Panel1, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+        wxStaticText *date = new wxStaticText(page2Panel1, wxID_ANY, "When did the share split occur (dd/mm/yyyy)?", wxDefaultPosition, wxDefaultSize);
+        wxTextCtrl *dateInput = new wxTextCtrl(page2Panel1, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+        wxButton *addButton = new wxButton(page2Panel1, wxID_ANY, "Add", wxDefaultPosition, wxDefaultSize);
+
+        confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
+
+        wxBoxSizer *page2Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
+
+        page2Panel1ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->AddSpacer(10);
+        page2Panel1ContentSizer->Add(ASXCode, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->Add(ASXCodeInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->Add(ratio, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->Add(ratioInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->Add(date, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->Add(dateInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+        page2Panel1ContentSizer->Add(addButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+
+        page2Panel1->SetSizer(page2Panel1ContentSizer);
+    }
+    
+
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
-    CreatePanels();
+    createPanels();
     setupPanel1();
     setupPanel2();
     setupPage1();
+    setupPage2();
 }
