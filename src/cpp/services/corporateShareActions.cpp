@@ -75,7 +75,7 @@ std::vector<ShareSplitRow> CorporateShareActions::getShareConsolidationCLI(){
             for (std::size_t i = 0; i < ASXCode.length(); i++) {
                 ASXCode[i] = toupper(ASXCode[i]);
             }
-            std::cout << "What was the ratio of the share split (1:10) converts 10 shares to 100 (1:x): ";
+            std::cout << "What was the ratio of the share split (1:10) converts 1 shares to 10 (1:x): ";
             std::cin >> ratio;
             std::cout << "When did the share split occur (dd/mm/yyyy): ";
             std::cin >> dateString;

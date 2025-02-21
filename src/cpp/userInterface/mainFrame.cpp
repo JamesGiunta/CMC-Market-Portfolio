@@ -17,8 +17,8 @@ void MainFrame::createPanels() {
     
     book = new wxSimplebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
-    page1 = new wxPanel(book);
-    page2 = new wxPanel(book);
+    page1 = new wxPanel(book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    page2 = new wxPanel(book, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     // page3 = new wxPanel(book);
     // page4 = new wxPanel(book);
     book->AddPage(page1, "Page 1");
@@ -26,17 +26,15 @@ void MainFrame::createPanels() {
     // book->AddPage(page3, "Page 3");
     // book->AddPage(page4, "Page 4");
 
-    book->SetSelection(0);
-
     panel1->SetBackgroundColour(wxColor(40, 40, 40));
     book->SetBackgroundColour(wxColor(40, 40, 40));
-    panel2->SetBackgroundColour(wxColor(100, 100, 100));
+    panel2->SetBackgroundColour(wxColor(40, 40, 40));
 
     wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
 
-    sizer->Add(panel1, wxSizerFlags().Proportion(3).Expand().Border(wxALL, 1));
-    sizer->Add(book, wxSizerFlags().Proportion(5).Expand().Border(wxTOP | wxBOTTOM | wxLEFT, 20));
-    sizer->Add(panel2, wxSizerFlags().Proportion(3).Expand().Border(wxTOP | wxRIGHT | wxBOTTOM, 20));
+    sizer->Add(panel1, wxSizerFlags().Proportion(6).Expand().Border(wxALL, 1));
+    sizer->Add(book, wxSizerFlags().Proportion(13).Expand().Border(wxTOP | wxBOTTOM | wxLEFT, 20));
+    sizer->Add(panel2, wxSizerFlags().Proportion(5).Expand().Border(wxTOP | wxRIGHT | wxBOTTOM, 20));
 
     this->SetSizer(sizer);
 }
@@ -78,9 +76,12 @@ void MainFrame::setupPanel2() {
     wxTextCtrl *reportNameText = new wxTextCtrl(panel2, wxID_ANY, "Report", wxDefaultPosition, wxDefaultSize);
 
     fileSaveLocation->SetFont(wxFont(wxFontInfo(12).Bold()));
+    fileSaveLocation->SetForegroundColour(wxColour(255, 255, 255));
+    reportNameTextStatic->SetForegroundColour(wxColour(255, 255, 255));
 
     wxBoxSizer *panel3ContentSizer = new wxBoxSizer(wxVERTICAL);
 
+    panel3ContentSizer->AddSpacer(10);
     panel3ContentSizer->Add(fileSaveLocation, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
     panel3ContentSizer->AddSpacer(10);
     panel3ContentSizer->Add(browseButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
@@ -134,34 +135,43 @@ void MainFrame::setupPage1() {
     page1Panel2->SetSizer(panel5ContentSizer);
 }
 
-    void MainFrame::setupPage2() {
-        page2Panel1 = new wxPanel(page2, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+void MainFrame::setupPage2() {
+    wxStaticText *confrimationsText = new wxStaticText(page2, wxID_ANY, "Share Splits", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *ASXCode = new wxStaticText(page2, wxID_ANY, "What is the shares ASX Code?", wxDefaultPosition, wxDefaultSize);
+    wxTextCtrl *ASXCodeInput = new wxTextCtrl(page2, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *ratio = new wxStaticText(page2, wxID_ANY, "Share Split Ratio (1:10) converts 1 share to 10 (1:x)?", wxDefaultPosition, wxDefaultSize);        wxTextCtrl *ratioInput = new wxTextCtrl(page2, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *date = new wxStaticText(page2, wxID_ANY, "When did the share split occur (dd/mm/yyyy)?", wxDefaultPosition, wxDefaultSize);
+    wxTextCtrl *dateInput = new wxTextCtrl(page2, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+    wxButton *addButton = new wxButton(page2, wxID_ANY, "Add", wxDefaultPosition, wxDefaultSize);
 
-        wxStaticText *confrimationsText = new wxStaticText(page2Panel1, wxID_ANY, "Share Splits", wxDefaultPosition, wxDefaultSize);
-        wxStaticText *ASXCode = new wxStaticText(page2Panel1, wxID_ANY, "What is the shares ASX Code?", wxDefaultPosition, wxDefaultSize);
-        wxTextCtrl *ASXCodeInput = new wxTextCtrl(page2Panel1, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
-        wxStaticText *ratio = new wxStaticText(page2Panel1, wxID_ANY, "What is the ratio of the share split (1:10) converts 10 shares to 100 (1:x)?", wxDefaultPosition, wxDefaultSize);
-        wxTextCtrl *ratioInput = new wxTextCtrl(page2Panel1, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
-        wxStaticText *date = new wxStaticText(page2Panel1, wxID_ANY, "When did the share split occur (dd/mm/yyyy)?", wxDefaultPosition, wxDefaultSize);
-        wxTextCtrl *dateInput = new wxTextCtrl(page2Panel1, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
-        wxButton *addButton = new wxButton(page2Panel1, wxID_ANY, "Add", wxDefaultPosition, wxDefaultSize);
+    confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
+    confrimationsText->SetForegroundColour(wxColour(255, 255, 255));
+    ASXCode->SetForegroundColour(wxColour(255, 255, 255));
+    ratio->SetForegroundColour(wxColour(255, 255, 255));
+    date->SetForegroundColour(wxColour(255, 255, 255));
 
-        confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
 
-        wxBoxSizer *page2Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *page2Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
 
-        page2Panel1ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->AddSpacer(10);
-        page2Panel1ContentSizer->Add(ASXCode, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->Add(ASXCodeInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->Add(ratio, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->Add(ratioInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->Add(date, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->Add(dateInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-        page2Panel1ContentSizer->Add(addButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page2Panel1ContentSizer->AddSpacer(10);
+    page2Panel1ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page2Panel1ContentSizer->AddSpacer(10);
+    page2Panel1ContentSizer->Add(ASXCode, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page2Panel1ContentSizer->AddSpacer(5);
+    page2Panel1ContentSizer->Add(ASXCodeInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 5));
+    page2Panel1ContentSizer->AddSpacer(5);
+    page2Panel1ContentSizer->Add(ratio, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page2Panel1ContentSizer->AddSpacer(5);
+    page2Panel1ContentSizer->Add(ratioInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 5));
+    page2Panel1ContentSizer->AddSpacer(5);
+    page2Panel1ContentSizer->Add(date, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page2Panel1ContentSizer->AddSpacer(5);
+    page2Panel1ContentSizer->Add(dateInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 5));
+    page2Panel1ContentSizer->AddSpacer(5);
+    page2Panel1ContentSizer->Add(addButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
 
-        page2Panel1->SetSizer(page2Panel1ContentSizer);
-    }
+    page2->SetSizer(page2Panel1ContentSizer);
+}
     
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
@@ -170,4 +180,5 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     setupPanel2();
     setupPage1();
     setupPage2();
+    book->SetSelection(0);
 }
