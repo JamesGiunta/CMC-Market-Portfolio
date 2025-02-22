@@ -145,7 +145,7 @@ void MainFrame::setupPage1() {
 }
 
 void MainFrame::setupPage2() {
-    wxStaticText *shareSplitsText = new wxStaticText(page2, wxID_ANY, "Share Splits", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *shareSplitsText = new wxStaticText(page2, wxID_ANY, "Share Split", wxDefaultPosition, wxDefaultSize);
     wxStaticText *ASXCode = new wxStaticText(page2, wxID_ANY, "What is the shares ASX Code?", wxDefaultPosition, wxDefaultSize);
     wxTextCtrl *ASXCodeInput = new wxTextCtrl(page2, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
     wxStaticText *ratio = new wxStaticText(page2, wxID_ANY, "Share Split Ratio (1:10) converts 1 share to 10 (1:x)?", wxDefaultPosition, wxDefaultSize);       
@@ -159,7 +159,6 @@ void MainFrame::setupPage2() {
     ASXCode->SetForegroundColour(wxColour(255, 255, 255));
     ratio->SetForegroundColour(wxColour(255, 255, 255));
     date->SetForegroundColour(wxColour(255, 255, 255));
-
 
     wxBoxSizer *page2Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -223,6 +222,42 @@ void MainFrame::setupPage3() {
 }
 
 void MainFrame::setupPage4() {
+    wxStaticText *shareTakeoverText = new wxStaticText(page4, wxID_ANY, "Share Takeover", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *ASXCode = new wxStaticText(page4, wxID_ANY, "What is the share's ASX Code?", wxDefaultPosition, wxDefaultSize);
+    wxTextCtrl *ASXCodeInput = new wxTextCtrl(page4, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *takeoverPrice = new wxStaticText(page4, wxID_ANY, "What was the share's takeover price?", wxDefaultPosition, wxDefaultSize);        
+    wxTextCtrl *takeoverPriceInput = new wxTextCtrl(page4, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+    wxStaticText *date = new wxStaticText(page4, wxID_ANY, "When did the share takeover occur (dd/mm/yyyy)?", wxDefaultPosition, wxDefaultSize);
+    wxTextCtrl *dateInput = new wxTextCtrl(page4, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+    wxButton *addButton = new wxButton(page4, wxID_ANY, "Add", wxDefaultPosition, wxDefaultSize);
+
+    shareTakeoverText->SetFont(wxFont(wxFontInfo(12).Bold()));
+    shareTakeoverText->SetForegroundColour(wxColour(255, 255, 255));
+    ASXCode->SetForegroundColour(wxColour(255, 255, 255));
+    takeoverPrice->SetForegroundColour(wxColour(255, 255, 255));
+    date->SetForegroundColour(wxColour(255, 255, 255));
+
+
+    wxBoxSizer *page4Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
+
+    page4Panel1ContentSizer->AddSpacer(10);
+    page4Panel1ContentSizer->Add(shareTakeoverText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page4Panel1ContentSizer->AddSpacer(10);
+    page4Panel1ContentSizer->Add(ASXCode, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page4Panel1ContentSizer->AddSpacer(5);
+    page4Panel1ContentSizer->Add(ASXCodeInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 5));
+    page4Panel1ContentSizer->AddSpacer(5);
+    page4Panel1ContentSizer->Add(takeoverPrice, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page4Panel1ContentSizer->AddSpacer(5);
+    page4Panel1ContentSizer->Add(takeoverPriceInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 5));
+    page4Panel1ContentSizer->AddSpacer(5);
+    page4Panel1ContentSizer->Add(date, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    page4Panel1ContentSizer->AddSpacer(5);
+    page4Panel1ContentSizer->Add(dateInput, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 5));
+    page4Panel1ContentSizer->AddSpacer(25);
+    page4Panel1ContentSizer->Add(addButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+
+    page4->SetSizer(page4Panel1ContentSizer);
 
 }
     
