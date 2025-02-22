@@ -1,6 +1,14 @@
 #include "mainFrame.h"
 #include <wx/wx.h>
 #include <wx/simplebook.h>
+#include <filesystem>
+
+void MainFrame::onFileSaveLocationButton(wxCommandEvent& event) {
+    wxDirDialog dialog(this, "Choose a directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    if (dialog.ShowModal() == wxID_OK) {
+        filePath = std::filesystem::path(dialog.GetPath().ToStdString());
+    }
+}
 
 void  MainFrame::onGenerateReportButton(wxCommandEvent& event) {
     book->SetSelection(0);
@@ -87,6 +95,8 @@ void MainFrame::setupPanel2() {
     fileSaveLocation->SetFont(wxFont(wxFontInfo(12).Bold()));
     fileSaveLocation->SetForegroundColour(wxColour(255, 255, 255));
     reportNameTextStatic->SetForegroundColour(wxColour(255, 255, 255));
+
+    browseButton->Bind(wxEVT_BUTTON, &MainFrame::onFileSaveLocationButton, this);
 
     wxBoxSizer *panel3ContentSizer = new wxBoxSizer(wxVERTICAL);
 
