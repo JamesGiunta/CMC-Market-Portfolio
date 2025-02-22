@@ -128,3 +128,9 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data) {
     file3.close();
     data.insert(data.end(), shareTakeOverVector.begin(), shareTakeOverVector.end());
 }
+
+void DataRetrieval::clearCache() {
+    std::filesystem::remove("resources/jsons/shareSplitVector.json");
+    std::filesystem::remove("resources/jsons/shareNameChangeVector.json");
+    std::filesystem::remove("resources/jsons/shareTakeOverVector.json");
+}

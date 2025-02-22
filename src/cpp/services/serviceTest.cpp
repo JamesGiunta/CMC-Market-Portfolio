@@ -216,7 +216,7 @@ void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
 
 void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
     DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0};
-    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), -9.11};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), -9.11, 0, 0, 0, -9.11};
     DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0};
     DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
     DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0};
@@ -259,7 +259,7 @@ void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
     DataRow expectedRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
     DataRow expectedRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
     DataRow expectedRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-    DataRow expectedRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, 0};
+    DataRow expectedRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, -244.59};
     DataRow expectedRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
     DataRow expectedRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
     DataRow expectedRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), double(7.78), 300, double(11.73), 0, 0, 0, 0, 0};
@@ -277,13 +277,6 @@ void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
     else {
         std::cout << "Data CGT was not calculated correctly. ❌" << std::endl; 
         std::cout << "Expected: " << std::endl;
-        for (DataRow& row : expectedData) {
-            std::cout << row << std::endl;
-        }
-        std::cout << "Actual: " << std::endl;
-        for (DataRow& row : testData) {
-            std::cout << row << std::endl;
-        }
     }
 }
 
