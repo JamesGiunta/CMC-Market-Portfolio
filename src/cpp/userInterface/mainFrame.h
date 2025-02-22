@@ -14,14 +14,18 @@ class MainFrame : public wxFrame {
         wxSimplebook *book;
         wxPanel *page1;
         wxPanel *page2;
-        // wxPanel *page3;
-        // wxPanel *page4;
+        wxPanel *page3;
+        wxPanel *page4;
 
         void createPanels();
         void setupPanel1();
         void setupPanel2();
         void setupPage1();
         void setupPage2();
+        void setupPage3();
+        void setupPage4();
         void onShareSplitButton(wxCommandEvent& event);
+        void onShareNameChangeButton(wxCommandEvent& event);
+        void onShareTakeoverButton(wxCommandEvent& event);
         void onGenerateReportButton(wxCommandEvent& event);
 };
