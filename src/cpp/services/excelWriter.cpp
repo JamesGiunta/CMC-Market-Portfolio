@@ -72,7 +72,7 @@ void ExcelWriter::writeTransactionData(lxw_worksheet* worksheet) {
 
 void ExcelWriter::writeTransactionDataWithRange(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd) {
     for (auto share : data) {
-        if (previousFinancialYearEnd < share.tradeDate && share.tradeDate < currentFinancialYearEnd) {
+        if (previousFinancialYearEnd < share.settlementDate && share.settlementDate < currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, dr.dateToString(share.tradeDate).c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 1, dr.orderTypeToString(share.orderType).c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 2, share.ASXCode.c_str(), NULL);
@@ -105,7 +105,7 @@ std::time_t ExcelWriter::caculateFinanicalYearEndDate(std::tm* date) {
 
 void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, double& financialYearProfit, double& capitalGainsTax) {
     for (auto share : data) {
-        if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.tradeDate && share.tradeDate < currentFinancialYearEnd) {
+        if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.settlementDate && share.settlementDate < currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, share.ASXCode.c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 1, std::to_string(share.profit).c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 2, dr.dateToString(share.tradeDate).c_str(), NULL);
@@ -156,7 +156,7 @@ void ExcelWriter::generateExcelFile() {
     writeTransactionData(worksheet1);
 
     
-    time_t earliestTime = data.back().tradeDate;
+    time_t earliestTime = data.back().settlementDate;
 
     std::time_t t = std::time(0);
     std::tm dateCopy = *std::localtime(&t);
