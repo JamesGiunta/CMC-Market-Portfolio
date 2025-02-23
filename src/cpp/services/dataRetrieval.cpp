@@ -130,7 +130,8 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data) {
 }
 
 void DataRetrieval::clearCache() {
-    std::filesystem::remove("resources/jsons/shareSplitVector.json");
-    std::filesystem::remove("resources/jsons/shareNameChangeVector.json");
-    std::filesystem::remove("resources/jsons/shareTakeOverVector.json");
+    std::filesystem::path path = "resources/jsons";
+    for(const auto& entry : std::filesystem::directory_iterator(path)) {
+        std::filesystem::remove_all(entry.path());
+    }
 }
