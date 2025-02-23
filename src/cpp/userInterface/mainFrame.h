@@ -2,6 +2,7 @@
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 #include <filesystem>
+#include "../services/dataRetrieval.h"
 
 class MainFrame : public wxFrame {
     public:
@@ -18,6 +19,7 @@ class MainFrame : public wxFrame {
         wxPanel *page3;
         wxPanel *page4;
         std::filesystem::path filePath;
+        DataRetrieval dataRetrieval;
 
         void createPanels();
         void setupPanel1();
@@ -27,6 +29,7 @@ class MainFrame : public wxFrame {
         void setupPage3();
         void setupPage4();
         void onFileSaveLocationButton(wxCommandEvent& event);
+        void onClearCacheButton(wxCommandEvent& event);
         void onShareSplitButton(wxCommandEvent& event);
         void onShareNameChangeButton(wxCommandEvent& event);
         void onShareTakeoverButton(wxCommandEvent& event);

@@ -2,12 +2,17 @@
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 #include <filesystem>
+#include "../services/dataRetrieval.h"
 
 void MainFrame::onFileSaveLocationButton(wxCommandEvent& event) {
     wxDirDialog dialog(this, "Choose a directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
     if (dialog.ShowModal() == wxID_OK) {
         filePath = std::filesystem::path(dialog.GetPath().ToStdString());
     }
+}
+
+void MainFrame::onClearCacheButton(wxCommandEvent& event) {
+    dataRetrieval.clearCache();
 }
 
 void  MainFrame::onGenerateReportButton(wxCommandEvent& event) {
@@ -97,6 +102,7 @@ void MainFrame::setupPanel2() {
     reportNameTextStatic->SetForegroundColour(wxColour(255, 255, 255));
 
     browseButton->Bind(wxEVT_BUTTON, &MainFrame::onFileSaveLocationButton, this);
+    clearCacheButton->Bind(wxEVT_BUTTON, &MainFrame::onClearCacheButton, this);
 
     wxBoxSizer *panel3ContentSizer = new wxBoxSizer(wxVERTICAL);
 
