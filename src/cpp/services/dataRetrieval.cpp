@@ -159,10 +159,28 @@ void DataRetrieval::clearCache() {
 
 void DataRetrieval::cacheSpecialCoporateActions(DataRow row) {
     nlohmann::json j;
-    j["specialData"] = row;
-    std::ofstream file("resources/jsons/specialData.json");
-    file << j;
-    file.close();
+
+    std::filesystem::path path = "resources/jsons/shareTakeOverVector.json";
+    if (std::filesystem::exists(path)) {
+        std::ifstream file(path);
+        if (file.is_open()) {
+            file >> j;
+            file.close();
+        } 
+        else {
+            std::cerr << "Failed to open shareTakeOverVector.json" << std::endl;
+        }
+    }
+    j["shareTakeOverVector"].push_back(row);
+
+    std::ofstream outputFile(path);
+    if (outputFile.is_open()) {
+        outputFile << j;
+        outputFile.close();
+    } 
+    else {
+        std::cerr << "Failed to open shareTakeOverVector.json" << std::endl;
+    }
 }
 
 void DataRetrieval::cacheShareConsolidation(ShareSplitRow row) {
@@ -194,7 +212,26 @@ void DataRetrieval::cacheShareConsolidation(ShareSplitRow row) {
 void DataRetrieval::cacheShareNameChange(NameChangeRow row) {
     nlohmann::json j;
     j["nameChangeRow"] = row;
-    std::ofstream file("resources/jsons/nameChangeVector.json");
-    file << j;
-    file.close();
+
+    std::filesystem::path path = "resources/jsons/shareNameChangeVector.json";
+    if (std::filesystem::exists(path)) {
+        std::ifstream file(path);
+        if (file.is_open()) {
+            file >> j;
+            file.close();
+        } 
+        else {
+            std::cerr << "Failed to open shareNameChangeVector.json" << std::endl;
+        }
+    }
+    j["shareNameChangeVector"].push_back(row);
+
+    std::ofstream outputFile(path);
+    if (outputFile.is_open()) {
+        outputFile << j;
+        outputFile.close();
+    } 
+    else {
+        std::cerr << "Failed to open shareNameChangeVector.json" << std::endl;
+    }
 }

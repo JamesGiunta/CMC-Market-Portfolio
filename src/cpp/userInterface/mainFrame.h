@@ -1,16 +1,13 @@
 #pragma once
 #include <wx/wx.h>
 #include <wx/simplebook.h>
-#include <filesystem>
-#include "../services/dataRetrieval.h"
-#include "../services/dataProcessing.h"
+#include "app.h"
 
 class MainFrame : public wxFrame {
     public:
         MainFrame(const wxString& title);
     private:
-        DataRetrieval dataRetrieval;
-        DataProcessing dataProcessing;
+        App* app;
         wxPanel *panel1;
         wxPanel *panel2;
         wxPanel *page1Panel1;

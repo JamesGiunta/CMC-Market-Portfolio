@@ -2,7 +2,6 @@
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 #include <filesystem>
-#include "../services/dataRetrieval.h"
 
 void MainFrame::onFileSaveLocationButton(wxCommandEvent& event) {
     wxDirDialog dialog(this, "Choose a directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
@@ -12,7 +11,10 @@ void MainFrame::onFileSaveLocationButton(wxCommandEvent& event) {
 }
 
 void MainFrame::onClearCacheButton(wxCommandEvent& event) {
-    dataRetrieval.clearCache();
+    if (!app) {
+        return;
+    }
+    app->dataRetrieval.clearCache();
 }
 
 void  MainFrame::onGenerateReportButton(wxCommandEvent& event) {
@@ -32,25 +34,65 @@ void MainFrame::onShareTakeoverButton(wxCommandEvent& event) {
 }
 
 void MainFrame::addCacheShareSplitRow(wxCommandEvent& event) {
+    if (!app) {
+        return;
+    }
     ShareSplitRow row;
     row.ASXCode = splitASXCodeInput->GetValue().ToStdString();
     row.ratio = std::stod(splitRatioInput->GetValue().ToStdString());
     std::string date = splitDateInput->GetValue().ToStdString();
-    row.date = dataProcessing.regexDate(date);
+    row.date = app->dataProcessing.regexDate(date);
 
-    dataRetrieval.cacheShareConsolidation(row);
+    app->dataRetrieval.cacheShareConsolidation(row);
     splitASXCodeInput->Clear();
     splitRatioInput->Clear();
     splitDateInput->Clear();
 }
 
-// void MainFrame::addCacheShareNameChangeRow(const std::string &oldASXCode, const std::string &newASXCode, const std::time_t &date) {
-//     dataRetrieval.cacheShareNameChange(oldASXCode, newASXCode, date);
-// }
+void MainFrame::addCacheShareNameChangeRow(wxCommandEvent& event) {
+    if (!app) {
+        return;
+    }
+    NameChangeRow row;
+    row.ASXCode = oldASXCodeInput->GetValue().ToStdString();
+    row.newASXCode = newASXCodeInput->GetValue().ToStdString();
+    std::string date = nameChangeDateInput->GetValue().ToStdString();
+    row.date = app->dataProcessing.regexDate(date);
 
-// void MainFrame::addCacheShareTakeoverRow(const std::string &ASXCode, const double price, const std::time_t &date) {
-//     dataRetrieval.cacheSpecialCoporateActions(ASXCode, price, date);
-// }
+    app->dataRetrieval.cacheShareNameChange(row);
+    oldASXCodeInput->Clear();
+    newASXCodeInput->Clear();
+    nameChangeDateInput->Clear();
+}
+
+void MainFrame::addCacheShareTakeoverRow(wxCommandEvent& event) {
+    if (!app) {
+        return;
+    }
+    DataRow row;
+    row.ASXCode = takeoverASXCodeInput->GetValue().ToStdString();
+    row.price = std::stod(takeoverPriceInput->GetValue().ToStdString());
+    std::string date = takeoverDateInput->GetValue().ToStdString();
+    row.tradeDate = app->dataProcessing.regexDate(date);
+    row.settlementDate = app->dataProcessing.regexDate(date);
+    row.fee = 0;
+    row.profit = 0;
+    row.seq = 0;
+    row.cgt = 0;
+    row.quantity = 0;
+    row.tempFee = 0;
+    row.tempQuantity = 0;
+    //Add this on generate runtime
+    // if (liveSharesMap.find(takeoverASXCodeInput) != liveSharesMap.end()) {
+    //     row.quantity = liveSharesMap[takeoverASXCodeInput].quantity;
+    //     liveSharesMap.erase(takeoverASXCodeInput);
+    // }
+
+    app->dataRetrieval.cacheSpecialCoporateActions(row);
+    takeoverASXCodeInput->Clear();
+    takeoverPriceInput->Clear();
+    takeoverDateInput->Clear();
+}
 
 void MainFrame::createPanels() {
     panel1 = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -237,6 +279,7 @@ void MainFrame::setupPage3() {
     newASXCode->SetForegroundColour(wxColour(255, 255, 255));
     date->SetForegroundColour(wxColour(255, 255, 255));
 
+    addButton->Bind(wxEVT_BUTTON, &MainFrame::addCacheShareNameChangeRow, this);
 
     wxBoxSizer *page3Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -276,6 +319,7 @@ void MainFrame::setupPage4() {
     takeoverPrice->SetForegroundColour(wxColour(255, 255, 255));
     date->SetForegroundColour(wxColour(255, 255, 255));
 
+    addButton->Bind(wxEVT_BUTTON, &MainFrame::addCacheShareTakeoverRow, this);
 
     wxBoxSizer *page4Panel1ContentSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -300,8 +344,12 @@ void MainFrame::setupPage4() {
 
 }
     
-
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
+    app = dynamic_cast<App*>(wxTheApp);
+    if (!app) {
+        wxMessageBox("Failed to initialize application", "Error", wxOK | wxICON_ERROR);
+        return;
+    }
     createPanels();
     setupPanel1();
     setupPanel2();
