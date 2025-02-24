@@ -7,6 +7,9 @@ public:
     std::string getRequest(std::string ASXCode);
     void getLivePrices(std::pair<const std::string, liveShares>& pair);
     void cacheSpecialCorporateActions(std::vector<ShareSplitRow>& shareSplitVector, std::vector<NameChangeRow>& shareNameChangeVector, std::vector<DataRow>& shareTakeOverVector);
+    void cacheSpecialCoporateActions(DataRow row);
+    void cacheShareConsolidation(ShareSplitRow row);
+    void cacheShareNameChange(NameChangeRow row);
     void loadCachedData(std::vector<DataRow>& data);
     void clearCache();
 private:

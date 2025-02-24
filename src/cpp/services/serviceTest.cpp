@@ -331,13 +331,13 @@ int main() {
         liveSharesMap = to.createLiveDataVector(data);
     }
     if (cache == 'N' || cache == 'n') {
-        CorporateShareActions csa(dr, dp, data);
+        CorporateShareActions csa(dr, drr, dp, data, liveSharesMap);
 
         std::vector<ShareSplitRow> shareSplitVector = csa.getShareConsolidationCLI();
-        std::vector<NameChangeRow> shareNameChangeVector = csa.getShareNameChange();
+        std::vector<NameChangeRow> shareNameChangeVector = csa.getShareNameChangeCLI();
         //update live shares map after data has been updated with share splits and name changes to avoid names, quantity and prices being incorrect
         liveSharesMap = to.createLiveDataVector(data);
-        std::vector<DataRow> shareTakeOverVector = csa.getSpecialCoporateActionsCLI(liveSharesMap);
+        std::vector<DataRow> shareTakeOverVector = csa.getSpecialCoporateActionsCLI();
 
         char response;
         std::cout << "Would you like to cache the data? (Y/N): ";
@@ -366,7 +366,6 @@ int main() {
     std::sort(data.begin(), data.end(), DataRow::descending);
     ExcelWriter ew(dr, "Report.xlsx", data, liveSharesMap);
     ew.generateExcelFile();
-    std::vector<DataRow> specialData;
     // st.testExcelExport(dr, to);
 
 

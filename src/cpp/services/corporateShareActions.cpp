@@ -1,6 +1,6 @@
 #include "corporateShareActions.h"
 
-std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(std::map<std::string, liveShares>& liveSharesMap){
+std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(){
     char response;
     std::vector<DataRow> userEnteredData;
     DataRow row;
@@ -10,10 +10,8 @@ std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(std::ma
     std::cin >> response;
     if (response == 'Y' || response == 'y') {
         std::string ASXCode;
-        std::string tradeDateString;
-        std::time_t tradeDate;
-        std::string settlementDateString;
-        std::time_t settlementDate;
+        std::string dateString;
+        std::time_t date;
         bool finished = false;
         while (!finished) {
             std::cout << "What was the share's ASX code: ";
@@ -21,18 +19,15 @@ std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(std::ma
             for (std::size_t i = 0; i < ASXCode.length(); i++) {
                 ASXCode[i] = toupper(ASXCode[i]);
             }
-            std::cout << "What was the trade date (dd/mm/yyyy): ";
-            std::cin >> tradeDateString;
-            tradeDate = dp.regexDate(tradeDateString);
-            std::cout << "What was the settlement date (dd/mm/yyyy): ";
-            std::cin >> settlementDateString;
-            settlementDate = dp.regexDate(settlementDateString);
+            std::cout << "What was the date (dd/mm/yyyy): ";
+            std::cin >> dateString;
+            date = dp.regexDate(dateString);
             std::cout << "What was the price of the share: ";
             std::cin >> price;
             row.ASXCode = ASXCode;
             row.orderType = DataRow::OrderType::SELL;
-            row.tradeDate = tradeDate;
-            row.settlementDate = settlementDate;
+            row.tradeDate = date;
+            row.settlementDate = date;
             row.price = price;
             row.quantity = 0;
             row.tempFee = 0;
@@ -100,7 +95,7 @@ std::vector<ShareSplitRow> CorporateShareActions::getShareConsolidationCLI(){
     return shareSplits;
 }
 
-std::vector<NameChangeRow> CorporateShareActions::getShareNameChange(){
+std::vector<NameChangeRow> CorporateShareActions::getShareNameChangeCLI(){
     char response;
     std::vector<NameChangeRow> nameChanges;
     NameChangeRow nameChangeRow;
@@ -143,5 +138,42 @@ std::vector<NameChangeRow> CorporateShareActions::getShareNameChange(){
         }
     }
     return nameChanges;
+}
+
+void CorporateShareActions::saveSpecialCoporateActions(const std::string &ASXCode, const double price, const std::time_t &date){
+    DataRow row;
+    row.ASXCode = ASXCode;
+    row.orderType = DataRow::OrderType::SELL;
+    row.tradeDate = date;
+    row.settlementDate = date;
+    row.price = price;
+    row.quantity = 0;
+    row.tempFee = 0;
+    row.tempQuantity = 0;
+    row.fee = 0;
+    row.profit = 0;
+    row.seq = 0;
+    row.cgt = 0;
+    if (liveSharesMap.find(ASXCode) != liveSharesMap.end()) {
+        row.quantity = liveSharesMap[ASXCode].quantity;
+        liveSharesMap.erase(ASXCode);
+    }
+    drr.cacheSpecialCoporateActions(row);
+}
+
+void CorporateShareActions::saveShareConsolidation(const std::string &ASXCode, const double ratio, const std::time_t &date){
+    ShareSplitRow shareSplitRow;
+    shareSplitRow.ASXCode = ASXCode;
+    shareSplitRow.ratio = ratio;
+    shareSplitRow.date = date;
+    drr.cacheShareConsolidation(shareSplitRow);
+}
+
+void CorporateShareActions::saveShareNameChange(const std::string &oldASXCode, const std::string &newASXCode, const std::time_t &date){
+    NameChangeRow nameChangeRow;
+    nameChangeRow.ASXCode = oldASXCode;
+    nameChangeRow.newASXCode = newASXCode;
+    nameChangeRow.date = date;
+    drr.cacheShareNameChange(nameChangeRow);
 }
 

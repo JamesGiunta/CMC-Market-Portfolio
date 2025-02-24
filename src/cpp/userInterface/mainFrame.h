@@ -3,11 +3,14 @@
 #include <wx/simplebook.h>
 #include <filesystem>
 #include "../services/dataRetrieval.h"
+#include "../services/dataProcessing.h"
 
 class MainFrame : public wxFrame {
     public:
         MainFrame(const wxString& title);
     private:
+        DataRetrieval dataRetrieval;
+        DataProcessing dataProcessing;
         wxPanel *panel1;
         wxPanel *panel2;
         wxPanel *page1Panel1;
@@ -19,7 +22,15 @@ class MainFrame : public wxFrame {
         wxPanel *page3;
         wxPanel *page4;
         std::filesystem::path filePath;
-        DataRetrieval dataRetrieval;
+        wxTextCtrl *splitASXCodeInput;
+        wxTextCtrl *splitRatioInput;
+        wxTextCtrl *splitDateInput;
+        wxTextCtrl *oldASXCodeInput;
+        wxTextCtrl *newASXCodeInput;
+        wxTextCtrl *nameChangeDateInput;
+        wxTextCtrl *takeoverASXCodeInput;
+        wxTextCtrl *takeoverPriceInput;
+        wxTextCtrl *takeoverDateInput;
 
         void createPanels();
         void setupPanel1();
@@ -34,4 +45,7 @@ class MainFrame : public wxFrame {
         void onShareNameChangeButton(wxCommandEvent& event);
         void onShareTakeoverButton(wxCommandEvent& event);
         void onGenerateReportButton(wxCommandEvent& event);
+        void addCacheShareSplitRow(wxCommandEvent& event);
+        void addCacheShareNameChangeRow(wxCommandEvent& event);
+        void addCacheShareTakeoverRow(wxCommandEvent& event);
 };
