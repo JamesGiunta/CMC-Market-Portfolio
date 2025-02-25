@@ -38,10 +38,22 @@ app.o:
 mainFrame.o:
 	$(CXX) $(CXXFLAGS) -c $(SRC_USERINTERFACE_DIR)/mainFrame.cpp -o $(SRC_USERINTERFACE_DIR)/mainFrame.o
 
+shareSplitController.o:
+	$(CXX) $(CXXFLAGS) -c $(SRC_USERINTERFACE_DIR)/shareSplitController.cpp -o $(SRC_USERINTERFACE_DIR)/shareSplitController.o
+
+shareNameChangeController.o:
+	$(CXX) $(CXXFLAGS) -c $(SRC_USERINTERFACE_DIR)/shareNameChangeController.cpp -o $(SRC_USERINTERFACE_DIR)/shareNameChangeController.o
+
+shareTakeoverController.o:
+	$(CXX) $(CXXFLAGS) -c $(SRC_USERINTERFACE_DIR)/shareTakeoverController.cpp -o $(SRC_USERINTERFACE_DIR)/shareTakeoverController.o
+
+generateReportController.o:
+	$(CXX) $(CXXFLAGS) -c $(SRC_USERINTERFACE_DIR)/generateReportController.cpp -o $(SRC_USERINTERFACE_DIR)/generateReportController.o
+
 serviceTest: $(SRC_SERVICES_DIR)/serviceTest.o $(SRC_SERVICES_DIR)/dataProcessing.o $(SRC_SERVICES_DIR)/dataRow.o $(SRC_SERVICES_DIR)/tradeOperations.o $(SRC_SERVICES_DIR)/dataRetrieval.o $(SRC_SERVICES_DIR)/excelWriter.o $(SRC_SERVICES_DIR)/corporateShareActions.o
 	$(CXX) $(LDFLAGS) -o serviceTest $^ $(LDLIBS)
 
-main: $(SRC_USERINTERFACE_DIR)/app.o $(SRC_USERINTERFACE_DIR)/mainFrame.o $(SRC_SERVICES_DIR)/dataProcessing.o $(SRC_SERVICES_DIR)/dataRow.o $(SRC_SERVICES_DIR)/tradeOperations.o $(SRC_SERVICES_DIR)/dataRetrieval.o $(SRC_SERVICES_DIR)/excelWriter.o $(SRC_SERVICES_DIR)/corporateShareActions.o
+main: $(SRC_USERINTERFACE_DIR)/app.o $(SRC_USERINTERFACE_DIR)/mainFrame.o $(SRC_USERINTERFACE_DIR)/shareSplitController.o $(SRC_USERINTERFACE_DIR)/shareNameChangeController.o $(SRC_USERINTERFACE_DIR)/shareTakeoverController.o $(SRC_USERINTERFACE_DIR)/generateReportController.o $(SRC_SERVICES_DIR)/dataProcessing.o $(SRC_SERVICES_DIR)/dataRow.o $(SRC_SERVICES_DIR)/tradeOperations.o $(SRC_SERVICES_DIR)/dataRetrieval.o $(SRC_SERVICES_DIR)/excelWriter.o $(SRC_SERVICES_DIR)/corporateShareActions.o
 	$(CXX) $(LDFLAGS) -o main $^ $(LDLIBS)
 
 clean:
