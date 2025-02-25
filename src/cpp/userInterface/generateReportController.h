@@ -10,5 +10,8 @@ class GenerateReportController : public wxPanel {
         wxPanel *parent;
         wxPanel *page1Panel1;
         wxPanel *page1Panel2;
+        wxListBox *confirmationsList;
+        std::vector<wxString> confirmationPaths;
         void setupUI();
+        void selectConfirmation(wxCommandEvent &event);
 };
