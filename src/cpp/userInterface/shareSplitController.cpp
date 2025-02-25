@@ -5,7 +5,12 @@ void ShareSplitController::addCacheShareSplitRow(wxCommandEvent& event) {
         return;
     }
     ShareSplitRow row;
-    row.ASXCode = splitASXCodeInput->GetValue().ToStdString();
+    std::string ASXCode = splitASXCodeInput->GetValue().ToStdString();
+    for (std::size_t i = 0; i < ASXCode.length(); i++) {
+        ASXCode[i] = toupper(ASXCode[i]);
+    }
+    std::cout << ASXCode << std::endl;
+    row.ASXCode = ASXCode;
     row.ratio = std::stod(splitRatioInput->GetValue().ToStdString());
     std::string date = splitDateInput->GetValue().ToStdString();
     row.date = app->dataProcessing.regexDate(date);

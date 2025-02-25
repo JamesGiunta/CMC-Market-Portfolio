@@ -5,8 +5,16 @@ void ShareNameChangeController::addCacheShareNameChangeRow(wxCommandEvent& event
         return;
     }
     NameChangeRow row;
-    row.ASXCode = oldASXCodeInput->GetValue().ToStdString();
-    row.newASXCode = newASXCodeInput->GetValue().ToStdString();
+    std::string oldASXCode = oldASXCodeInput->GetValue().ToStdString();
+    for (std::size_t i = 0; i < oldASXCode.length(); i++) {
+        oldASXCode[i] = toupper(oldASXCode[i]);
+    }
+    row.ASXCode = oldASXCode;
+    std::string newASXCode = newASXCodeInput->GetValue().ToStdString();
+    for (std::size_t i = 0; i < newASXCode.length(); i++) {
+        newASXCode[i] = toupper(newASXCode[i]);
+    }
+    row.newASXCode = newASXCode;
     std::string date = nameChangeDateInput->GetValue().ToStdString();
     row.date = app->dataProcessing.regexDate(date);
 

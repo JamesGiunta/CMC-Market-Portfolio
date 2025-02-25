@@ -5,7 +5,11 @@ void ShareTakeoverController::addCacheShareTakeoverRow(wxCommandEvent& event) {
         return;
     }
     DataRow row;
-    row.ASXCode = takeoverASXCodeInput->GetValue().ToStdString();
+    std::string ASXCode = takeoverASXCodeInput->GetValue().ToStdString();
+    for (std::size_t i = 0; i < ASXCode.length(); i++) {
+        ASXCode[i] = toupper(ASXCode[i]);
+    }
+    row.ASXCode = ASXCode;
     row.price = std::stod(takeoverPriceInput->GetValue().ToStdString());
     std::string date = takeoverDateInput->GetValue().ToStdString();
     row.tradeDate = app->dataProcessing.regexDate(date);

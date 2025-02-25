@@ -211,7 +211,6 @@ void DataRetrieval::cacheShareConsolidation(ShareSplitRow row) {
 
 void DataRetrieval::cacheShareNameChange(NameChangeRow row) {
     nlohmann::json j;
-    j["nameChangeRow"] = row;
 
     std::filesystem::path path = "resources/jsons/shareNameChangeVector.json";
     if (std::filesystem::exists(path)) {
