@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 #include "app.h"
 
-class ShareTakeoverController : public wxPanel {
+class ShareTakeoverController {
     public:
         ShareTakeoverController(wxPanel *parent, App *app);
     private:

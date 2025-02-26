@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 #include "app.h"
 
-class ShareNameChangeController : public wxPanel {
+class ShareNameChangeController {
     public:
         ShareNameChangeController(wxPanel *parent, App *app);
     private:

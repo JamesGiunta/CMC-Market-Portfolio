@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 #include "app.h"
 
-class ShareSplitController : public wxPanel {
+class ShareSplitController {
     public:
         ShareSplitController(wxPanel *parent, App *app);
     private:

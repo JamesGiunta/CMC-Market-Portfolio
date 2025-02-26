@@ -73,7 +73,7 @@ void ShareTakeoverController::setupUI() {
     parent->SetSizer(page4Panel1ContentSizer);
 }
 
-ShareTakeoverController::ShareTakeoverController(wxPanel *parent, App *app) : wxPanel(parent) {
+ShareTakeoverController::ShareTakeoverController(wxPanel *parent, App *app) {
     this->app = app;
     this->parent = parent;
     setupUI();

@@ -64,7 +64,7 @@ void ShareNameChangeController::setupUI() {
     parent->SetSizer(page3Panel1ContentSizer);
 }
 
-ShareNameChangeController::ShareNameChangeController(wxPanel *parent, App *app) : wxPanel(parent) {
+ShareNameChangeController::ShareNameChangeController(wxPanel *parent, App *app) {
     this->app = app;
     this->parent = parent;
     setupUI();

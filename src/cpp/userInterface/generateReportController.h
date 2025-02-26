@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 #include "app.h"
 
-class GenerateReportController : public wxPanel {
+class GenerateReportController {
     public:
     GenerateReportController(wxPanel *parent, App *app);
     private:
@@ -14,4 +14,5 @@ class GenerateReportController : public wxPanel {
         std::vector<wxString> confirmationPaths;
         void setupUI();
         void selectConfirmation(wxCommandEvent &event);
+        void onListBoxDoubleClick(wxCommandEvent& event);
 };

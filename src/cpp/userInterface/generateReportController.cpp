@@ -4,9 +4,19 @@ void GenerateReportController::selectConfirmation(wxCommandEvent &event) {
     wxFileDialog openFileDialog(parent, "Select Confirmation", "", "", "CSV files (*.csv)|*.csv", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
     if (openFileDialog.ShowModal() == wxID_OK) {
-        wxString path = openFileDialog.GetPath();
-        confirmationPaths.push_back(path);
-        confirmationsList->Append(path);
+        std::filesystem::path path = openFileDialog.GetPath().ToStdString();
+        wxString fileName = path.filename().string();
+        wxString pathString = path.string();
+        confirmationPaths.push_back(pathString);
+        confirmationsList->Append(fileName);
+    }
+}
+
+void GenerateReportController::onListBoxDoubleClick(wxCommandEvent& event) {
+    int selection = confirmationsList->GetSelection();
+    if (selection != wxNOT_FOUND) {
+        confirmationsList->Delete(selection);
+        confirmationPaths.erase(confirmationPaths.begin() + selection);
     }
 }
 
@@ -33,6 +43,8 @@ void GenerateReportController::setupUI() {
     confirmationsList->SetForegroundColour(wxColor(255, 255, 255));
 
     confirmButton->Bind(wxEVT_BUTTON, &GenerateReportController::selectConfirmation, this);
+    confirmationsList->Bind(wxEVT_LISTBOX_DCLICK, &GenerateReportController::onListBoxDoubleClick, this);
+
 
     wxCheckBox *checkBox = new wxCheckBox(page1Panel2, wxID_ANY, "Use Cache", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE);
     wxButton *generateReportButton = new wxButton(page1Panel2, wxID_ANY, "Generate Report", wxDefaultPosition, wxDefaultSize);
@@ -44,10 +56,10 @@ void GenerateReportController::setupUI() {
 
     panel4ContentSizer->Add(confrimationsText, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
     panel4ContentSizer->AddSpacer(10);
-    panel4ContentSizer->Add(confirmButton, wxSizerFlags().Proportion(0).Border(wxALL, 10));
-    panel4ContentSizer->AddSpacer(10);
-    panel4ContentSizer->Add(confirmationsList, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
-
+    panel4ContentSizer->Add(confirmButton, wxSizerFlags().Proportion(0).CenterHorizontal().Border(wxALL, 10));
+    panel4ContentSizer->AddSpacer(20);
+    panel4ContentSizer->Add(confirmationsList, wxSizerFlags().Proportion(1).Expand().Border(wxLEFT | wxRIGHT, 50)); 
+    panel4ContentSizer->AddSpacer(10);   
     page1Panel1->SetSizer(panel4ContentSizer);
 
     wxBoxSizer *panel5ContentSizer = new wxBoxSizer(wxVERTICAL);
@@ -59,7 +71,7 @@ void GenerateReportController::setupUI() {
     page1Panel2->SetSizer(panel5ContentSizer);
 }
 
-GenerateReportController::GenerateReportController(wxPanel *parent, App *app) : wxPanel(parent) {
+GenerateReportController::GenerateReportController(wxPanel *parent, App *app) {
     this->app = app;
     this->parent = parent;
     setupUI();

@@ -62,7 +62,7 @@ void ShareSplitController::setupUI() {
     parent->SetSizer(page2Panel1ContentSizer);
 }
 
-ShareSplitController::ShareSplitController(wxPanel *parent, App *app): wxPanel(parent, wxID_ANY) {
+ShareSplitController::ShareSplitController(wxPanel *parent, App *app) {
     this->app = app;
     this->parent = parent;
     setupUI();
