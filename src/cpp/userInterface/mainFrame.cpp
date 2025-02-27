@@ -97,7 +97,7 @@ void MainFrame::setupPanel2() {
     wxButton *browseButton = new wxButton(panel2, wxID_ANY, "Browse", wxDefaultPosition, wxDefaultSize);
     wxButton *clearCacheButton = new wxButton(panel2, wxID_ANY, "Clear Cache", wxDefaultPosition, wxDefaultSize);
     wxStaticText *reportNameTextStatic = new wxStaticText(panel2, wxID_ANY, "Generated File Name:", wxDefaultPosition, wxDefaultSize);
-    wxTextCtrl *reportNameText = new wxTextCtrl(panel2, wxID_ANY, "Report", wxDefaultPosition, wxDefaultSize);
+    reportNameText = new wxTextCtrl(panel2, wxID_ANY, "Report", wxDefaultPosition, wxDefaultSize);
 
     fileSaveLocation->SetFont(wxFont(wxFontInfo(12).Bold()));
     fileSaveLocation->SetForegroundColour(wxColour(255, 255, 255));

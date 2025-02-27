@@ -12,7 +12,9 @@ class GenerateReportController {
         wxPanel *page1Panel2;
         wxListBox *confirmationsList;
         std::vector<wxString> confirmationPaths;
+        wxCheckBox *cacheCheckBox;
         void setupUI();
         void selectConfirmation(wxCommandEvent &event);
         void onListBoxDoubleClick(wxCommandEvent& event);
+        void generateReport(wxCommandEvent &event);
 };
