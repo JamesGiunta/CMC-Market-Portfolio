@@ -23,11 +23,15 @@ void GenerateReportController::onListBoxDoubleClick(wxCommandEvent& event) {
 void GenerateReportController::generateReport(wxCommandEvent &event) {
     bool useCache = cacheCheckBox->IsChecked();
 
-    std::cout << useCache << std::endl;
-
     if (confirmationPaths.size() == 0) {
         wxMessageBox("Please select at least one confirmation", "Error", wxICON_ERROR);
         return;
+    }
+
+    std::vector<DataRow> data;
+    for (auto confirmation: confirmationPaths) {
+        std::vector<DataRow> confirmationData = app->dataProcessing.loadCSV(confirmation.ToStdString());
+        data.insert(data.end(), confirmationData.begin(), confirmationData.end());
     }
 }
 
