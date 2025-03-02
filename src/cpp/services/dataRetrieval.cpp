@@ -71,7 +71,7 @@ void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& sha
     file3.close();
 }
 
-void DataRetrieval::loadCachedData(std::vector<DataRow>& data) {
+void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap) {
     //Check if the json files exist and create them if they don't
     if (!std::filesystem::exists("resources/jsons/shareSplitVector.json")) {
         nlohmann::json j;
@@ -147,8 +147,18 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data) {
         std::cerr << "Failed to open shareTakeOverVector.json" << std::endl;
     }
     std::vector<DataRow> shareTakeOverVector = j3["shareTakeOverVector"];
+
+    //update live shares map after share name change and share split first to avoid errors
+    liveSharesMap = to.createLiveDataVector(data);
+    for (DataRow& row : shareTakeOverVector) {
+        if (liveSharesMap.find(row.ASXCode) != liveSharesMap.end()) {
+            row.quantity = liveSharesMap[row.ASXCode].quantity;
+            liveSharesMap.erase(row.ASXCode);
+        }
+    }
     data.insert(data.end(), shareTakeOverVector.begin(), shareTakeOverVector.end());
 }
+
 
 void DataRetrieval::clearCache() {
     std::filesystem::path path = "resources/jsons";

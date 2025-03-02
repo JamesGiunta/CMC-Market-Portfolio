@@ -155,7 +155,7 @@ void ServiceTest::testLiveShareValue(TradeOperations& to) {
     bool flag = false;
     liveShares LiveShare1 = {20};
     liveShares LiveShare2 = {100};
-    DataRetrieval dr;
+    DataRetrieval dr(to);
 
     std::map<std::string, liveShares> liveSharesMap;
     liveSharesMap["ANZ"] = LiveShare1;
@@ -305,8 +305,8 @@ int main() {
     ServiceTest st;
     DataRow dr;
     DataProcessing dp;
-    DataRetrieval drr;
     TradeOperations to;
+    DataRetrieval drr(to);
     st.createDirectory();
     st.testLoadCSV(dr, dp);
     st.testDataRowSorting(dr);
@@ -326,9 +326,8 @@ int main() {
     std::map<std::string, liveShares> liveSharesMap;
 
     if (cache == 'Y' || cache == 'y') {
-        drr.loadCachedData(data);
+        drr.loadCachedData(data, liveSharesMap);
         //update live shares map after data has been updated to avoid names, quantity and prices being incorrect
-        liveSharesMap = to.createLiveDataVector(data);
     }
     if (cache == 'N' || cache == 'n') {
         CorporateShareActions csa(dr, drr, dp, data, liveSharesMap);

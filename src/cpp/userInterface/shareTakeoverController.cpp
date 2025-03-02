@@ -21,12 +21,6 @@ void ShareTakeoverController::addCacheShareTakeoverRow(wxCommandEvent& event) {
     row.quantity = 0;
     row.tempFee = 0;
     row.tempQuantity = 0;
-    //Add this on generate runtime
-    // if (liveSharesMap.find(takeoverASXCodeInput) != liveSharesMap.end()) {
-    //     row.quantity = liveSharesMap[takeoverASXCodeInput].quantity;
-    //     liveSharesMap.erase(takeoverASXCodeInput);
-    // }
-
     app->dataRetrieval.cacheSpecialCoporateActions(row);
     takeoverASXCodeInput->Clear();
     takeoverPriceInput->Clear();

@@ -1,4 +1,6 @@
 #include "generateReportController.h"
+#include <thread>
+#include <curl/curl.h>
 
 void GenerateReportController::selectConfirmation(wxCommandEvent &event) {
     wxFileDialog openFileDialog(parent, "Select Confirmation", "", "", "CSV files (*.csv)|*.csv", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -28,11 +30,45 @@ void GenerateReportController::generateReport(wxCommandEvent &event) {
         return;
     }
 
+    std::cout << "Generating report..." << std::endl;
+
     std::vector<DataRow> data;
     for (auto confirmation: confirmationPaths) {
         std::vector<DataRow> confirmationData = app->dataProcessing.loadCSV(confirmation.ToStdString());
         data.insert(data.end(), confirmationData.begin(), confirmationData.end());
     }
+    std::map<std::string, liveShares> liveSharesMap;
+    if (useCache) {
+        app->dataRetrieval.loadCachedData(data, liveSharesMap);
+    }
+    else {
+        liveSharesMap = app->tradeOperations.createLiveDataVector(data);
+    }
+
+    std::cout << "Retrieving live share values..." << std::endl;
+
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    std::vector<std::thread> threads(liveSharesMap.size());
+    int i = 0;
+    for (std::pair<const std::string, liveShares>& pair : liveSharesMap) {
+        threads[i] = std::thread(std::bind(&DataRetrieval::getLivePrices, &app->dataRetrieval, std::ref(pair)));
+        i++;
+    }
+    for (std::thread& thread : threads) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
+
+    curl_global_cleanup();
+
+    app->tradeOperations.calculateLiveProfit(liveSharesMap, data);
+    app->tradeOperations.calculateProfit(data);
+    std::sort(data.begin(), data.end(), DataRow::descending);
+    ExcelWriter excelWriter(app->dataRow, "Report.xlsx", data, liveSharesMap);
+    excelWriter.generateExcelFile();
+    wxMessageBox("Report Generated", "Success", wxICON_INFORMATION);
 }
 
 void GenerateReportController::setupUI() {
