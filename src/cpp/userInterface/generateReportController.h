@@ -4,10 +4,12 @@
 
 class GenerateReportController {
     public:
-    GenerateReportController(wxPanel *parent, App *app);
+    GenerateReportController(wxPanel *parent, App *app, wxTextCtrl *reportNameText, std::filesystem::path *filePath);
     private:
         App *app;
         wxPanel *parent;
+        wxTextCtrl *reportNameText;
+        std::filesystem::path *filePath;
         wxPanel *page1Panel1;
         wxPanel *page1Panel2;
         wxListBox *confirmationsList;

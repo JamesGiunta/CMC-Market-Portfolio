@@ -26,7 +26,7 @@ class MainFrame : public wxFrame {
         wxPanel *page3;
         wxPanel *page4;
 
-        std::filesystem::path filePath;
+        std::filesystem::path *filePath;
         wxTextCtrl *reportNameText;
 
         void createPanels();

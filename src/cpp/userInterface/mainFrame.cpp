@@ -6,7 +6,7 @@
 void MainFrame::onFileSaveLocationButton(wxCommandEvent& event) {
     wxDirDialog dialog(this, "Choose a directory", "", wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
     if (dialog.ShowModal() == wxID_OK) {
-        filePath = std::filesystem::path(dialog.GetPath().ToStdString());
+        *filePath = std::filesystem::path(dialog.GetPath().ToStdString());
     }
 }
 
@@ -131,7 +131,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     setupPanel1();
     setupPanel2();
 
-    generateReportController = new GenerateReportController(page1, app);
+    generateReportController = new GenerateReportController(page1, app, reportNameText, filePath);
     shareSplitController = new ShareSplitController(page2, app);
     shareNameChangeController = new ShareNameChangeController(page3, app);
     shareTakeoverController = new ShareTakeoverController(page4, app);
