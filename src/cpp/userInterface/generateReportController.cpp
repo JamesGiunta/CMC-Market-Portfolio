@@ -66,8 +66,9 @@ void GenerateReportController::generateReport(wxCommandEvent &event) {
     app->tradeOperations.calculateLiveProfit(liveSharesMap, data);
     app->tradeOperations.calculateProfit(data);
     std::sort(data.begin(), data.end(), DataRow::descending);
-    std::string reportName = reportNameText->GetValue().ToStdString() + ".xlsx";    
-    ExcelWriter excelWriter(app->dataRow, reportName, data, liveSharesMap);
+    std::string reportName = reportNameText->GetValue().ToStdString() + ".xlsx";   
+    std::string filePathString = filePath->string() + "/" + reportName; 
+    ExcelWriter excelWriter(app->dataRow, filePathString, data, liveSharesMap);
     excelWriter.generateExcelFile();
     wxMessageBox("Report Generated", "Success", wxICON_INFORMATION);
 }
@@ -125,7 +126,7 @@ void GenerateReportController::setupUI() {
     page1Panel2->SetSizer(panel5ContentSizer);
 }
 
-GenerateReportController::GenerateReportController(wxPanel *parent, App *app, wxTextCtrl *reportNameText, std::filesystem::path *filePath) {
+GenerateReportController::GenerateReportController(wxPanel *parent, App *app, wxTextCtrl *reportNameText, std::shared_ptr<std::filesystem::path> filePath) {
     this->app = app;
     this->parent = parent;
     this->reportNameText = reportNameText;

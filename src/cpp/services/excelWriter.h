@@ -7,12 +7,12 @@
 
 class ExcelWriter {
 public:
-    ExcelWriter(DataRow& dr, const std::string& fileName, const std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap) :
+    ExcelWriter(DataRow& dr, const std::string& fullPath, const std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap) :
         dr(dr),
-        fileName(fileName),
+        fullPath(fullPath),
         data(data),
         liveSharesMap(liveSharesMap) {
-        workbook = workbook_new(fileName.c_str());
+        workbook = workbook_new(fullPath.c_str());
         cellFormat = workbook_add_format(workbook);
         format_set_bold(cellFormat);
     }
@@ -26,7 +26,7 @@ public:
 
 private:
     DataRow& dr;
-    const std::string fileName;
+    const std::string fullPath;
     lxw_workbook* workbook;
     lxw_format* cellFormat;
     const std::vector<DataRow>& data;

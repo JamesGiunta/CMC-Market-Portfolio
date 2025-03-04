@@ -131,6 +131,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     setupPanel1();
     setupPanel2();
 
+    filePath = std::make_shared<std::filesystem::path>(std::filesystem::current_path());
     generateReportController = new GenerateReportController(page1, app, reportNameText, filePath);
     shareSplitController = new ShareSplitController(page2, app);
     shareNameChangeController = new ShareNameChangeController(page3, app);
