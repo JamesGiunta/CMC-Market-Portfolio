@@ -40,9 +40,7 @@ target_link_libraries(services
     OpenSSL::SSL
     OpenSSL::Crypto
     Threads::Threads
-    ZLIB::ZLIB
     xlsxwriter
-    minizip
     nlohmann_json::nlohmann_json
 )
 
