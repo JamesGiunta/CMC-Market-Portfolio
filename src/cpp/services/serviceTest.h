@@ -15,7 +15,6 @@ class ServiceTest {
         static void testCalculateLiveProfit(DataRow& dr, TradeOperations& to);
         static void testCalculateProfit(DataRow& dr, TradeOperations& to);
         static void testcalculateCGTPercentage(DataRow& dr, TradeOperations& to);
-        static void testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew);
         static void createDirectory();
 
     private:

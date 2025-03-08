@@ -18,7 +18,7 @@
 
 
 void ServiceTest::createDirectory() {
-    const char* dir = "resources/jsons";
+    const char* dir = "../resources/jsons";
  
     // Structure which would store the metadata
     struct stat sb;
@@ -65,7 +65,7 @@ void ServiceTest::createTestData(DataRow& dr) {
     std::vector<std::string> row5 = {"", "", "ANZ", "", "Buy", "", "06/11/2023", "08/11/2023", "22.33", "30", "10", "0.19"};
 
     std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3, row4, row5};
-    vectorToCSV(testData1, "resources/testData.csv");
+    vectorToCSV(testData1, "../resources/testData.csv");
 }
 
 std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
@@ -89,7 +89,7 @@ void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
 
-    std::vector<DataRow> data = dp.loadCSV("resources/testData.csv");
+    std::vector<DataRow> data = dp.loadCSV("../resources/testData.csv");
     std::cout << "function: testLoadCSV" << std::endl;
     if (data == expectedData) {
         std::cout << "Data loaded correctly. ✅" << std::endl;
@@ -280,26 +280,6 @@ void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
     }
 }
 
-void ServiceTest::testExcelExport(DataRow& dr, TradeOperations& to, ExcelWriter& ew) {
-
-    DataRow testRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0};
-    DataRow testRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), -9.11};
-    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0};
-    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68};
-    DataRow testRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0};
-
-    std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5};
-
-    liveShares testLiveShare1 = {20, 24.31, 32.81, 454.39, 22.33};
-    liveShares testLiveShare2 = {100, 110.12, -587.12, 11599.12, 115.78};
-
-    std::map<std::string, liveShares> testLiveShares;
-    testLiveShares["ANZ"] = testLiveShare1;
-    testLiveShares["CBA"] = testLiveShare2;
-
-    std::sort(testData.begin(), testData.end(), DataRow::descending);
-    ew.generateExcelFile();
-}
 
 int main() {
     ServiceTest st;
@@ -315,9 +295,8 @@ int main() {
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
     st.testcalculateCGTPercentage(dr, to);
-    // st.testExcelExport(dr, to, ew);
 
-    std::vector<DataRow> data = dp.loadCSV("resources/Confirmation.csv");
+    std::vector<DataRow> data = dp.loadCSV("../resources/testData.csv");
 
     char cache;
     std::cout << "Would you like to use cached data? (Y/N): ";
@@ -363,9 +342,13 @@ int main() {
     to.calculateLiveProfit(liveSharesMap, data);
     to.calculateProfit(data);
     std::sort(data.begin(), data.end(), DataRow::descending);
-    ExcelWriter ew(dr, "Report.xlsx", data, liveSharesMap);
+    std::filesystem::path reportPath = "../resources/reports";
+    if (!std::filesystem::exists(reportPath)) {
+        std::filesystem::create_directories(reportPath);
+    }
+    std::string reportPathStr = reportPath.string() + "/Report.xlsx";
+    ExcelWriter ew(dr, reportPathStr, data, liveSharesMap);
     ew.generateExcelFile();
-    // st.testExcelExport(dr, to);
 
 
  

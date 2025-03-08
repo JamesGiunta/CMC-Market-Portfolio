@@ -73,35 +73,35 @@ void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& sha
 
 void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::string, liveShares>& liveSharesMap) {
     //Check if the json files exist and create them if they don't
-    if (!std::filesystem::exists("resources/jsons/shareSplitVector.json")) {
+    if (!std::filesystem::exists("../resources/jsons/shareSplitVector.json")) {
         nlohmann::json j;
         std::vector<ShareSplitRow> empty;
         j["shareSplitVector"] = empty;
-        std::ofstream file("resources/jsons/shareSplitVector.json");
+        std::ofstream file("../resources/jsons/shareSplitVector.json");
         file << j;
         file.close();
     }
 
-    if (!std::filesystem::exists("resources/jsons/shareNameChangeVector.json")) {
+    if (!std::filesystem::exists("../resources/jsons/shareNameChangeVector.json")) {
         nlohmann::json j;
         std::vector<NameChangeRow> empty;
         j["shareNameChangeVector"] = empty;
-        std::ofstream file("resources/jsons/shareNameChangeVector.json");
+        std::ofstream file("../resources/jsons/shareNameChangeVector.json");
         file << j;
         file.close();
     }
 
-    if (!std::filesystem::exists("resources/jsons/shareTakeOverVector.json")) {
+    if (!std::filesystem::exists("../resources/jsons/shareTakeOverVector.json")) {
         nlohmann::json j;
         std::vector<DataRow> empty;
         j["shareTakeOverVector"] = empty;
-        std::ofstream file("resources/jsons/shareTakeOverVector.json");
+        std::ofstream file("../resources/jsons/shareTakeOverVector.json");
         file << j;
         file.close();
     }
 
     nlohmann::json j1;
-    std::ifstream file1("resources/jsons/shareSplitVector.json");
+    std::ifstream file1("../resources/jsons/shareSplitVector.json");
     if (file1.is_open()) {
         file1 >> j1;
         file1.close();
@@ -120,7 +120,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
     }
 
     nlohmann::json j2;
-    std::ifstream file2("resources/jsons/shareNameChangeVector.json");
+    std::ifstream file2("../resources/jsons/shareNameChangeVector.json");
     if (file2.is_open()) {
         file2 >> j2;
         file2.close();
@@ -138,7 +138,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
     }
 
     nlohmann::json j3;
-    std::ifstream file3("resources/jsons/shareTakeOverVector.json");
+    std::ifstream file3("../resources/jsons/shareTakeOverVector.json");
     if (file3.is_open()) {
         file3 >> j3;
         file3.close();
@@ -161,7 +161,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
 
 
 void DataRetrieval::clearCache() {
-    std::filesystem::path path = "resources/jsons";
+    std::filesystem::path path = "../resources/jsons";
     for(const auto& entry : std::filesystem::directory_iterator(path)) {
         std::filesystem::remove_all(entry.path());
     }
@@ -170,7 +170,7 @@ void DataRetrieval::clearCache() {
 void DataRetrieval::cacheSpecialCoporateActions(DataRow row) {
     nlohmann::json j;
 
-    std::filesystem::path path = "resources/jsons/shareTakeOverVector.json";
+    std::filesystem::path path = "../resources/jsons/shareTakeOverVector.json";
     if (std::filesystem::exists(path)) {
         std::ifstream file(path);
         if (file.is_open()) {
@@ -196,7 +196,7 @@ void DataRetrieval::cacheSpecialCoporateActions(DataRow row) {
 void DataRetrieval::cacheShareConsolidation(ShareSplitRow row) {
     nlohmann::json j;
 
-    std::filesystem::path path = "resources/jsons/shareSplitVector.json";
+    std::filesystem::path path = "../resources/jsons/shareSplitVector.json";
     if (std::filesystem::exists(path)) {
         std::ifstream file(path);
         if (file.is_open()) {
@@ -222,7 +222,7 @@ void DataRetrieval::cacheShareConsolidation(ShareSplitRow row) {
 void DataRetrieval::cacheShareNameChange(NameChangeRow row) {
     nlohmann::json j;
 
-    std::filesystem::path path = "resources/jsons/shareNameChangeVector.json";
+    std::filesystem::path path = "../resources/jsons/shareNameChangeVector.json";
     if (std::filesystem::exists(path)) {
         std::ifstream file(path);
         if (file.is_open()) {
