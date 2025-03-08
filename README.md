@@ -19,7 +19,17 @@ sudo apt install -y libcurl4-openssl-dev
 sudo apt install -y nlohmann-json3-dev
 sudo apt install -y libzip-dev
 
-### Window Install
+### Windows Install
+https://cmake.org/download/ (Between 3.22.1 and 3.5)
+
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+.\bootstrap-vcpkg.bat
+.\vcpkg install wxwidgets:x64-windows
+.\vcpkg install curl:x64-windows openssl:x64-windows
+.\vcpkg install nlohmann-json:x64-windows
+.\vcpkg install libxlsxwriter:x64-windows
+.\vcpkg install libzip:x64-windows
 
 ### Downloading Trade Confirmations
 1. Go to the CMC-Market website
