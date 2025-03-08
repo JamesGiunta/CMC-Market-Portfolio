@@ -130,6 +130,12 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
     createPanels();
     setupPanel1();
     setupPanel2();
+    // Create a directory for resources and jsons if they dont exist
+    const char* dir = "../resources/jsons"; 
+    struct stat sb;
+     if (stat(dir, &sb) == -1) {
+        std::filesystem::create_directories(dir);
+    }
 
     std::filesystem::path filePathLocation= std::filesystem::current_path().parent_path() / "reports";
 

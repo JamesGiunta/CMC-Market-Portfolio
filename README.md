@@ -45,5 +45,6 @@ In project directory:
 mkdir build
 cd build
 cmake ..
-make
+Linux: make
+Windows: cmake --build .
 ./main
