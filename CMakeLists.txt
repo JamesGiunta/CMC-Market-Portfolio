@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD_EXTENSIONS OFF)
 
 add_compile_options(-Wall -Werror -g -O)
 
-# Find required system packages
-find_package(wxWidgets REQUIRED COMPONENTS core base net)
+
+find_package(wxWidgets 3.2 REQUIRED COMPONENTS core base net)
 find_package(Threads REQUIRED)
 find_package(CURL REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -35,13 +35,6 @@ set(MAIN_SOURCES
 
 add_library(services STATIC ${SERVICES_SOURCES})
 
-# Include system directories instead of vcpkg
-target_include_directories(services PUBLIC 
-    /usr/include
-    /usr/local/include
-)
-
-# Link with system libraries instead of vcpkg
 target_link_libraries(services
     CURL::libcurl
     OpenSSL::SSL
