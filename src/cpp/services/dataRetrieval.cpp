@@ -7,6 +7,14 @@
 #include <fstream> 
 #include <filesystem>
 
+/**
+ * Stock Data Retriever
+ * 
+ * DISCLAIMER: This code makes API calls with a specific referrer setting.
+ * See README.md for important usage information and disclaimers.
+ * Use at your own risk and responsibility.
+ */
+
 size_t DataRetrieval::WriteCallback(void* contents, size_t size, size_t nmemb, void* userp){
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
