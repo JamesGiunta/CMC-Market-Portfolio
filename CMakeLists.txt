@@ -23,7 +23,7 @@ if(WIN32)
     
     find_library(XLSXWRITER_LIBRARY xlsxwriter PATHS "${MSYS2_PATH}/lib" REQUIRED)
     find_path(XLSXWRITER_INCLUDE_DIR xlsxwriter.h PATHS "${MSYS2_PATH}/include" REQUIRED)
-    else()
+else()
     add_compile_options(-Wall -Werror -g -O)
     
     find_package(wxWidgets 3.2 REQUIRED COMPONENTS core base net)
