@@ -20,16 +20,16 @@ sudo apt install -y nlohmann-json3-dev
 sudo apt install -y libzip-dev
 
 ### Windows Install
-https://cmake.org/download/ (Between 3.22.1 and 3.5)
+#### Install MSYS2 from https://www.msys2.org/
+#### Then open MSYS2 MINGW64 terminal and run:
 
-git clone https://github.com/Microsoft/vcpkg.git
-cd vcpkg
-.\bootstrap-vcpkg.bat
-.\vcpkg install wxwidgets:x64-windows
-.\vcpkg install curl:x64-windows openssl:x64-windows
-.\vcpkg install nlohmann-json:x64-windows
-.\vcpkg install libxlsxwriter:x64-windows
-.\vcpkg install libzip:x64-windows
+pacman -Syu
+pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+pacman -S mingw-w64-x86_64-wxWidgets
+pacman -S mingw-w64-x86_64-curl mingw-w64-x86_64-openssl
+pacman -S mingw-w64-x86_64-nlohmann-json
+pacman -S mingw-w64-x86_64-libxlsxwriter
+pacman -S mingw-w64-x86_64-libzip
 
 ### Downloading Trade Confirmations
 1. Go to the CMC-Market website
