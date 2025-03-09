@@ -23,13 +23,13 @@ sudo apt install -y libzip-dev
 #### Install MSYS2 from https://www.msys2.org/
 #### Then open MSYS2 MINGW64 terminal and run:
 
-pacman -Syu
-pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-make
-pacman -S mingw-w64-x86_64-wxWidgets
-pacman -S mingw-w64-x86_64-curl mingw-w64-x86_64-openssl
-pacman -S mingw-w64-x86_64-nlohmann-json
-pacman -S mingw-w64-x86_64-libxlsxwriter
-pacman -S mingw-w64-x86_64-libzip
+1. pacman -Syu
+2. pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+3. pacman -S mingw-w64-x86_64-wxWidgets
+4. pacman -S mingw-w64-x86_64-curl mingw-w64-x86_64-openssl
+5. pacman -S mingw-w64-x86_64-nlohmann-json
+6. pacman -S mingw-w64-x86_64-libxlsxwriter
+7. pacman -S mingw-w64-x86_64-libzip
 
 ### Downloading Trade Confirmations
 1. Go to the CMC-Market website
