@@ -12,24 +12,24 @@ nlohmann/json
 libxlsxwriter
 
 ### Linux Install
-#### sudo apt update
-#### sudo apt install -y build-essential cmake
-#### sudo apt install -y libwxgtk3.2-dev
-#### sudo apt install -y libcurl4-openssl-dev
-####sudo apt install -y nlohmann-json3-dev
-#### sudo apt install -y libzip-dev
+##### sudo apt update
+##### sudo apt install -y build-essential cmake
+##### sudo apt install -y libwxgtk3.2-dev
+##### sudo apt install -y libcurl4-openssl-dev
+#####sudo apt install -y nlohmann-json3-dev
+##### sudo apt install -y libzip-dev
 
 ### Windows Install
-#### Install MSYS2 from https://www.msys2.org/
-#### Then open MSYS2 MINGW64 terminal and run:
+##### Install MSYS2 from https://www.msys2.org/
+##### Then open MSYS2 MINGW64 terminal and run:
 
-#### pacman -Syu
-#### pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-make
-#### pacman -S mingw-w64-x86_64-wxWidgets
-#### pacman -S mingw-w64-x86_64-curl mingw-w64-x86_64-openssl
-#### pacman -S mingw-w64-x86_64-nlohmann-json
-#### pacman -S mingw-w64-x86_64-libxlsxwriter
-#### pacman -S mingw-w64-x86_64-libzip
+##### pacman -Syu
+##### pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-make
+##### pacman -S mingw-w64-x86_64-wxWidgets
+##### pacman -S mingw-w64-x86_64-curl mingw-w64-x86_64-openssl
+##### pacman -S mingw-w64-x86_64-nlohmann-json
+##### pacman -S mingw-w64-x86_64-libxlsxwriter
+##### pacman -S mingw-w64-x86_64-libzip
 
 ### Downloading Trade Confirmations
 1. Go to the CMC-Market website
