@@ -1,6 +1,6 @@
 # CMC-Market-Report
 
-Creates a market portfolio from CMC Confirmations 
+Creates a market report portfolio from CMC Confirmations 
 
 ## Required Packages
 cmake
