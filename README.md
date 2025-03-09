@@ -2,6 +2,16 @@
 
 Creates a market report portfolio from CMC Confirmations 
 
+## API Usage Disclaimer
+The code in this repository makes API calls to a third-party service using publicly visible configuration. Please note:
+
+- The code uses an API endpoint that appears on public web pages
+- It sets HTTP referrer headers to "fool.com.au" which may violate terms of service
+- No private API keys have been exposed (the AppID is publicly visible in network requests)
+- This code is shared for educational purposes only
+- Users are responsible for ensuring their usage complies with all relevant terms of service
+- No warranty or support is provided for production use
+
 ## Required Packages
 cmake
 build-essential
