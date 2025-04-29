@@ -155,13 +155,14 @@ void ExcelWriter::generateExcelFile() {
     row = 1;
     writeTransactionData(worksheet1);
 
-    
-    time_t earliestTime = data.back().settlementDate;
-
     std::time_t t = std::time(0);
     std::tm dateCopy = *std::localtime(&t);
     std::time_t currentFinancialYearEnd = caculateFinanicalYearEndDate(&dateCopy); 
+    time_t earliestTime = currentFinancialYearEnd;
 
+    if (!data.empty()) {
+        earliestTime = data.back().settlementDate;
+    }
     while (currentFinancialYearEnd > earliestTime) {
         // Calculate the previous financial year
         std::tm tm_current = *std::localtime(&currentFinancialYearEnd);
