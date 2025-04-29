@@ -74,6 +74,7 @@ add_executable(main ${MAIN_SOURCES})
 
 if(WIN32)
     target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
+    set_target_properties(main PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
 
 target_link_libraries(main services ${wxWidgets_LIBRARIES} ${PLATFORM_LIBS})
