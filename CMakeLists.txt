@@ -71,15 +71,20 @@ target_link_libraries(services
 )
 
 add_executable(main ${MAIN_SOURCES})
+add_executable(mainDebug ${MAIN_SOURCES})
 
 if(WIN32)
     target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
+    target_include_directories(mainDebug PRIVATE ${wxWidgets_INCLUDE_DIRS})
+    
+    # Only set WIN32_EXECUTABLE for the GUI version, not for the debug version
     set_target_properties(main PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
 
 target_link_libraries(main services ${wxWidgets_LIBRARIES} ${PLATFORM_LIBS})
+target_link_libraries(mainDebug services ${wxWidgets_LIBRARIES} ${PLATFORM_LIBS})
 
 add_executable(serviceTest src/cpp/services/serviceTest.cpp)
 target_link_libraries(serviceTest services)
 
-install(TARGETS main serviceTest RUNTIME DESTINATION bin)
+install(TARGETS main mainDebug serviceTest RUNTIME DESTINATION bin)
