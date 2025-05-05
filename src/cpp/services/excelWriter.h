@@ -31,6 +31,7 @@ private:
     lxw_format* cellFormat;
     const std::vector<DataRow>& data;
     std::map<std::string, liveShares>& liveSharesMap;
+    std::stringstream ss;
     int col; 
     int row;
 

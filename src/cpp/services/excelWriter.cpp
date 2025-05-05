@@ -38,7 +38,10 @@ void ExcelWriter::setUpHeader(lxw_worksheet* worksheet, std::list<std::string> h
 
 void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<double> profits) {
     for (const auto& profit : profits) {
-        worksheet_write_string(worksheet, row, col, std::to_string(profit).c_str(), NULL);
+        ss << std::fixed << std::setprecision(2) << profit;
+        std::string profitStr = ss.str();
+        ss.str("");
+        worksheet_write_string(worksheet, row, col, profitStr.c_str(), NULL);
         col++;
     }
 }
