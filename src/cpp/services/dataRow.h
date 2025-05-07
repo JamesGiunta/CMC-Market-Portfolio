@@ -20,6 +20,7 @@ struct DataRow {
     int tempQuantity;
     double tempFee;
     double cgt;
+    long long consideration;
     bool twelveMonths = false;
     
     friend std::ostream& operator<<(std::ostream& os, const DataRow& row);
@@ -29,7 +30,7 @@ struct DataRow {
     static std::string orderTypeToString(OrderType type);
     static std::string dateToString(std::time_t date);
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(DataRow, ASXCode, orderType, tradeDate, settlementDate, price, quantity, fee, profit, seq, tempQuantity, tempFee, cgt, twelveMonths)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(DataRow, ASXCode, orderType, tradeDate, settlementDate, price, quantity, fee, profit, seq, tempQuantity, tempFee, cgt, consideration, twelveMonths)
 };
 
 struct ShareSplitRow {

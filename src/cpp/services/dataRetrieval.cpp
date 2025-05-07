@@ -161,6 +161,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
     for (DataRow& row : shareTakeOverVector) {
         if (liveSharesMap.find(row.ASXCode) != liveSharesMap.end()) {
             row.quantity = liveSharesMap[row.ASXCode].quantity;
+            row.consideration = row.price * row.quantity * 100.00;
             liveSharesMap.erase(row.ASXCode);
         }
     }

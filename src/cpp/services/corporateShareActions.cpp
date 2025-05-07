@@ -4,7 +4,7 @@ std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(){
     char response;
     std::vector<DataRow> userEnteredData;
     DataRow row;
-    double price;
+    int price;
     std::map<std::string, liveShares>::iterator it;
     std::cout << "Have you incurred any Share Takeovers? (Y/N): ";
     std::cin >> response;
@@ -38,6 +38,7 @@ std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(){
             }
             row.fee = 0;
             row.profit = 0;
+            row.consideration = 0;
             row.seq = 0;
             row.cgt = 0;
             userEnteredData.push_back(row);
@@ -154,6 +155,7 @@ void CorporateShareActions::saveSpecialCoporateActions(const std::string &ASXCod
     row.profit = 0;
     row.seq = 0;
     row.cgt = 0;
+    row.consideration = row.price * row.quantity * 100;
     if (liveSharesMap.find(ASXCode) != liveSharesMap.end()) {
         row.quantity = liveSharesMap[ASXCode].quantity;
         liveSharesMap.erase(ASXCode);

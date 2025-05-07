@@ -108,14 +108,15 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
         row.tempFee = row.fee;
     }
     for (auto& sellOrder: data) {
-        double cost = 0;
+        long long cost = 0;
         if (sellOrder.orderType == DataRow::SELL) {
             int quantity = sellOrder.quantity;
             for (auto& buyOrder: data) {
                 if ((buyOrder.orderType == DataRow::BUY) && (buyOrder.ASXCode == sellOrder.ASXCode)) {
                     if (buyOrder.tempQuantity <= quantity) {
                         if (buyOrder.tempQuantity != 0) {
-                            cost += (buyOrder.price * buyOrder.tempQuantity) + buyOrder.tempFee;
+                            // Calculate profit, while rounding to the nearest cent
+                            cost += ((buyOrder.consideration * buyOrder.tempQuantity) + (buyOrder.quantity/2))/buyOrder.quantity;
                             calculateCGTPercentage(buyOrder, sellOrder);
                         }
                     
@@ -127,7 +128,7 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                         double percentage = quantity / (double)buyOrder.tempQuantity;  
                         calculateCGTPercentage(buyOrder, sellOrder);
                         double fee = buyOrder.tempFee * percentage;
-                        cost += (buyOrder.price * quantity) + fee;
+                        cost += ((buyOrder.consideration * quantity) + (buyOrder.quantity/2))/buyOrder.quantity;
                         buyOrder.tempQuantity -= quantity;
                         buyOrder.tempFee -= fee;
                         quantity = 0;
@@ -137,9 +138,7 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                     break;
                 }
             }
-            sellOrder.profit = (sellOrder.price * sellOrder.quantity) - cost - sellOrder.fee;
-            // Rounds to 2 decimal places
-            sellOrder.profit = round(sellOrder.profit*100)/100;
+            sellOrder.profit = (sellOrder.consideration - cost)/100.00;
             if (sellOrder.twelveMonths && sellOrder.profit > 0) {
                 sellOrder.cgt = sellOrder.profit * 0.5;
             }
