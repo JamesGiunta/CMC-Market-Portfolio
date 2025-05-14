@@ -1,4 +1,5 @@
 #include "excelWriter.h"
+#include "highPrecisionMoney.h"
 #include <iostream>
 #include <xlsxwriter.h>
 #include <list>
@@ -67,7 +68,8 @@ void ExcelWriter::writeTransactionData(lxw_worksheet* worksheet) {
         worksheet_write_string(worksheet, row, col, dr.dateToString(share.tradeDate).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 1, dr.orderTypeToString(share.orderType).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 2, share.ASXCode.c_str(), NULL);
-        worksheet_write_number(worksheet, row, col + 3, share.price, NULL);
+        std::string priceString = HighPrecisionMoney::hundredsOfCentsToString(share.price);
+        worksheet_write_string(worksheet, row, col + 3, HighPrecisionMoney::hundredsOfCentsToString(share.price).c_str(), NULL);
         worksheet_write_number(worksheet, row, col + 4, share.quantity, NULL);
         row++;
     }
@@ -197,7 +199,6 @@ void ExcelWriter::generateExcelFile() {
         row = 1;
         std::list<double> profits = {financialYearProfit, capitalGainsTax};
         writeProfitData(worksheet2, profits);
-
 
         col = 9;
         row = 1;

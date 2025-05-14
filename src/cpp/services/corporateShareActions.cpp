@@ -1,10 +1,11 @@
 #include "corporateShareActions.h"
+#include "highPrecisionMoney.h"
 
 std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(){
     char response;
     std::vector<DataRow> userEnteredData;
     DataRow row;
-    int price;
+    std::string priceString;
     std::map<std::string, liveShares>::iterator it;
     std::cout << "Have you incurred any Share Takeovers? (Y/N): ";
     std::cin >> response;
@@ -23,12 +24,12 @@ std::vector<DataRow> CorporateShareActions::getSpecialCoporateActionsCLI(){
             std::cin >> dateString;
             date = dp.regexDate(dateString);
             std::cout << "What was the price of the share: ";
-            std::cin >> price;
+            std::cin >> priceString;
+            row.price = HighPrecisionMoney::stringToNumberInHundredsOfCents(priceString);
             row.ASXCode = ASXCode;
             row.orderType = DataRow::OrderType::SELL;
             row.tradeDate = date;
             row.settlementDate = date;
-            row.price = price;
             row.quantity = 0;
             row.tempFee = 0;
             row.tempQuantity = 0;
@@ -155,7 +156,7 @@ void CorporateShareActions::saveSpecialCoporateActions(const std::string &ASXCod
     row.profit = 0;
     row.seq = 0;
     row.cgt = 0;
-    row.consideration = row.price * row.quantity * 100;
+    row.consideration = ((row.price * row.quantity)+50)/100;
     if (liveSharesMap.find(ASXCode) != liveSharesMap.end()) {
         row.quantity = liveSharesMap[ASXCode].quantity;
         liveSharesMap.erase(ASXCode);

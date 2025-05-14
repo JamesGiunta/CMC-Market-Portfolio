@@ -7,10 +7,10 @@
 
 struct liveShares {
     int quantity;
-    double price;
+    long long price;
     double profit;
-    double cost;
-    double priceBrought;
+    long long cost;
+    long long priceBrought;
 
     friend bool operator==(const liveShares& lhs, const liveShares& rhs);
 };

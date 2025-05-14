@@ -5,6 +5,7 @@
 #include "../services/tradeOperations.h"
 #include "../services/dataRow.h"
 #include "../services/excelWriter.h"
+#include "../services/highPrecisionMoney.h"
 #include <filesystem>
 
 class App : public wxApp {

@@ -1,4 +1,5 @@
 #include "dataProcessing.h"
+#include "highPrecisionMoney.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -70,16 +71,16 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
 
         std::string price;
         std::getline(ss, price, ',');
-        row.price = std::stod(price);
+        row.price = HighPrecisionMoney::stringToNumberInHundredsOfCents(price);
         std::string quantity;
         std::getline(ss, quantity, ',');
         row.quantity = std::stoi(quantity);
         std::string brokerage;
         std::getline(ss, brokerage, ',');
-        row.fee = std::stod(brokerage);
+        row.fee = HighPrecisionMoney::stringToNumberInCents(brokerage);
         std::string gst;
         std::getline(ss, gst, ',');
-        row.fee += std::stod(gst);
+        row.fee += HighPrecisionMoney::stringToNumberInCents(gst);
         row.profit = 0;
         discardColumn(ss);
         discardColumn(ss);
@@ -88,49 +89,7 @@ std::vector<DataRow> DataProcessing::loadCSV(const std::string& filepath){
         discardColumn(ss);
         std::string consideration;
         std::getline(ss, consideration, ',');
-        bool round = false;
-        size_t dotPos = consideration.find('.');
-        if (dotPos == std::string::npos) {
-            // Convert to cents
-            consideration = consideration + "00";
-        }
-        else {
-            int pos = consideration.find(".");
-            // If there is no digit after the decimal point, add two zeros
-            if (consideration.length() - pos == 1) {             
-                consideration = consideration + "00";
-            }
-            // If there is one digit after the decimal point, add one zero
-            else if (consideration.length() - pos == 2) {
-                consideration = consideration + "0";
-            }
-            
-            // If there is three or more digits after the decimal point and the third digit is greater than 5, round up
-            else if (consideration.length() - pos > 3) {
-                char thirdCharAfterPos = consideration[pos + 3];
-                if (thirdCharAfterPos >= '5') {
-                    round = true;
-                }
-                consideration = consideration.substr(0, pos + 3);
-            }
-            // Remove the decimal point
-            consideration.erase(pos, 1);
-        }
-        try {
-            long long considerationValue = std::stoll(consideration);
-            if (round) {
-                considerationValue += 1;
-            }
-            row.consideration = considerationValue;
-        }
-        catch (const std::invalid_argument& e) {
-            std::cerr << "Invalid consideration value: " << consideration << std::endl;
-            break;
-        }
-        catch (const std::out_of_range& e) {
-            std::cerr << "Consideration value out of range: " << consideration << std::endl;
-            break;
-        }    
+        row.consideration = HighPrecisionMoney::stringToNumberInCents(consideration);  
         row.seq = seq;
         seq++;
         row.cgt = 0;

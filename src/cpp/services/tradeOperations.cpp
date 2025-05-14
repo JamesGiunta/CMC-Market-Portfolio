@@ -68,23 +68,22 @@ std::map<std::string, liveShares> TradeOperations::createLiveDataVector(std::vec
 void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liveSharesMap, std::vector<DataRow>& data){
     std::sort(data.begin(), data.end(), DataRow::descending);
     for (auto& liveShare: liveSharesMap) {
-        double cost = 0;
-        double fee = 0;
+        long long cost = 0;
+        long long sharePrice = 0;
 
         int quantity = liveShare.second.quantity;
         for (auto& dataRow: data) {
             if (dataRow.orderType==DataRow::BUY) {
                 if (liveShare.first == dataRow.ASXCode) {
                     if (dataRow.quantity <= quantity) {
-                        cost += (dataRow.price * dataRow.quantity) + dataRow.fee;
+                        cost += (((dataRow.price * dataRow.quantity)+50)/100)+ dataRow.fee;
                         quantity = quantity - dataRow.quantity;
-                        fee += dataRow.fee;
+                        sharePrice += dataRow.price * dataRow.quantity;
                     }
                     // If the buy order quantity is greater than the live quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
-                        double percentage = quantity / (double)dataRow.quantity;  
-                        cost += (dataRow.price * quantity) + (dataRow.fee * percentage);
-                        fee += dataRow.fee * percentage;
+                        cost += (((dataRow.price * dataRow.quantity)+50)/100) + ((dataRow.fee * quantity + dataRow.quantity / 2)) / dataRow.quantity;
+                        sharePrice += dataRow.price * quantity;
                         quantity = 0;
                     }
                 } 
@@ -94,10 +93,8 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
             }      
         }
         liveShare.second.profit = (liveShare.second.price * liveShare.second.quantity) - cost;
-        // Rounds to 2 decimal places
-        liveShare.second.profit = round(liveShare.second.profit*100)/100;
         liveShare.second.cost = cost;
-        liveShare.second.priceBrought = (cost - fee)/ liveShare.second.quantity;
+        liveShare.second.priceBrought = (sharePrice + (liveShare.second.quantity / 2)) / liveShare.second.quantity;
     }
 }
 
@@ -105,7 +102,6 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
     std::sort(data.begin(), data.end());
     for (auto& row: data){
         row.tempQuantity = row.quantity;
-        row.tempFee = row.fee;
     }
     for (auto& sellOrder: data) {
         long long cost = 0;
@@ -119,18 +115,14 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                             cost += ((buyOrder.consideration * buyOrder.tempQuantity) + (buyOrder.quantity/2))/buyOrder.quantity;
                             calculateCGTPercentage(buyOrder, sellOrder);
                         }
-                    
                         quantity -= buyOrder.tempQuantity;
                         buyOrder.tempQuantity = 0;
                     }
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
-                        double percentage = quantity / (double)buyOrder.tempQuantity;  
                         calculateCGTPercentage(buyOrder, sellOrder);
-                        double fee = buyOrder.tempFee * percentage;
                         cost += ((buyOrder.consideration * quantity) + (buyOrder.quantity/2))/buyOrder.quantity;
                         buyOrder.tempQuantity -= quantity;
-                        buyOrder.tempFee -= fee;
                         quantity = 0;
                     }
                 }
@@ -138,9 +130,9 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                     break;
                 }
             }
-            sellOrder.profit = (sellOrder.consideration - cost)/100.00;
+            sellOrder.profit = sellOrder.consideration - cost;
             if (sellOrder.twelveMonths && sellOrder.profit > 0) {
-                sellOrder.cgt = sellOrder.profit * 0.5;
+                sellOrder.cgt = (sellOrder.profit+1)/2;
             }
             else {
                 sellOrder.cgt = sellOrder.profit;

@@ -1,4 +1,6 @@
 #include "dataRetrieval.h"
+#include "customSaxHandler.h"
+#include "highPrecisionMoney.h"
 #include <curl/curl.h>
 #include <iostream>
 #include <string>
@@ -54,9 +56,14 @@ std::string DataRetrieval::getRequest(std::string ASXCode) {
 //TODO: Internet check before calling getRequest
 void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair) {
     std::string jsonResponse = getRequest(pair.first);
-    nlohmann::json j = nlohmann::json::parse(jsonResponse);
-    double price = j["quote"]["price"];
-    pair.second.price = price;
+    CustomSaxHandler handler;
+    std::istringstream inputStream(jsonResponse);
+    nlohmann::json::sax_parse(inputStream, &handler);
+    if (handler.priceStr.empty()) {
+        throw std::runtime_error("Unable to extract share price from JSON");
+    }
+    pair.second.price = HighPrecisionMoney::stringToNumberInHundredsOfCents(handler.priceStr);
+    std::cout << "PriceString: " << handler.priceStr << " " << pair.second.price << std::endl;
 }
 
 void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& shareSplitVector, std::vector<NameChangeRow>& shareNameChangeVector, std::vector<DataRow>& shareTakeOverVector){
