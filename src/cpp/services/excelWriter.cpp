@@ -50,13 +50,14 @@ void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<std::strin
 void ExcelWriter::showLiveShares(lxw_worksheet* worksheet) {
     for (auto liveShare : liveSharesMap) {
         worksheet_write_string(worksheet, row, col, liveShare.first.c_str(), NULL);
-        worksheet_write_number(worksheet, row, col + 1, liveShare.second.price, NULL);
-        worksheet_write_number(worksheet, row, col + 2, liveShare.second.priceBrought, NULL);
-        worksheet_write_number(worksheet, row, col + 3, liveShare.second.price - liveShare.second.priceBrought, NULL);
-        worksheet_write_number(worksheet, row, col + 4, ((liveShare.second.price/liveShare.second.priceBrought)-1)*100, NULL);
+        worksheet_write_string(worksheet, row, col + 1, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.price).c_str(), NULL);
+        worksheet_write_string(worksheet, row, col + 2, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.priceBrought).c_str(), NULL);
+        worksheet_write_string(worksheet, row, col + 3, HighPrecisionMoney::hundredsOfCentsToString((liveShare.second.price - liveShare.second.priceBrought)).c_str(), NULL);
+        // Calculate the change percentage to 4 decimal places without using floating point
+        worksheet_write_string(worksheet, row, col + 4, HighPrecisionMoney::hundredsOfCentsToString(((liveShare.second.price*1000000)+(liveShare.second.priceBrought/2))/liveShare.second.priceBrought-1000000).c_str(), NULL);
         worksheet_write_number(worksheet, row, col + 5, liveShare.second.quantity, NULL);
-        worksheet_write_number(worksheet, row, col + 6, liveShare.second.cost, NULL);
-        worksheet_write_number(worksheet, row, col + 7, liveShare.second.price * liveShare.second.quantity, NULL);
+        worksheet_write_string(worksheet, row, col + 6, HighPrecisionMoney::centsToString(liveShare.second.cost).c_str(), NULL);
+        worksheet_write_string(worksheet, row, col + 7, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.price * liveShare.second.quantity).c_str(), NULL);
         worksheet_write_number(worksheet, row, col + 8, liveShare.second.profit, NULL);
         worksheet_write_number(worksheet, row, col + 9, (liveShare.second.profit / liveShare.second.cost)*100, NULL);
         row++;
