@@ -37,7 +37,7 @@ void ExcelWriter::setUpHeader(lxw_worksheet* worksheet, std::list<std::string> h
     }
 }
 
-void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<double> profits) {
+void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<std::string> profits) {
     for (const auto& profit : profits) {
         ss << std::fixed << std::setprecision(2) << profit;
         std::string profitStr = ss.str();
@@ -108,11 +108,11 @@ std::time_t ExcelWriter::caculateFinanicalYearEndDate(std::tm* date) {
     return std::mktime(date);
 }
 
-void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, double& financialYearProfit, double& capitalGainsTax) {
+void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, long long& financialYearProfit, long long& capitalGainsTax) {
     for (auto share : data) {
         if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.settlementDate && share.settlementDate < currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, share.ASXCode.c_str(), NULL);
-            worksheet_write_string(worksheet, row, col + 1, std::to_string(share.profit).c_str(), NULL);
+            worksheet_write_string(worksheet, row, col + 1, HighPrecisionMoney::centsToString(share.profit).c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 2, dr.dateToString(share.tradeDate).c_str(), NULL);
             if (share.twelveMonths) {
                 worksheet_write_string(worksheet, row, col + 3, "Yes", NULL);
@@ -120,7 +120,7 @@ void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::ti
             else {
                 worksheet_write_string(worksheet, row, col + 3, "No", NULL);
             }
-            worksheet_write_string(worksheet, row, col + 4, std::to_string(share.cgt).c_str(), NULL);
+            worksheet_write_string(worksheet, row, col + 4, HighPrecisionMoney::centsToString(share.cgt).c_str(), NULL);
             financialYearProfit += share.profit;
             capitalGainsTax += share.cgt;
             row++;
@@ -129,15 +129,20 @@ void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::ti
 }
 
 void ExcelWriter::generateExcelFile() {
-    double liveProfit = 0;
+    long long liveProfit = 0;
     for (auto liveShare : liveSharesMap) {
         liveProfit += liveShare.second.profit;
     }
-    double profit = 0;
+    long long profit = 0;
     for (auto row : data) {
         profit += row.profit;
     }
-    double totalProfit = profit + liveProfit;
+    long long totalProfit = profit + liveProfit;
+    std::list<std::string> profits = {
+        HighPrecisionMoney::centsToString(totalProfit),
+        HighPrecisionMoney::centsToString(profit),
+        HighPrecisionMoney::centsToString(liveProfit)
+    };
 
     lxw_worksheet *worksheet1 = workbook_add_worksheet(workbook, "Overview");
     setupOverviewSheet(worksheet1);
@@ -148,7 +153,6 @@ void ExcelWriter::generateExcelFile() {
     std::list<std::string> headers = {"Total Profit", "Sold Profit", "Live Profit", "", "Share", "Current Price", "Price Brought", "Change", "Change %", "Quantity", "Cost", "Market Value", "Profit", "Profit %", "", "Date", "Type", "Share", "Price", "Quantity"};
     setUpHeader(worksheet1, headers);
 
-    std::list<double> profits = {totalProfit, profit, liveProfit};
     col = 0;
     row++;
     writeProfitData(worksheet1, profits);
@@ -190,14 +194,17 @@ void ExcelWriter::generateExcelFile() {
         setUpHeader(worksheet2, headers);
 
         row++;
-        double financialYearProfit = 0;
-        double capitalGainsTax = 0;
+        long long financialYearProfit = 0;
+        long long capitalGainsTax = 0;
         col = 3;
         writeSoldFinancialYearShares(worksheet2, previousFinancialYearEnd, currentFinancialYearEnd, financialYearProfit, capitalGainsTax);
 
         col = 0;
         row = 1;
-        std::list<double> profits = {financialYearProfit, capitalGainsTax};
+        std::list<std::string> profits = {
+            HighPrecisionMoney::centsToString(financialYearProfit),
+            HighPrecisionMoney::centsToString(capitalGainsTax)
+        };
         writeProfitData(worksheet2, profits);
 
         col = 9;

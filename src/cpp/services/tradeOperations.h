@@ -8,7 +8,7 @@
 struct liveShares {
     int quantity;
     long long price;
-    double profit;
+    long long profit;
     long long cost;
     long long priceBrought;
 
