@@ -49,7 +49,7 @@ void ExcelWriter::writeProfitData(lxw_worksheet* worksheet, std::list<std::strin
 
 void ExcelWriter::showLiveShares(lxw_worksheet* worksheet) {
     for (auto liveShare : liveSharesMap) {
-        worksheet_write_string(worksheet, row, col, liveShare.first.c_str(), NULL);
+        worksheet_write_string(worksheet, row, col, liveShare.first.c_str(),    NULL);
         worksheet_write_string(worksheet, row, col + 1, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.price).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 2, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.priceBrought).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 3, HighPrecisionMoney::hundredsOfCentsToString((liveShare.second.price - liveShare.second.priceBrought)).c_str(), NULL);
@@ -58,8 +58,10 @@ void ExcelWriter::showLiveShares(lxw_worksheet* worksheet) {
         worksheet_write_number(worksheet, row, col + 5, liveShare.second.quantity, NULL);
         worksheet_write_string(worksheet, row, col + 6, HighPrecisionMoney::centsToString(liveShare.second.cost).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 7, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.price * liveShare.second.quantity).c_str(), NULL);
-        worksheet_write_number(worksheet, row, col + 8, liveShare.second.profit, NULL);
-        worksheet_write_number(worksheet, row, col + 9, (liveShare.second.profit / liveShare.second.cost)*100, NULL);
+        worksheet_write_string(worksheet, row, col + 8, HighPrecisionMoney::centsToString(liveShare.second.profit).c_str(), NULL);
+        worksheet_write_string(worksheet, row, col + 9, HighPrecisionMoney::hundredsOfCentsToString(((liveShare.second.profit*1000000)+(liveShare.second.cost/2))/liveShare.second.cost).c_str(), NULL);
+        std::cout << "liveShare.second.profit " << liveShare.second.profit << std::endl;
+        std::cout << "liveShare.second.cost " << liveShare.second.cost << std::endl;
         row++;
     }
 }

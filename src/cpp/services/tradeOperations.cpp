@@ -92,7 +92,7 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
                 }
             }      
         }
-        liveShare.second.profit = (liveShare.second.price * liveShare.second.quantity) - cost;
+        liveShare.second.profit = (liveShare.second.price * liveShare.second.quantity + 50)/100 - cost;
         liveShare.second.cost = cost;
         liveShare.second.priceBrought = (sharePrice + (liveShare.second.quantity / 2)) / liveShare.second.quantity;
     }
