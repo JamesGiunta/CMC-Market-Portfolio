@@ -5,9 +5,8 @@
 #include <mutex>
 #include <queue>
 #include <thread>
-using namespace std;
 
-ThreadPool::ThreadPool(size_t numThreads = std::thread::hardware_concurrency()) {
+ThreadPool::ThreadPool(size_t numThreads) {
     for (size_t i = 0; i < numThreads; i++) {
         threads.emplace_back([this] {
             while (true) {
@@ -32,11 +31,11 @@ ThreadPool::ThreadPool(size_t numThreads = std::thread::hardware_concurrency()) 
 }
 
 ThreadPool::~ThreadPool() {
-    unique_lock<std::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
     stopFlag = true;
     conditionVariable.notify_all();
 
-    for (thread &thread : threads) {
+    for (std::thread &thread : threads) {
         if (thread.joinable()) {
             thread.join();
         }
