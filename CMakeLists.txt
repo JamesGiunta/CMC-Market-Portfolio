@@ -47,6 +47,7 @@ set(SERVICES_SOURCES
     src/cpp/services/dataRetrieval.cpp
     src/cpp/services/excelWriter.cpp
     src/cpp/services/corporateShareActions.cpp
+    src/cpp/services/threadPool.cpp
 )
 
 set(MAIN_SOURCES

@@ -1,4 +1,4 @@
-#include "ThreadPool.h"
+#include "threadPool.h"
 #include <condition_variable>
 #include <functional>
 #include <iostream>
@@ -11,18 +11,15 @@ ThreadPool::ThreadPool(size_t numThreads) {
         threads.emplace_back([this] {
             while (true) {
                 std::function<void()> task; {
-                    std::unique_lock<std::mutex> lock(mutex);
+                    std::unique_lock<std::mutex> lock(queueMutex);
                     conditionVariable.wait(lock, [this] {
-                    return !tasks.empty() || stopFlag;
+                        return !tasks.empty() || stopFlag;
                     });
-
                     if (stopFlag && tasks.empty()) {
                         return;
                     }
-
                     task = std::move(tasks.front());
                     tasks.pop();
-
                 }
                 task();
             }
@@ -31,20 +28,19 @@ ThreadPool::ThreadPool(size_t numThreads) {
 }
 
 ThreadPool::~ThreadPool() {
-    std::unique_lock<std::mutex> lock(mutex);
-    stopFlag = true;
+    {
+        std::unique_lock<std::mutex> lock(queueMutex);
+        stopFlag = true;
+    }
     conditionVariable.notify_all();
-
     for (std::thread &thread : threads) {
-        if (thread.joinable()) {
-            thread.join();
-        }
+        thread.join();
     }
 }
 
 void ThreadPool::enqueue(std::function<void()> task) {
     {
-        std::unique_lock<std::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(queueMutex);
         tasks.emplace(std::move(task));
     }
     conditionVariable.notify_one();
