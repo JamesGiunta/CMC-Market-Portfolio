@@ -15,6 +15,8 @@
 #include <thread>
 #include <vector>
 #include <sys/stat.h>
+#include "threadPool.h"
+#include <latch>
 
 
 void ServiceTest::createDirectory() {
@@ -163,17 +165,17 @@ void ServiceTest::testLiveShareValue(TradeOperations& to) {
 
     curl_global_init(CURL_GLOBAL_ALL);
 
-    std::vector<std::thread> threads(liveSharesMap.size());
-    int i = 0;
-    for (std::pair<const std::string, liveShares>& pair: liveSharesMap) {
-        threads[i] = std::thread(std::bind(&DataRetrieval::getLivePrices, &dr, std::ref(pair)));
-        i++;
+    std::latch latch(liveSharesMap.size());
+
+    ThreadPool threadPool;
+    for (auto& pair : liveSharesMap) {
+        threadPool.enqueue([&dr, &pair, &latch]() {
+            dr.getLivePrices(pair);
+            latch.count_down();
+        });
     }
-    for (std::thread& thread : threads) {
-        if (thread.joinable()){
-            thread.join();
-        } 
-    }
+    latch.wait();
+
     curl_global_cleanup();
     if (liveSharesMap["ANZ"].price != 0 && liveSharesMap["ANZ"].price != 0) {
         flag = true;
@@ -349,8 +351,6 @@ int main() {
     std::string reportPathStr = reportPath.string() + "/Report.xlsx";
     ExcelWriter ew(dr, reportPathStr, data, liveSharesMap);
     ew.generateExcelFile();
-
-
  
     return 0;
 }
