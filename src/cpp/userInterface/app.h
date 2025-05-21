@@ -5,11 +5,13 @@
 #include "../services/tradeOperations.h"
 #include "../services/dataRow.h"
 #include "../services/excelWriter.h"
+#include "../services/threadPool.h"
 #include <filesystem>
 
 class App : public wxApp {
     public:
         bool OnInit();
+        int OnExit();
         DataRow dataRow;
         DataProcessing dataProcessing;
         TradeOperations tradeOperations;

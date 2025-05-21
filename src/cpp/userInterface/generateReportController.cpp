@@ -1,6 +1,7 @@
 #include "generateReportController.h"
 #include <thread>
 #include <curl/curl.h>
+#include <latch>
 
 void GenerateReportController::selectConfirmation(wxCommandEvent &event) {
     wxFileDialog openFileDialog(parent, "Select Confirmation", "", "", "CSV files (*.csv)|*.csv", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -47,21 +48,21 @@ void GenerateReportController::generateReport(wxCommandEvent &event) {
 
     std::cout << "Retrieving live share values..." << std::endl;
 
-    curl_global_init(CURL_GLOBAL_ALL);
-
-    std::vector<std::thread> threads(liveSharesMap.size());
-    int i = 0;
-    for (std::pair<const std::string, liveShares>& pair : liveSharesMap) {
-        threads[i] = std::thread(std::bind(&DataRetrieval::getLivePrices, &app->dataRetrieval, std::ref(pair)));
-        i++;
-    }
-    for (std::thread& thread : threads) {
-        if (thread.joinable()) {
-            thread.join();
-        }
+    unsigned int amount = liveSharesMap.size();
+    std::latch latch(amount);
+    unsigned int threads = std::thread::hardware_concurrency();
+    if (amount < threads) {
+        threads = amount;
     }
 
-    curl_global_cleanup();
+    ThreadPool threadPool(threads);
+    for (auto& pair : liveSharesMap) {
+        threadPool.enqueue([this, &pair, &latch]() {
+            app->dataRetrieval.getLivePrices(pair);
+            latch.count_down();
+        });
+    }
+    latch.wait();
 
     app->tradeOperations.calculateLiveProfit(liveSharesMap, data);
     app->tradeOperations.calculateProfit(data);
