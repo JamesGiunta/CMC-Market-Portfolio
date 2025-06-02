@@ -63,7 +63,6 @@ void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair
         throw std::runtime_error("Unable to extract share price from JSON");
     }
     pair.second.price = HighPrecisionMoney::stringToNumberInHundredsOfCents(handler.priceStr);
-    std::cout << "PriceString: " << handler.priceStr << " " << pair.second.price << std::endl;
 }
 
 void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& shareSplitVector, std::vector<NameChangeRow>& shareNameChangeVector, std::vector<DataRow>& shareTakeOverVector){

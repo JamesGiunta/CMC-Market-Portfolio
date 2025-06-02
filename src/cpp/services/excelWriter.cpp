@@ -60,8 +60,6 @@ void ExcelWriter::showLiveShares(lxw_worksheet* worksheet) {
         worksheet_write_string(worksheet, row, col + 7, HighPrecisionMoney::hundredsOfCentsToString(liveShare.second.price * liveShare.second.quantity).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 8, HighPrecisionMoney::centsToString(liveShare.second.profit).c_str(), NULL);
         worksheet_write_string(worksheet, row, col + 9, HighPrecisionMoney::hundredsOfCentsToString(((liveShare.second.profit*1000000)+(liveShare.second.cost/2))/liveShare.second.cost).c_str(), NULL);
-        std::cout << "liveShare.second.profit " << liveShare.second.profit << std::endl;
-        std::cout << "liveShare.second.cost " << liveShare.second.cost << std::endl;
         row++;
     }
 }

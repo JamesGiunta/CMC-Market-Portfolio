@@ -122,7 +122,6 @@ std::string HighPrecisionMoney::centsToString(const long long& cents) {
 }
 
 std::string HighPrecisionMoney::hundredsOfCentsToString(const long long& hundredsOfCents) {
-    std::cout << "hundredofcents " << hundredsOfCents << std::endl;
     bool isNegative = false;
     if (hundredsOfCents < 0) {
         isNegative = true;
@@ -136,6 +135,5 @@ std::string HighPrecisionMoney::hundredsOfCentsToString(const long long& hundred
     if (isNegative) {
         str.insert(0, "-");
     }
-    std::cout << "str " << str << std::endl;
     return str;
 }
