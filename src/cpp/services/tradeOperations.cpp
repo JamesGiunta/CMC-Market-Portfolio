@@ -11,7 +11,7 @@ bool operator==(const liveShares& lhs, const liveShares& rhs) {
     return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity && (lhs.cost - rhs.cost) < epsilon && (lhs.priceBrought - rhs.priceBrought) < epsilon;
 }
 
-void TradeOperations::calculateCGTPercentage(DataRow& buyOrder, DataRow& sellOrder, long long& cost, int quantityUsed) {
+void TradeOperations::calculateCGT(DataRow& buyOrder, DataRow& sellOrder, long long& cost, int quantityUsed) {
     //Takes way a day and 12 months and sets hour,min,sec same for buy and sell order
     std::tm tmSellDate = *std::localtime(&sellOrder.settlementDate);
     tmSellDate.tm_year -= 1;
@@ -120,7 +120,7 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                         if (buyOrder.tempQuantity != 0) {
                             // Calculate profit, while rounding to the nearest cent
                             long long tempCost = ((buyOrder.consideration * buyOrder.tempQuantity) + (buyOrder.quantity/2))/buyOrder.quantity;
-                            calculateCGTPercentage(buyOrder, sellOrder, tempCost, buyOrder.tempQuantity);
+                            calculateCGT(buyOrder, sellOrder, tempCost, buyOrder.tempQuantity);
                             cost += tempCost;
                         }
                         quantity -= buyOrder.tempQuantity;
@@ -129,7 +129,7 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
                         long long tempCost = ((buyOrder.consideration * quantity) + (buyOrder.quantity/2))/buyOrder.quantity;
-                        calculateCGTPercentage(buyOrder, sellOrder, cost, quantity);
+                        calculateCGT(buyOrder, sellOrder, cost, quantity);
                         cost += tempCost;
                         buyOrder.tempQuantity -= quantity;
                         quantity = 0;

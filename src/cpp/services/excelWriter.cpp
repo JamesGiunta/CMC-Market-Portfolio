@@ -19,8 +19,8 @@ void ExcelWriter::setupOverviewSheet(lxw_worksheet* worksheet1){
 void ExcelWriter::setFinancialSheet(lxw_worksheet* worksheet1){
     worksheet_set_column(worksheet1, 0, 1, 18, NULL);
     worksheet_set_column(worksheet1, 4, 5, 12, NULL);
-    worksheet_set_column(worksheet1, 6, 6, 20, NULL);
-    worksheet_set_column(worksheet1, 7, 7, 24, NULL);
+    worksheet_set_column(worksheet1, 6, 6, 24, NULL);
+    worksheet_set_column(worksheet1, 7, 7, 12, NULL);
     worksheet_set_column(worksheet1, 9, 9, 15, NULL);
     worksheet_set_column(worksheet1, 10, 10, 12, NULL);
     worksheet_set_column(worksheet1, 11, 11, 15, NULL);
@@ -115,13 +115,7 @@ void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::ti
             worksheet_write_string(worksheet, row, col, share.ASXCode.c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 1, HighPrecisionMoney::centsToString(share.profit).c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 2, dr.dateToString(share.tradeDate).c_str(), NULL);
-            if (share.twelveMonths) {
-                worksheet_write_string(worksheet, row, col + 3, "Yes", NULL);
-            }
-            else {
-                worksheet_write_string(worksheet, row, col + 3, "No", NULL);
-            }
-            worksheet_write_string(worksheet, row, col + 4, HighPrecisionMoney::centsToString(share.cgt).c_str(), NULL);
+            worksheet_write_string(worksheet, row, col + 3, HighPrecisionMoney::centsToString(share.cgt).c_str(), NULL);
             financialYearProfit += share.profit;
             capitalGainsTax += share.cgt;
             row++;
@@ -191,7 +185,7 @@ void ExcelWriter::generateExcelFile() {
 
         row = 0;
         col = 0;
-        std::list<std::string> headers = {"Financial Year Profit", "Capital Gains Tax", "", "Share", "Profit", "Date", "Held For 12 Months", "Capital Gains Tax On Share", "", "Date", "Type", "Share", "Price", "Quantity"};
+        std::list<std::string> headers = {"Financial Year Profit", "Capital Gains Tax", "", "Share", "Profit", "Date", "Capital Gains Tax On Share", "", "Date", "Type", "Share", "Price", "Quantity"};
         setUpHeader(worksheet2, headers);
 
         row++;
@@ -208,7 +202,7 @@ void ExcelWriter::generateExcelFile() {
         };
         writeProfitData(worksheet2, profits);
 
-        col = 9;
+        col = 8;
         row = 1;
         writeTransactionDataWithRange(worksheet2, previousFinancialYearEnd, currentFinancialYearEnd);
 
