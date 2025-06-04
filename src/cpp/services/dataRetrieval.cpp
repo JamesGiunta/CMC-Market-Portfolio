@@ -127,7 +127,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
     for (ShareSplitRow& row : shareSplitVector) {
         for (DataRow& dataRow : data) {
             if (dataRow.ASXCode == row.ASXCode) {
-                dataRow.price /= row.ratio;
+                dataRow.price = (dataRow.price + row.ratio/2) / row.ratio;
                 dataRow.quantity *= row.ratio;
             }
         }

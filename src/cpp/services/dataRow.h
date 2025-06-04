@@ -33,7 +33,7 @@ struct DataRow {
 
 struct ShareSplitRow {
     std::string ASXCode;
-    double ratio;
+    long long ratio;
     std::time_t date;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShareSplitRow, ASXCode, ratio, date)
