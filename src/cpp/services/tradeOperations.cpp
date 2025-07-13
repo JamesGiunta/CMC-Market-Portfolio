@@ -89,7 +89,7 @@ void TradeOperations::calculateLiveProfit(std::map<std::string, liveShares>& liv
                     }
                     // If the buy order quantity is greater than the live quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
-                        cost += (((dataRow.price * dataRow.quantity)+50)/100) + ((dataRow.fee * quantity + dataRow.quantity / 2)) / dataRow.quantity;
+                        cost += (((dataRow.price * quantity)+50)/100) + ((dataRow.fee * quantity + dataRow.quantity / 2)) / dataRow.quantity;
                         sharePrice += dataRow.price * quantity;
                         quantity = 0;
                     }
@@ -129,7 +129,7 @@ void TradeOperations::calculateProfit(std::vector<DataRow>& data){
                     // If the buy order quantity is greater than the sell order quantity then calculate the profit based on the percentage of the buy order quantity
                     else {
                         long long tempCost = ((buyOrder.consideration * quantity) + (buyOrder.quantity/2))/buyOrder.quantity;
-                        calculateCGT(buyOrder, sellOrder, cost, quantity);
+                        calculateCGT(buyOrder, sellOrder, tempCost, quantity);
                         cost += tempCost;
                         buyOrder.tempQuantity -= quantity;
                         quantity = 0;
