@@ -1,320 +1,321 @@
-// #include "serviceTest.h"
-// #include "dataRow.h"
-// #include "dataProcessing.h"
-// #include "tradeOperations.h"
-// #include "dataRetrieval.h"
-// #include "excelWriter.h"
-// #include <iostream>
-// #include <iomanip>
-// #include <fstream>
-// #include <ctime>
-// #include <algorithm>
-// #include <curl/curl.h>
-// #include <nlohmann/json.hpp>
-// #include <chrono>
-// #include <thread>
-// #include <vector>
-// #include <sys/stat.h>
-// #include "threadPool.h"
-// #include <latch>
+#include "serviceTest.h"
+#include "dataRow.h"
+#include "dataProcessing.h"
+#include "tradeOperations.h"
+#include "dataRetrieval.h"
+#include "excelWriter.h"
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <ctime>
+#include <algorithm>
+#include <curl/curl.h>
+#include <nlohmann/json.hpp>
+#include <chrono>
+#include <thread>
+#include <vector>
+#include <sys/stat.h>
+#include "threadPool.h"
+#include <latch>
 
-
-// void ServiceTest::createDirectory() {
-//     const char* dir = "../resources/jsons";
+void ServiceTest::createDirectory() {
+    const char* dir = "../resources/jsons";
  
-//     // Structure which would store the metadata
-//     struct stat sb;
+    // Structure which would store the metadata
+    struct stat sb;
  
-//     // If the directory does not exists at the path returns -1
-//     if (stat(dir, &sb) == -1) {
-//         std::filesystem::create_directories(dir);
-//     }
-// }
+    // If the directory does not exists at the path returns -1
+    if (stat(dir, &sb) == -1) {
+        std::filesystem::create_directories(dir);
+    }
+}
 
-// std::time_t ServiceTest::parseDate(const std::string& dateStr) {
-//     std::tm tm = {};
-//     std::istringstream dateStream(dateStr);
-//     dateStream >> std::get_time(&tm, "%d/%m/%Y");
-//     std::time_t date = mktime(&tm);
-//     return date;
-// }
+std::time_t ServiceTest::parseDate(const std::string& dateStr) {
+    std::tm tm = {};
+    std::istringstream dateStream(dateStr);
+    dateStream >> std::get_time(&tm, "%d/%m/%Y");
+    std::time_t date = mktime(&tm);
+    return date;
+}
 
-// void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data, const std::string& filepath) {
-//     std::ofstream outputFile(filepath);
+void ServiceTest::vectorToCSV(const std::vector<std::vector<std::string>>& data, const std::string& filepath) {
+    std::ofstream outputFile(filepath);
 
-//     if (!outputFile.is_open()){
-//         throw std::runtime_error("Unable to open file: " + filepath);
-//     }
+    if (!outputFile.is_open()){
+        throw std::runtime_error("Unable to open file: " + filepath);
+    }
 
-//     for (const auto& row : data) {
-//         for (size_t i = 0; i < row.size(); ++i) {
-//             outputFile << row[i];
-//             if (i != row.size() - 1) {
-//                 outputFile << ",";
-//             }
-//         }
-//         outputFile << "\n";
-//     }
-//     outputFile.close();
-// }
+    for (const auto& row : data) {
+        for (size_t i = 0; i < row.size(); ++i) {
+            outputFile << row[i];
+            if (i != row.size() - 1) {
+                outputFile << ",";
+            }
+        }
+        outputFile << "\n";
+    }
+    outputFile.close();
+}
 
-// void ServiceTest::createTestData(DataRow& dr) {
-//     std::vector<std::string> header = {"Account","ASXCode", "Confirmations", "OrderType", "As at Date", "TradeDate", "Settlement Date", "Price", "Quantity", "Brokerage", "GST"};
-//     std::vector<std::string> row1 = {"", "", "CBA", "", "Buy", "", "19/03/2024", "21/03/2024", "115.78", "100", "19.95", "1.17"};
-//     std::vector<std::string> row2 = {"", "", "360", "", "Sell", "", "01/03/2024", "03/03/2024", "11.30", "300", "11", "0.73"};
-//     std::vector<std::string> row3 = {"", "", "360", "", "Buy", "", "04/12/2023", "06/12/2023", "7.78", "300", "10", "0.59"};
-//     std::vector<std::string> row4 = {"", "", "ANZ", "", "Sell", "", "06/11/2023", "08/11/2023", "22.78", "10", "10", "0.21"};
-//     std::vector<std::string> row5 = {"", "", "ANZ", "", "Buy", "", "06/11/2023", "08/11/2023", "22.33", "30", "10", "0.19"};
+void ServiceTest::createTestData(DataRow& dr) {
+    std::vector<std::string> header = {"Account","ASXCode", "Confirmations", "OrderType", "As at Date", "TradeDate", "Settlement Date", "Price", "Quantity", "Brokerage", "GST"};
+    std::vector<std::string> row1 = {"", "", "CBA", "", "Buy", "", "19/03/2024", "21/03/2024", "115.78", "100", "19.95", "1.17"};
+    std::vector<std::string> row2 = {"", "", "360", "", "Sell", "", "01/03/2024", "03/03/2024", "11.30", "300", "11", "0.73"};
+    std::vector<std::string> row3 = {"", "", "360", "", "Buy", "", "04/12/2023", "06/12/2023", "7.78", "300", "10", "0.59"};
+    std::vector<std::string> row4 = {"", "", "ANZ", "", "Sell", "", "06/11/2023", "08/11/2023", "22.78", "10", "10", "0.21"};
+    std::vector<std::string> row5 = {"", "", "ANZ", "", "Buy", "", "06/11/2023", "08/11/2023", "22.33", "30", "10", "0.19"};
 
-//     std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3, row4, row5};
-//     vectorToCSV(testData1, "../resources/testData.csv");
-// }
+    std::vector<std::vector<std::string>> testData1 = {header, row1, row2, row3, row4, row5};
+    vectorToCSV(testData1, "../resources/testData.csv");
+}
 
-// std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
-//     DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112, 0, 0};
-//     DataRow row2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173, 0, 1};
-//     DataRow row3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059, 0, 2};
-//     DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021, 0, 3};
-//     DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019, 0, 4};
+std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
+    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112, 0, 0};
+    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173, 0, 1};
+    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059, 0, 2};
+    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021, 0, 3};
+    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019, 0, 4};
 
-//     std::vector<DataRow> testData = {row1, row2, row3, row4, row5};
-//     return testData;
-// }
+    std::vector<DataRow> testData = {row1, row2, row3, row4, row5};
+    return testData;
+}
 
-// void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
-//     createTestData(dr);
-//     DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112};
-//     DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173};
-//     DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059};
-//     DataRow expectedRow4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021};
-//     DataRow expectedRow5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019};
+void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
+    createTestData(dr);
+    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112};
+    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059};
+    DataRow expectedRow4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021};
+    DataRow expectedRow5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019};
 
-//     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
+    std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
 
-//     std::vector<DataRow> data = dp.loadCSV("../resources/testData.csv");
-//     std::cout << "function: testLoadCSV" << std::endl;
-//     if (data == expectedData) {
-//         std::cout << "Data loaded correctly. ✅" << std::endl;
-//     } 
-//     else {
-//         std::cout << "Data did not load correctly. ❌" << std::endl;  
-//         std::cout << "Expected: " << std::endl;
-//         for (const auto& row : expectedData) {
-//             std::cout << row << std::endl;
-//         }
-//         std::cout << "Actual: " << std::endl;
-//         for (const auto& row : data) {
-//             std::cout << row << std::endl;
-//         }
-//     }    
-// }
+    std::vector<DataRow> data = dp.loadCSV("../resources/testData.csv");
+    std::cout << "function: testLoadCSV" << std::endl;
+    if (data == expectedData) {
+        std::cout << "Data loaded correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Data did not load correctly. ❌" << std::endl;  
+        std::cout << "Expected: " << std::endl;
+        for (const auto& row : expectedData) {
+            std::cout << row << std::endl;
+        }
+        std::cout << "Actual: " << std::endl;
+        for (const auto& row : data) {
+            std::cout << row << std::endl;
+        }
+    }    
+}
 
-// void ServiceTest::testDataRowSorting(DataRow& dr) {
-//     bool ascending = false;
-//     bool descending = false;
-//     DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019};
-//     DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021};
-//     DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059};
-//     DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173};
-//     DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112};
+void ServiceTest::testDataRowSorting(DataRow& dr) {
+    bool ascending = false;
+    bool descending = false;
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173};
+    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112};
 
-//     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
-//     std::vector<DataRow> expectedData2 = {expectedRow5, expectedRow4, expectedRow3, expectedRow2, expectedRow1};
+    std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
+    std::vector<DataRow> expectedData2 = {expectedRow5, expectedRow4, expectedRow3, expectedRow2, expectedRow1};
 
-//     std::vector<DataRow> testData = generateTestData(dr);
-//     std::sort(testData.begin(), testData.end());
-//     ascending = (testData == expectedData);
-//     std::sort(testData.begin(), testData.end(), DataRow::descending);
-//     descending = (testData == expectedData2);
-//     std::cout << "function: testDataRowSorting" << std::endl;
-//     if (ascending && descending) {
-//         std::cout << "Both ascending and descending sort are correct. ✅" << std::endl;
-//     } 
-//     else if (!ascending && descending) {
-//         std::cout << "Ascending sort is incorrect. ❌" << std::endl;
-//     }
-//     else if (ascending && !descending) {
-//         std::cout << "Descending sort is incorrect. ❌" << std::endl;
-//     }
-//     else {
-//         std::cout << "Both ascending and descending sort is incorrect. ❌" << std::endl;  
-//     }
-// }
+    std::vector<DataRow> testData = generateTestData(dr);
+    std::sort(testData.begin(), testData.end());
+    ascending = (testData == expectedData);
+    std::sort(testData.begin(), testData.end(), DataRow::descending);
+    descending = (testData == expectedData2);
+    std::cout << "function: testDataRowSorting" << std::endl;
+    if (ascending && descending) {
+        std::cout << "Both ascending and descending sort are correct. ✅" << std::endl;
+    } 
+    else if (!ascending && descending) {
+        std::cout << "Ascending sort is incorrect. ❌" << std::endl;
+    }
+    else if (ascending && !descending) {
+        std::cout << "Descending sort is incorrect. ❌" << std::endl;
+    }
+    else {
+        std::cout << "Both ascending and descending sort is incorrect. ❌" << std::endl;  
+    }
+}
 
-// void ServiceTest::testLiveDataVector(DataRow& dr, TradeOperations& to) {
-//     liveShares expectedLiveShare1 = {20};
-//     liveShares expectedLiveShare2 = {100};
+void ServiceTest::testLiveDataVector(DataRow& dr, TradeOperations& to) {
+    liveShares expectedLiveShare1 = {20};
+    liveShares expectedLiveShare2 = {100};
 
-//     std::map<std::string, liveShares> expectedLiveShares;
-//     expectedLiveShares["ANZ"] = expectedLiveShare1;
-//     expectedLiveShares["CBA"] = expectedLiveShare2;
+    std::map<std::string, liveShares> expectedLiveShares;
+    expectedLiveShares["ANZ"] = expectedLiveShare1;
+    expectedLiveShares["CBA"] = expectedLiveShare2;
 
-//     std::vector<DataRow> testData = generateTestData(dr);
-//     std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(testData);
-//     std::cout << "function: testLiveDataVector" << std::endl;
-//     if (liveSharesMap == expectedLiveShares) {
-//         std::cout << "Live data vector created correctly. ✅" << std::endl;
-//     } 
-//     else {
-//         std::cout << "Live data vector did not create correctly. ❌" << std::endl;  
-//     }
+    std::vector<DataRow> testData = generateTestData(dr);
+    std::map<std::string, liveShares> liveSharesMap = to.createLiveDataVector(testData);
+    std::cout << "function: testLiveDataVector" << std::endl;
+    if (liveSharesMap == expectedLiveShares) {
+        std::cout << "Live data vector created correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Live data vector did not create correctly. ❌" << std::endl;  
+    }
 
-// }
+}
 
-// void ServiceTest::testLiveShareValue(TradeOperations& to) {
-//     bool flag = false;
-//     liveShares LiveShare1 = {20};
-//     liveShares LiveShare2 = {100};
-//     DataRetrieval dr(to);
+void ServiceTest::testLiveShareValue(TradeOperations& to) {
+    bool flag = false;
+    liveShares LiveShare1 = {20};
+    liveShares LiveShare2 = {100};
+    DataRetrieval dr(to);
 
-//     std::map<std::string, liveShares> liveSharesMap;
-//     liveSharesMap["ANZ"] = LiveShare1;
-//     liveSharesMap["CBA"] = LiveShare2;
+    std::map<std::string, liveShares> liveSharesMap;
+    liveSharesMap["ANZ"] = LiveShare1;
+    liveSharesMap["CBA"] = LiveShare2;
 
-//     curl_global_init(CURL_GLOBAL_ALL);
+    curl_global_init(CURL_GLOBAL_ALL);
 
-//     std::latch latch(liveSharesMap.size());
+    std::latch latch(liveSharesMap.size());
 
-//     ThreadPool threadPool;
-//     for (auto& pair : liveSharesMap) {
-//         threadPool.enqueue([&dr, &pair, &latch]() {
-//             dr.getLivePrices(pair);
-//             latch.count_down();
-//         });
-//     }
-//     latch.wait();
+    ThreadPool threadPool;
+    for (auto& pair : liveSharesMap) {
+        threadPool.enqueue([&dr, &pair, &latch]() {
+            dr.getLivePrices(pair);
+            latch.count_down();
+        });
+    }
+    latch.wait();
 
-//     curl_global_cleanup();
-//     if (liveSharesMap["ANZ"].price != 0 && liveSharesMap["CBA"].price != 0) {
-//         flag = true;
-//     }
+    curl_global_cleanup();
+    if (liveSharesMap["ANZ"].price != 0 && liveSharesMap["CBA"].price != 0) {
+        flag = true;
+    }
 
-//     std::cout << "function: testLiveShareValue" << std::endl;
-//     if (flag) {
-//         std::cout << "Live share values retrieved correctly. ✅" << std::endl;
-//     } 
-//     else {
-//         std::cout << "Live share values did not retrieve correctly. ❌" << std::endl;  
-//     }
-// }
+    std::cout << "function: testLiveShareValue" << std::endl;
+    if (flag) {
+        std::cout << "Live share values retrieved correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Live share values did not retrieve correctly. ❌" << std::endl;  
+    }
+}
 
-// void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
-//     liveShares expectedLiveShare1 = {20, 243100, 3281, 45439, 223300};
-//     liveShares expectedLiveShare2 = {100, 1101200, -58712, 1159912, 1157800};
+void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
+    liveShares expectedLiveShare1 = {20, 243100, 3281, 45439, 223300};
+    liveShares expectedLiveShare2 = {100, 1101200, -58712, 1159912, 1157800};
 
-//     std::map<std::string, liveShares> expectedLiveShares;
-//     expectedLiveShares["ANZ"] = expectedLiveShare1;
-//     expectedLiveShares["CBA"] = expectedLiveShare2;
+    std::map<std::string, liveShares> expectedLiveShares;
+    expectedLiveShares["ANZ"] = expectedLiveShare1;
+    expectedLiveShares["CBA"] = expectedLiveShare2;
 
-//     liveShares liveShare1 = {20, 243100};
-//     liveShares liveShare2 = {100, 1101200};
+    liveShares liveShare1 = {20, 243100};
+    liveShares liveShare2 = {100, 1101200};
 
-//     std::map<std::string, liveShares> liveSharesMap;
-//     liveSharesMap["ANZ"] = liveShare1;
-//     liveSharesMap["CBA"] = liveShare2;
+    std::map<std::string, liveShares> liveSharesMap;
+    liveSharesMap["ANZ"] = liveShare1;
+    liveSharesMap["CBA"] = liveShare2;
 
-//     std::vector<DataRow> testData = generateTestData(dr);
-//     to.calculateLiveProfit(liveSharesMap, testData);
-//     std::cout << "function: testLiveDataVector" << std::endl;
-//     if (liveSharesMap == expectedLiveShares) {
-//         std::cout << "Live data vector created correctly. ✅" << std::endl;
-//     } 
-//     else {
-//         std::cout << "Live data vector did not create correctly. ❌" << std::endl;  
-//         std::cout << "Expected: " << std::endl;
-//         for (const auto& pair : expectedLiveShares) {
-//             std::cout << pair.first << ": " << pair.second.quantity << ", " << pair.second.price << ", " 
-//                       << pair.second.profit << ", " << pair.second.cost << ", " << pair.second.priceBrought << std::endl;
-//         }
-//         std::cout << "Actual: " << std::endl;
-//         for (const auto& pair : liveSharesMap) {
-//             std::cout << pair.first << ": " << pair.second.quantity << ", " << pair.second.price << ", "
+    std::vector<DataRow> testData = generateTestData(dr);
+    to.calculateLiveProfit(liveSharesMap, testData);
+    std::cout << "function: testLiveDataVector" << std::endl;
+    if (liveSharesMap == expectedLiveShares) {
+        std::cout << "Live data vector created correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Live data vector did not create correctly. ❌" << std::endl;
+    }
+}
 
-//                         << pair.second.profit << ", " << pair.second.cost << ", " << pair.second.priceBrought << std::endl;
-//         }
-//     }
-// }
+void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019, 0};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021, -911, 0, 0, 0, -911};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059, 0};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173, 103368, 0, 0, 0, 103368};
+    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112, 0};
 
-// void ServiceTest::testCalculateProfit(DataRow& dr, TradeOperations& to) {
-//     DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0};
-//     DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), -9.11, 0, 0, 0, -9.11};
-//     DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0};
-//     DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
-//     DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0};
+    std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
 
-//     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
-
-//     std::vector<DataRow> testData = generateTestData(dr);
-//     to.calculateProfit(testData);
-//     std::cout << "function: testCalculateProfit" << std::endl;
+    std::vector<DataRow> testData = generateTestData(dr);
+    to.calculateProfit(testData);
+    std::cout << "function: testCalculateProfit" << std::endl;
     
-//     if (testData == expectedData) {
-//         std::cout << "Data profit calculated correctly. ✅" << std::endl;
-//     } 
-//     else {
-//         std::cout << "Data profit was not calculated correctly. ❌" << std::endl;
-//     }
-// }
+    if (testData == expectedData) {
+        std::cout << "Data profit calculated correctly. ✅" << std::endl;
+    } 
+    else {
+        std::cout << "Data profit was not calculated correctly. ❌" << std::endl;
+        std::cout << "Expected: " << std::endl;
+        for (const auto& row : expectedData) {
+            std::cout << row << std::endl;
+        }
+        std::cout << "Actual: " << std::endl;
+        for (const auto& row : testData) {
+            std::cout << row << std::endl;
+        }
+    }
+}
 
-// void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
-//     DataRow testRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), parseDate("03/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow testRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-//     DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), parseDate("03/02/2025"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), parseDate("03/02/2026"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-//     DataRow testRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow testRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-//     DataRow testRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow testRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, 0};
-//     DataRow testRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow testRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 0};
-//     DataRow testRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), double(7.78), 300, double(11.73), 0, 0, 0, 0, 0};
-//     DataRow testRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), parseDate("03/06/2033"), double(11.30), 30, double(11.73), 92.68, 0, 0, 0, 0};
-//     DataRow testRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), parseDate("03/06/2034"), double(11.30), 270, double(11.73), 834.99, 0, 0, 0, 0};
+void ServiceTest::testcalculateCGTPercentage(DataRow& dr, TradeOperations& to){
+    DataRow testRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), parseDate("03/02/2023"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow testRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173, 103368, 0, 0, 0, 0, 337827};
+    DataRow testRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), parseDate("03/02/2025"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow testRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), parseDate("03/02/2026"), 113000, 300, 1173, 103368, 0, 0, 0, 0, 337827};
+    DataRow testRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow testRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), 113000, 300, 1173, 103368, 0, 0, 0, 0, 337827};
+    DataRow testRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow testRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), 70000, 300, 0, -24459, 0, 0, 0, 0, 210000};
+    DataRow testRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow testRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), 113000, 300, 1173, 103368, 0, 0, 0, 0, 337827};
+    DataRow testRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), 77800, 300, 1173, 0, 0, 0, 0, 0, 234573};
+    DataRow testRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), parseDate("03/06/2033"), 113000, 30, 1173, 9268, 0, 0, 0, 0, 32727};
+    DataRow testRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), parseDate("03/06/2034"), 113000, 270, 1173, 83499, 0, 0, 0, 0, 303927};
     
-//     std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5, testRow6, testRow7, testRow8, testRow9, testRow10, testRow11, testRow12, testRow13};
+    std::vector<DataRow> testData = {testRow1, testRow2, testRow3, testRow4, testRow5, testRow6, testRow7, testRow8, testRow9, testRow10, testRow11, testRow12, testRow13};
 
-//     DataRow expectedRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), parseDate("03/02/2023"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
-//     DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), parseDate("03/02/2025"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), parseDate("03/02/2026"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 1033.68};
-//     DataRow expectedRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow expectedRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
-//     DataRow expectedRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow expectedRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), double(7.00), 300, double(0.0), -244.59, 0, 0, 0, -244.59};
-//     DataRow expectedRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), double(7.78), 300, double(10.59), 0, 0, 0, 0, 0};
-//     DataRow expectedRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), double(11.30), 300, double(11.73), 1033.68, 0, 0, 0, 516.84};
-//     DataRow expectedRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), double(7.78), 300, double(11.73), 0, 0, 0, 0, 0};
-//     DataRow expectedRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), parseDate("03/06/2033"), double(11.30), 30, double(11.73), 92.7, 0, 0, 0, 92.7};
-//     DataRow expectedRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), parseDate("03/06/2034"), double(11.30), 270, double(11.73), 928.11, 0, 0, 0, 464.055};
+    DataRow expectedRow1 = {"360", dr.OrderType::BUY, parseDate("01/02/2023"), parseDate("03/02/2023"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173, 103368, 0, 0, 0, 51684, 337827};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("01/02/2025"), parseDate("03/02/2025"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/02/2026"), parseDate("03/02/2026"), 113000, 300, 1173, 103368, 0, 0, 0, 103368, 337827};
+    DataRow expectedRow5 = {"360", dr.OrderType::BUY, parseDate("01/02/2027"), parseDate("03/02/2027"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow expectedRow6 = {"360", dr.OrderType::SELL, parseDate("02/02/2028"), parseDate("04/02/2028"), 113000, 300, 1173, 103368, 0, 0, 0, 51684, 337827};
+    DataRow expectedRow7 = {"360", dr.OrderType::BUY, parseDate("01/02/2029"), parseDate("03/02/2029"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow expectedRow8 = {"360", dr.OrderType::SELL, parseDate("02/02/2030"), parseDate("04/02/2030"), 70000, 300, 0, -24459, 0, 0, 0, -24459, 210000};
+    DataRow expectedRow9 = {"360", dr.OrderType::BUY, parseDate("29/02/2032"), parseDate("02/03/2032"), 77800, 300, 1059, 0, 0, 0, 0, 0, 234459};
+    DataRow expectedRow10 = {"360", dr.OrderType::SELL, parseDate("01/03/2033"), parseDate("03/03/2033"), 113000, 300, 1173, 103368, 0, 0, 0, 51684, 337827};
+    DataRow expectedRow11 = {"360", dr.OrderType::BUY, parseDate("01/05/2033"), parseDate("03/05/2033"), 77800, 300, 1173, 0, 0, 0, 0, 0, 234573};
+    DataRow expectedRow12 = {"360", dr.OrderType::SELL, parseDate("01/06/2033"), parseDate("03/06/2033"), 113000, 30, 1173, 9270, 0, 0, 0, 9270, 32727};
+    DataRow expectedRow13 = {"360", dr.OrderType::SELL, parseDate("01/06/2034"), parseDate("03/06/2034"), 113000, 270, 1173, 92811, 0, 0, 0, 46406, 303927};
 
-//     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5, expectedRow6, expectedRow7, expectedRow8, expectedRow9, expectedRow10, expectedRow11, expectedRow12, expectedRow13};
+    std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5, expectedRow6, expectedRow7, expectedRow8, expectedRow9, expectedRow10, expectedRow11, expectedRow12, expectedRow13};
 
-//     to.calculateProfit(testData);
-//     std::cout << "function: testcalculateCGTPercentage" << std::endl;
+    to.calculateProfit(testData);
+    std::cout << "function: testcalculateCGTPercentage" << std::endl;
     
-//     if (testData == expectedData) {
-//         std::cout << "Data CGT calculated correctly. ✅" << std::endl;
-//     }
-//     else {
-//         std::cout << "Data CGT was not calculated correctly. ❌" << std::endl; 
-//         std::cout << "Expected: " << std::endl;
-//     }
-// }
+    if (testData == expectedData) {
+        std::cout << "Data CGT calculated correctly. ✅" << std::endl;
+    }
+    else {
+        std::cout << "Data CGT was not calculated correctly. ❌" << std::endl; 
+        std::cout << "Expected: " << std::endl;
+        for (const auto& row : expectedData) {
+            std::cout << row << std::endl;
+        }
+        std::cout << "Actual: " << std::endl;
+        for (const auto& row : testData) {
+            std::cout << row << std::endl;
+        }
+    }
+}
 
 
 int main() {
-    // ServiceTest st;
-    // DataRow dr;
-    // DataProcessing dp;
-    // TradeOperations to;
-    // DataRetrieval drr(to);
-    // st.createDirectory();
-    // st.testLoadCSV(dr, dp);
-    // st.testDataRowSorting(dr);
-    // st.testLiveDataVector(dr, to);
-    // st.testLiveShareValue(to);
-    // st.testCalculateLiveProfit(dr, to);
-    // st.testCalculateProfit(dr, to);
-    // st.testcalculateCGTPercentage(dr, to);
+    ServiceTest st;
+    DataRow dr;
+    DataProcessing dp;
+    TradeOperations to;
+    DataRetrieval drr(to);
+    st.createDirectory();
+    st.testLoadCSV(dr, dp);
+    st.testDataRowSorting(dr);
+    st.testLiveDataVector(dr, to);
+    st.testLiveShareValue(to);
+    st.testCalculateLiveProfit(dr, to);
     return 0;
 }
