@@ -88,16 +88,9 @@ void ExcelWriter::writeTransactionDataWithRange(lxw_worksheet* worksheet, std::t
 
 std::time_t ExcelWriter::caculateFinanicalYearEndDate(std::tm* date) {
     std::time_t currentMonth = date->tm_mon + 1;
-    if (currentMonth >= 1 and currentMonth <= 6) {
-        date->tm_mon = 5;
-        date->tm_mday = 30;
-        date->tm_hour = 23;
-        date->tm_min = 59;
-        date->tm_sec = 59;
-    }
-    else {
+    if (currentMonth >= 7 and currentMonth <= 12) {
         date->tm_year = date->tm_year + 1;
-        date->tm_mon = 6;
+        date->tm_mon = 5;
         date->tm_mday = 30;
         date->tm_hour = 23;
         date->tm_min = 59;
@@ -108,7 +101,7 @@ std::time_t ExcelWriter::caculateFinanicalYearEndDate(std::tm* date) {
 
 void ExcelWriter::writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, double& financialYearProfit, double& capitalGainsTax) {
     for (auto share : data) {
-        if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.settlementDate && share.settlementDate < currentFinancialYearEnd) {
+        if (share.orderType == DataRow::OrderType::SELL && previousFinancialYearEnd < share.settlementDate && share.settlementDate <= currentFinancialYearEnd) {
             worksheet_write_string(worksheet, row, col, share.ASXCode.c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 1, std::to_string(share.profit).c_str(), NULL);
             worksheet_write_string(worksheet, row, col + 2, dr.dateToString(share.tradeDate).c_str(), NULL);
@@ -170,15 +163,13 @@ void ExcelWriter::generateExcelFile() {
         // Calculate the previous financial year
         std::tm tm_current = *std::localtime(&currentFinancialYearEnd);
         tm_current.tm_year -= 1;
-        std::time_t previousYearDate = std::mktime(&tm_current);
-        std::tm tm_previous = *std::localtime(&previousYearDate);
-        std::time_t previousFinancialYearEnd = caculateFinanicalYearEndDate(&tm_previous);
+        std::time_t previousFinancialYearEnd = std::mktime(&tm_current);
         
-        std::tm* tm_year = std::localtime(&currentFinancialYearEnd);
-        int year = tm_year->tm_year + 1900;
-        int year2 = tm_previous.tm_year + 1900;
+        std::tm* tmYear = std::localtime(&currentFinancialYearEnd);
+        int financialYearStart = tmYear->tm_year + 1899;
+        int financialYearEnd = tmYear->tm_year + 1900;
 
-        std::string sheetName = std::to_string(year) + "-" + std::to_string(year2) + " Financial Year";
+        std::string sheetName = std::to_string(financialYearStart) + "-" + std::to_string(financialYearEnd) + " Financial Year";
         lxw_worksheet *worksheet2 = workbook_add_worksheet(workbook, sheetName.c_str());
         setFinancialSheet(worksheet2);
 
