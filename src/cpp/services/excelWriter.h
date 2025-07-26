@@ -38,10 +38,10 @@ private:
     void setupOverviewSheet(lxw_worksheet* worksheet1);
     void setFinancialSheet(lxw_worksheet* worksheet1);
     void setUpHeader(lxw_worksheet* worksheet, std::list<std::string> headers);
-    void writeProfitData(lxw_worksheet* worksheet, std::list<double> profits);
+    void writeProfitData(lxw_worksheet* worksheet, std::list<std::string> profits);
     void showLiveShares(lxw_worksheet* worksheet);
     void writeTransactionData(lxw_worksheet* worksheet);
     void writeTransactionDataWithRange(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd);
     std::time_t caculateFinanicalYearEndDate(std::tm* date);
-    void writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, double& financialYearProfit, double& capitialGainsTax);
+    void writeSoldFinancialYearShares(lxw_worksheet* worksheet, std::time_t previousFinancialYearEnd, std::time_t currentFinancialYearEnd, long long& financialYearProfit, long long& capitialGainsTax);
 };

@@ -7,10 +7,10 @@
 
 struct liveShares {
     int quantity;
-    double price;
-    double profit;
-    double cost;
-    double priceBrought;
+    long long price;
+    long long profit;
+    long long cost;
+    long long priceBrought;
 
     friend bool operator==(const liveShares& lhs, const liveShares& rhs);
 };
@@ -20,5 +20,5 @@ public:
     std::map<std::string, liveShares> createLiveDataVector(std::vector<DataRow>& data);
     void calculateLiveProfit(std::map<std::string, liveShares>& liveSharesMap, std::vector<DataRow>& data);
     void calculateProfit(std::vector<DataRow>& data);
-    void calculateCGTPercentage(DataRow& buyOrder, DataRow& sellOrder);
+    void calculateCGT(DataRow& buyOrder, DataRow& sellOrder, long long& cost, int quantityUsed);
 };

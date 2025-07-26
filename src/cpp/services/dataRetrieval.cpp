@@ -1,4 +1,6 @@
 #include "dataRetrieval.h"
+#include "customSaxHandler.h"
+#include "highPrecisionMoney.h"
 #include "curlHandle.h"
 #include <curl/curl.h>
 #include <iostream>
@@ -54,10 +56,13 @@ std::string DataRetrieval::getRequest(std::string ASXCode) {
 //TODO: Internet check before calling getRequest
 void DataRetrieval::getLivePrices(std::pair<const std::string, liveShares>& pair) {
     std::string jsonResponse = getRequest(pair.first);
-    nlohmann::json j = nlohmann::json::parse(jsonResponse);
-    double price = j["quote"]["price"];
-    pair.second.price = price;
-    std::cout << "Price for " << pair.first << ": " << price << std::endl;
+    CustomSaxHandler handler;
+    std::istringstream inputStream(jsonResponse);
+    nlohmann::json::sax_parse(inputStream, &handler);
+    if (handler.priceStr.empty()) {
+        throw std::runtime_error("Unable to extract share price from JSON");
+    }
+    pair.second.price = HighPrecisionMoney::stringToNumberInHundredsOfCents(handler.priceStr);
 }
 
 void DataRetrieval::cacheSpecialCorporateActions(std::vector<ShareSplitRow>& shareSplitVector, std::vector<NameChangeRow>& shareNameChangeVector, std::vector<DataRow>& shareTakeOverVector){
@@ -122,7 +127,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
     for (ShareSplitRow& row : shareSplitVector) {
         for (DataRow& dataRow : data) {
             if (dataRow.ASXCode == row.ASXCode) {
-                dataRow.price /= row.ratio;
+                dataRow.price = (dataRow.price + row.ratio/2) / row.ratio;
                 dataRow.quantity *= row.ratio;
             }
         }
@@ -162,7 +167,7 @@ void DataRetrieval::loadCachedData(std::vector<DataRow>& data, std::map<std::str
     for (DataRow& row : shareTakeOverVector) {
         if (liveSharesMap.find(row.ASXCode) != liveSharesMap.end()) {
             row.quantity = liveSharesMap[row.ASXCode].quantity;
-            row.consideration = row.price * row.quantity * 100.00;
+            row.consideration = (row.price * row.quantity) / 100;
             liveSharesMap.erase(row.ASXCode);
         }
     }

@@ -71,11 +71,11 @@ void ServiceTest::createTestData(DataRow& dr) {
 }
 
 std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
-    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12), 0, 0};
-    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73), 0, 1};
-    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59), 0, 2};
-    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21), 0, 3};
-    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19), 0, 4};
+    DataRow row1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112, 0, 0};
+    DataRow row2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173, 0, 1};
+    DataRow row3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059, 0, 2};
+    DataRow row4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021, 0, 3};
+    DataRow row5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019, 0, 4};
 
     std::vector<DataRow> testData = {row1, row2, row3, row4, row5};
     return testData;
@@ -83,11 +83,11 @@ std::vector<DataRow> ServiceTest::generateTestData(DataRow& dr) {
 
 void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
     createTestData(dr);
-    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12)};
-    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73)};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59)};
-    DataRow expectedRow4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21)};
-    DataRow expectedRow5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19)};
+    DataRow expectedRow1 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112};
+    DataRow expectedRow2 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059};
+    DataRow expectedRow4 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021};
+    DataRow expectedRow5 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
 
@@ -98,17 +98,25 @@ void ServiceTest::testLoadCSV(DataRow& dr, DataProcessing& dp) {
     } 
     else {
         std::cout << "Data did not load correctly. ❌" << std::endl;  
+        std::cout << "Expected: " << std::endl;
+        for (const auto& row : expectedData) {
+            std::cout << row << std::endl;
+        }
+        std::cout << "Actual: " << std::endl;
+        for (const auto& row : data) {
+            std::cout << row << std::endl;
+        }
     }    
 }
 
 void ServiceTest::testDataRowSorting(DataRow& dr) {
     bool ascending = false;
     bool descending = false;
-    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.33), 30, double(10.19)};
-    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), double(22.78), 10, double(10.21)};
-    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), double(7.78), 300, double(10.59)};
-    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), double(11.30), 300, double(11.73)};
-    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), double(115.78), 100, double(21.12)};
+    DataRow expectedRow1 = {"ANZ", dr.OrderType::BUY, parseDate("06/11/2023"), parseDate("08/11/2023"), 223300, 30, 1019};
+    DataRow expectedRow2 = {"ANZ", dr.OrderType::SELL, parseDate("06/11/2023"), parseDate("08/11/2023"), 227800, 10, 1021};
+    DataRow expectedRow3 = {"360", dr.OrderType::BUY, parseDate("04/12/2023"), parseDate("06/12/2023"), 77800, 300, 1059};
+    DataRow expectedRow4 = {"360", dr.OrderType::SELL, parseDate("01/03/2024"), parseDate("03/03/2024"), 113000, 300, 1173};
+    DataRow expectedRow5 = {"CBA", dr.OrderType::BUY, parseDate("19/03/2024"), parseDate("21/03/2024"), 1157800, 100, 2112};
 
     std::vector<DataRow> expectedData = {expectedRow1, expectedRow2, expectedRow3, expectedRow4, expectedRow5};
     std::vector<DataRow> expectedData2 = {expectedRow5, expectedRow4, expectedRow3, expectedRow2, expectedRow1};
@@ -177,7 +185,7 @@ void ServiceTest::testLiveShareValue(TradeOperations& to) {
     latch.wait();
 
     curl_global_cleanup();
-    if (liveSharesMap["ANZ"].price != 0 && liveSharesMap["ANZ"].price != 0) {
+    if (liveSharesMap["ANZ"].price != 0 && liveSharesMap["CBA"].price != 0) {
         flag = true;
     }
 
@@ -191,15 +199,15 @@ void ServiceTest::testLiveShareValue(TradeOperations& to) {
 }
 
 void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
-    liveShares expectedLiveShare1 = {20, 24.31, 32.81, 454.39, 22.33};
-    liveShares expectedLiveShare2 = {100, 110.12, -587.12, 11599.12, 115.78};
+    liveShares expectedLiveShare1 = {20, 243100, 3281, 45439, 223300};
+    liveShares expectedLiveShare2 = {100, 1101200, -58712, 1159912, 1157800};
 
     std::map<std::string, liveShares> expectedLiveShares;
     expectedLiveShares["ANZ"] = expectedLiveShare1;
     expectedLiveShares["CBA"] = expectedLiveShare2;
 
-    liveShares liveShare1 = {20, 24.31};
-    liveShares liveShare2 = {100, 110.12};
+    liveShares liveShare1 = {20, 243100};
+    liveShares liveShare2 = {100, 1101200};
 
     std::map<std::string, liveShares> liveSharesMap;
     liveSharesMap["ANZ"] = liveShare1;
@@ -213,6 +221,17 @@ void ServiceTest::testCalculateLiveProfit(DataRow& dr, TradeOperations& to) {
     } 
     else {
         std::cout << "Live data vector did not create correctly. ❌" << std::endl;  
+        std::cout << "Expected: " << std::endl;
+        for (const auto& pair : expectedLiveShares) {
+            std::cout << pair.first << ": " << pair.second.quantity << ", " << pair.second.price << ", " 
+                      << pair.second.profit << ", " << pair.second.cost << ", " << pair.second.priceBrought << std::endl;
+        }
+        std::cout << "Actual: " << std::endl;
+        for (const auto& pair : liveSharesMap) {
+            std::cout << pair.first << ": " << pair.second.quantity << ", " << pair.second.price << ", "
+
+                        << pair.second.profit << ", " << pair.second.cost << ", " << pair.second.priceBrought << std::endl;
+        }
     }
 }
 
@@ -297,60 +316,5 @@ int main() {
     st.testCalculateLiveProfit(dr, to);
     st.testCalculateProfit(dr, to);
     st.testcalculateCGTPercentage(dr, to);
-
-    std::vector<DataRow> data = dp.loadCSV("../resources/testData.csv");
-
-    char cache;
-    std::cout << "Would you like to use cached data? (Y/N): ";
-    std::cin >> cache;
-
-    std::map<std::string, liveShares> liveSharesMap;
-
-    if (cache == 'Y' || cache == 'y') {
-        drr.loadCachedData(data, liveSharesMap);
-        //update live shares map after data has been updated to avoid names, quantity and prices being incorrect
-    }
-    if (cache == 'N' || cache == 'n') {
-        CorporateShareActions csa(dr, drr, dp, data, liveSharesMap);
-
-        std::vector<ShareSplitRow> shareSplitVector = csa.getShareConsolidationCLI();
-        std::vector<NameChangeRow> shareNameChangeVector = csa.getShareNameChangeCLI();
-        //update live shares map after data has been updated with share splits and name changes to avoid names, quantity and prices being incorrect
-        liveSharesMap = to.createLiveDataVector(data);
-        std::vector<DataRow> shareTakeOverVector = csa.getSpecialCoporateActionsCLI();
-
-        char response;
-        std::cout << "Would you like to cache the data? (Y/N): ";
-        std::cin >> response;
-        if (response == 'Y' || response == 'y') {    
-            drr.cacheSpecialCorporateActions(shareSplitVector, shareNameChangeVector, shareTakeOverVector);
-        }
-    }
-    curl_global_init(CURL_GLOBAL_ALL);
-
-    std::vector<std::thread> threads(liveSharesMap.size());
-    int i = 0;
-    for (std::pair<const std::string, liveShares>& pair : liveSharesMap) {
-        threads[i] = std::thread(std::bind(&DataRetrieval::getLivePrices, &drr, std::ref(pair)));
-        i++;
-    }
-    for (std::thread& thread : threads) {
-        if (thread.joinable()) {
-            thread.join();
-        }
-    }
-
-    curl_global_cleanup();
-    to.calculateLiveProfit(liveSharesMap, data);
-    to.calculateProfit(data);
-    std::sort(data.begin(), data.end(), DataRow::descending);
-    std::filesystem::path reportPath = "../resources/reports";
-    if (!std::filesystem::exists(reportPath)) {
-        std::filesystem::create_directories(reportPath);
-    }
-    std::string reportPathStr = reportPath.string() + "/Report.xlsx";
-    ExcelWriter ew(dr, reportPathStr, data, liveSharesMap);
-    ew.generateExcelFile();
- 
     return 0;
 }
