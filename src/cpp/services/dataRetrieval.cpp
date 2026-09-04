@@ -35,20 +35,18 @@ std::string DataRetrieval::getRequest(std::string ASXCode) {
     if (!curl) {
         throw std::runtime_error("Failed to initialise curl");
     }
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &jsonResponse);
-        res = curl_easy_perform(curl);
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &jsonResponse);
+    res = curl_easy_perform(curl);
 
-        if (res != CURLE_OK) {
-            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
-        }
-        long httpCode = 0;
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-        if (httpCode != 200){
-            std::cerr << "httpCode: " << httpCode << std::endl;
-        }
+    if (res != CURLE_OK) {
+        std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+    }
+    long httpCode = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+     if (httpCode != 200){
+        std::cerr << "httpCode: " << httpCode << std::endl;
     }
     return jsonResponse;
 }
@@ -182,7 +180,7 @@ void DataRetrieval::clearCache() {
     }
 }
 
-void DataRetrieval::cacheSpecialCoporateActions(DataRow row) {
+void DataRetrieval::cacheSpecialCorporateAction(DataRow row) {
     nlohmann::json j;
 
     std::filesystem::path path = "../resources/jsons/shareTakeOverVector.json";

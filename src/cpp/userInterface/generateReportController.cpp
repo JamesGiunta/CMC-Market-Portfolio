@@ -89,7 +89,7 @@ void GenerateReportController::setupUI() {
     
     wxStaticText *confrimationsText = new wxStaticText(page1Panel1, wxID_ANY, "Select Confirmations", wxDefaultPosition, wxDefaultSize);
     wxButton *confirmButton = new wxButton(page1Panel1, wxID_ANY, "Add Confirmation", wxDefaultPosition, wxDefaultSize);
-    confirmationsList = new wxListBox(page1Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    confirmationsList = new wxListBox(page1Panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxBORDER_NONE);
 
     confrimationsText->SetFont(wxFont(wxFontInfo(12).Bold()));
 

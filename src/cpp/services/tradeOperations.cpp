@@ -7,8 +7,11 @@
 #include <cmath>
 
 bool operator==(const liveShares& lhs, const liveShares& rhs) {
-    const double epsilon = 1e-6; // Tolerance for floating-point comparison
-    return std::abs(lhs.price - rhs.price) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && lhs.quantity == rhs.quantity && (lhs.cost - rhs.cost) < epsilon && (lhs.priceBrought - rhs.priceBrought) < epsilon;
+    return lhs.price == rhs.price &&
+           lhs.profit == rhs.profit &&
+           lhs.quantity == rhs.quantity &&
+           lhs.cost == rhs.cost &&
+           lhs.priceBrought == rhs.priceBrought;
 }
 
 void TradeOperations::calculateCGT(DataRow& buyOrder, DataRow& sellOrder, long long& cost, int quantityUsed) {

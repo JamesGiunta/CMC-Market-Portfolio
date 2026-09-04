@@ -24,7 +24,7 @@ void ShareTakeoverController::addCacheShareTakeoverRow(wxCommandEvent& event) {
     row.tempQuantity = 0;
     row.consideration = 0;
     row.orderType = DataRow::SELL;
-    app->dataRetrieval.cacheSpecialCoporateActions(row);
+    app->dataRetrieval.cacheSpecialCorporateAction(row);
     takeoverASXCodeInput->Clear();
     takeoverPriceInput->Clear();
     takeoverDateInput->Clear();

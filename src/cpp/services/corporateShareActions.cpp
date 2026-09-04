@@ -161,7 +161,7 @@ void CorporateShareActions::saveSpecialCoporateActions(const std::string &ASXCod
         row.quantity = liveSharesMap[ASXCode].quantity;
         liveSharesMap.erase(ASXCode);
     }
-    drr.cacheSpecialCoporateActions(row);
+    drr.cacheSpecialCorporateAction(row);
 }
 
 void CorporateShareActions::saveShareConsolidation(const std::string &ASXCode, const double ratio, const std::time_t &date){

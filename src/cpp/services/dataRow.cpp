@@ -9,15 +9,15 @@ std::ostream& operator<<(std::ostream& os, const DataRow& row) {
 }
 
 bool operator==(const DataRow& lhs, const DataRow& rhs) {
-    const double epsilon = 1e-6; // Tolerance for floating-point comparison
     return lhs.ASXCode == rhs.ASXCode &&
-            lhs.orderType == rhs.orderType &&
-            lhs.tradeDate == rhs.tradeDate &&
-            lhs.settlementDate == rhs.settlementDate &&
-           std::abs(lhs.price - rhs.price) < epsilon &&
+           lhs.orderType == rhs.orderType &&
+           lhs.tradeDate == rhs.tradeDate &&
+           lhs.settlementDate == rhs.settlementDate &&
+           lhs.price == rhs.price &&
            lhs.quantity == rhs.quantity &&
-           std::abs(lhs.fee - rhs.fee) < epsilon && std::abs(lhs.profit - rhs.profit) < epsilon && 
-           std::abs(lhs.cgt - rhs.cgt) < epsilon;
+           lhs.fee == rhs.fee &&
+           lhs.profit == rhs.profit &&
+           lhs.cgt == rhs.cgt;
 }
 
 bool DataRow::operator<(const DataRow& obj) const {
